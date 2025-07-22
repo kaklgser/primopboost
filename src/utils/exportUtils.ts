@@ -798,12 +798,7 @@ export const getFileName = (resumeData: ResumeData, fileExtension: 'pdf' | 'doc'
     // Sanitize name: replace spaces with underscores
     const namePart = resumeData.name.replace(/\s+/g, '_');
     
-    // The rolePart is no longer included in the filename, so we can remove its declaration.
-    // const rolePart = resumeData.targetRole
-    //     ? `_${resumeData.targetRole.replace(/\s+/g, '_')}`
-    //     : '';
-        
-    return `${namePart}_Resume.${fileExtension}`; // Modified to exclude rolePart
+    return `${namePart}_Resume.${fileExtension}`;
 };
 
 export const exportToWord = async (resumeData: ResumeData, userType: UserType = 'experienced'): Promise<void> => {
