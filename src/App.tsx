@@ -21,6 +21,7 @@ function App() {
     setShowMobileMenu(!showMobileMenu);
   };
 
+  // Get isAuthenticated from useAuth()
   const { isAuthenticated } = useAuth();
 
 
@@ -67,7 +68,8 @@ function App() {
       default:
         return (
           <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-            <ResumeOptimizer    isAuthenticated={isAuthenticated}    onShowAuth={handleShowAuth}  />
+            {/* Modified line: Pass isAuthenticated and onShowAuth as props */}
+            <ResumeOptimizer isAuthenticated={isAuthenticated} onShowAuth={handleShowAuth} />
           </main>
         );
     }
