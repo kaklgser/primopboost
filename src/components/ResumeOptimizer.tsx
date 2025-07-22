@@ -866,7 +866,12 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
             )}
             
             {/* Project Analysis Button */}
-            
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Project Mismatch Dialog */}
       {showProjectMismatch && (
