@@ -21,9 +21,9 @@ function App() {
     setShowMobileMenu(!showMobileMenu);
   };
 
-  // Get isAuthenticated from useAuth()
-  const { isAuthenticated } = useAuth();
-
+  // Move the useAuth() hook call INSIDE the AuthProvider's context
+  // This will be done in the return statement for the <App> component.
+  // We'll move the isAuthenticated declaration into the AuthProvider wrapper.
 
   const logoImage = "https://res.cloudinary.com/dlkovvlud/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1751536902/a-modern-logo-design-featuring-primoboos_XhhkS8E_Q5iOwxbAXB4CqQ_HnpCsJn4S1yrhb826jmMDw_nmycqj.jpg";
 
@@ -56,7 +56,7 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const renderCurrentPage = () => {
+  const renderCurrentPage = (isAuthenticated: boolean) => { // Accept isAuthenticated as a parameter
     switch (currentPage) {
       case 'about':
         return <AboutUs />;
@@ -68,7 +68,6 @@ function App() {
       default:
         return (
           <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-            {/* Modified line: Pass isAuthenticated and onShowAuth as props */}
             <ResumeOptimizer isAuthenticated={isAuthenticated} onShowAuth={handleShowAuth} />
           </main>
         );
@@ -77,150 +76,153 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="min-h-screen pb-safe-bottom safe-area">
-        {currentPage === 'home' ? (
-          // For home page, show the header with navigation integrated
-          <>
-            <Header onMobileMenuToggle={handleMobileMenuToggle} showMobileMenu={showMobileMenu}>
-              <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
-            </Header>
-            {renderCurrentPage()}
-          </>
-        ) : (
-          // For other pages, show a simpler header with navigation
-          <>
-            <header className="bg-white/95 backdrop-blur-sm shadow-sm border-b border-secondary-200 sticky top-0 z-40">
-              <div className="container-responsive">
-                <div className="flex items-center justify-between h-14 sm:h-16">
-                  <button
-                    onClick={() => setCurrentPage('home')}
-                    className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity"
-                  >
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-lg">
-                      <img 
-                        src={logoImage} 
-                        alt="PrimoBoost AI Logo" 
-                        className="w-full h-full object-cover"
-                      />
+      {/* Move useAuth here, inside the AuthProvider */}
+      {({ isAuthenticated }) => (
+        <div className="min-h-screen pb-safe-bottom safe-area">
+          {currentPage === 'home' ? (
+            // For home page, show the header with navigation integrated
+            <>
+              <Header onMobileMenuToggle={handleMobileMenuToggle} showMobileMenu={showMobileMenu}>
+                <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
+              </Header>
+              {renderCurrentPage(isAuthenticated)} {/* Pass isAuthenticated to renderCurrentPage */}
+            </>
+          ) : (
+            // For other pages, show a simpler header with navigation
+            <>
+              <header className="bg-white/95 backdrop-blur-sm shadow-sm border-b border-secondary-200 sticky top-0 z-40">
+                <div className="container-responsive">
+                  <div className="flex items-center justify-between h-14 sm:h-16">
+                    <button
+                      onClick={() => setCurrentPage('home')}
+                      className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity"
+                    >
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-lg">
+                        <img 
+                          src={logoImage} 
+                          alt="PrimoBoost AI Logo" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h1 className="text-lg sm:text-xl font-bold text-secondary-900">PrimoBoost AI</h1>
+                      </div>
+                    </button>
+                    
+                    <div className="hidden md:block">
+                      <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
                     </div>
-                    <div>
+                    
+                    {/* Mobile Menu Button */}
+                    <button
+                      onClick={handleMobileMenuToggle}
+                      className="min-w-touch min-h-touch p-2 text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 md:hidden"
+                    >
+                      <Menu className="w-6 h-6" />
+                    </button>
+                  </div>
+                </div>
+              </header>
+              {renderCurrentPage(isAuthenticated)} {/* Pass isAuthenticated to renderCurrentPage */}
+            </>
+          )}
+          
+          {/* Mobile Bottom Navigation */}
+          <MobileNavBar currentPage={currentPage} onPageChange={handlePageChange} />
+          
+          {/* Mobile Menu Overlay */}
+          {showMobileMenu && (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              <div 
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm" 
+                onClick={() => setShowMobileMenu(false)}
+              />
+              <div className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl overflow-y-auto safe-area">
+                <div className="flex flex-col space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-lg">
+                        <img 
+                          src={logoImage} 
+                          alt="PrimoBoost AI Logo" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                       <h1 className="text-lg sm:text-xl font-bold text-secondary-900">PrimoBoost AI</h1>
                     </div>
-                  </button>
-                  
-                  <div className="hidden md:block">
-                    <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
+                    <button
+                      onClick={() => setShowMobileMenu(false)}
+                      className="min-w-touch min-h-touch p-2 text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100 rounded-lg transition-colors"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
                   </div>
                   
-                  {/* Mobile Menu Button */}
-                  <button
-                    onClick={handleMobileMenuToggle}
-                    className="min-w-touch min-h-touch p-2 text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 md:hidden"
-                  >
-                    <Menu className="w-6 h-6" />
-                  </button>
-                </div>
-              </div>
-            </header>
-            {renderCurrentPage()}
-          </>
-        )}
-        
-        {/* Mobile Bottom Navigation */}
-        <MobileNavBar currentPage={currentPage} onPageChange={handlePageChange} />
-        
-        {/* Mobile Menu Overlay */}
-        {showMobileMenu && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <div 
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm" 
-              onClick={() => setShowMobileMenu(false)}
-            />
-            <div className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl overflow-y-auto safe-area">
-              <div className="flex flex-col space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-lg">
-                      <img 
-                        src={logoImage} 
-                        alt="PrimoBoost AI Logo" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <h1 className="text-lg sm:text-xl font-bold text-secondary-900">PrimoBoost AI</h1>
+                  <div className="border-t border-secondary-200 pt-6">
+                    <nav className="flex flex-col space-y-4">
+                      {[
+                        { id: 'home', label: 'Home', icon: <Home className="w-5 h-5" /> },
+                        { id: 'about', label: 'About Us', icon: <Info className="w-5 h-5" /> },
+                        { id: 'tutorials', label: 'Tutorials', icon: <BookOpen className="w-5 h-5" /> },
+                        { id: 'contact', label: 'Contact', icon: <Phone className="w-5 h-5" /> }
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => {
+                            setCurrentPage(item.id);
+                            setShowMobileMenu(false);
+                          }}
+                          className={`flex items-center space-x-3 min-h-touch px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                            currentPage === item.id
+                              ? 'bg-primary-100 text-primary-700 shadow-md'
+                              : 'text-secondary-700 hover:text-primary-600 hover:bg-primary-50'
+                          }`}
+                        >
+                          {item.icon}
+                          <span>{item.label}</span>
+                        </button>
+                      ))}
+                    </nav>
                   </div>
-                  <button
-                    onClick={() => setShowMobileMenu(false)}
-                    className="min-w-touch min-h-touch p-2 text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100 rounded-lg transition-colors"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-                
-                <div className="border-t border-secondary-200 pt-6">
-                  <nav className="flex flex-col space-y-4">
-                    {[
-                      { id: 'home', label: 'Home', icon: <Home className="w-5 h-5" /> },
-                      { id: 'about', label: 'About Us', icon: <Info className="w-5 h-5" /> },
-                      { id: 'tutorials', label: 'Tutorials', icon: <BookOpen className="w-5 h-5" /> },
-                      { id: 'contact', label: 'Contact', icon: <Phone className="w-5 h-5" /> }
-                    ].map((item) => (
+                  
+                  {/* Authentication Section */}
+                  <div className="border-t border-secondary-200 pt-6">
+                    <AuthButtons 
+                      onPageChange={setCurrentPage} 
+                      onClose={() => setShowMobileMenu(false)}
+                      onShowAuth={handleShowAuth}
+                    />
+                  </div>
+                  
+                  <div className="mt-auto pt-6 border-t border-secondary-200">
+                    <div className="bg-gradient-to-r from-primary-50 to-accent-50 rounded-xl p-4">
+                      <p className="text-sm text-secondary-700 mb-2">
+                        Need help with your resume?
+                      </p>
                       <button
-                        key={item.id}
                         onClick={() => {
-                          setCurrentPage(item.id);
+                          setCurrentPage('home');
                           setShowMobileMenu(false);
                         }}
-                        className={`flex items-center space-x-3 min-h-touch px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
-                          currentPage === item.id
-                            ? 'bg-primary-100 text-primary-700 shadow-md'
-                            : 'text-secondary-700 hover:text-primary-600 hover:bg-primary-50'
-                        }`}
+                        className="w-full btn-primary text-sm flex items-center justify-center space-x-2"
                       >
-                        {item.icon}
-                        <span>{item.label}</span>
+                        <FileText className="w-4 h-4" />
+                        <span>Optimize Now</span>
                       </button>
-                    ))}
-                  </nav>
-                </div>
-                
-                {/* Authentication Section */}
-                <div className="border-t border-secondary-200 pt-6">
-                  <AuthButtons 
-                    onPageChange={setCurrentPage} 
-                    onClose={() => setShowMobileMenu(false)}
-                    onShowAuth={handleShowAuth}
-                  />
-                </div>
-                
-                <div className="mt-auto pt-6 border-t border-secondary-200">
-                  <div className="bg-gradient-to-r from-primary-50 to-accent-50 rounded-xl p-4">
-                    <p className="text-sm text-secondary-700 mb-2">
-                      Need help with your resume?
-                    </p>
-                    <button
-                      onClick={() => {
-                        setCurrentPage('home');
-                        setShowMobileMenu(false);
-                      }}
-                      className="w-full btn-primary text-sm flex items-center justify-center space-x-2"
-                    >
-                      <FileText className="w-4 h-4" />
-                      <span>Optimize Now</span>
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Auth Modal */}
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-        />
-      </div>
+          {/* Auth Modal */}
+          <AuthModal
+            isOpen={showAuthModal}
+            onClose={() => setShowAuthModal(false)}
+          />
+        </div>
+      )}
     </AuthProvider>
   );
 }
