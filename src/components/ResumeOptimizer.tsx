@@ -850,48 +850,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
             {/* Export Buttons */}
             <ExportButtons resumeData={optimizedResume} targetRole={targetRole} />
 
-            {/* Analysis */}
-            {beforeScore && afterScore && initialResumeScore && finalResumeScore && (
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-6">
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
-                  <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                    <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
-                    Resume Score Analysis
-                  </h2>
-                </div>
-                <div className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="text-center">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Before Optimization</h3>
-                      <div className="text-4xl font-bold text-red-600 mb-2">{initialResumeScore.totalScore}/100</div>
-                      <div className="text-sm text-gray-600">Grade: {initialResumeScore.grade}</div>
-                    </div>
-                    <div className="text-center">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">After Optimization</h3>
-                      <div className="text-4xl font-bold text-green-600 mb-2">{finalResumeScore.totalScore}/100</div>
-                      <div className="text-sm text-gray-600">Grade: {finalResumeScore.grade}</div>
-                    </div>
-                  </div>
-                  <div className="mt-6 text-center">
-                    <div className="text-2xl font-bold text-blue-600">
-                      +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {beforeScore && afterScore && (
-              <ComprehensiveAnalysis
-                beforeScore={beforeScore}
-                afterScore={afterScore}
-                changedSections={changedSections}
-                resumeData={optimizedResume}
-                jobDescription={jobDescription}
-                targetRole={targetRole || "Target Role"}
-              />
-            )}
-            
+           
             {/* Project Analysis Button */}
             <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
               <button
