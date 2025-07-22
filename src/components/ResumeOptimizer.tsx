@@ -850,7 +850,21 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
             {/* Export Buttons */}
             <ExportButtons resumeData={optimizedResume} targetRole={targetRole} />
 
-           
+            {/* Analysis */}
+          
+              
+            
+            {beforeScore && afterScore && (
+              <ComprehensiveAnalysis
+                beforeScore={beforeScore}
+                afterScore={afterScore}
+                changedSections={changedSections}
+                resumeData={optimizedResume}
+                jobDescription={jobDescription}
+                targetRole={targetRole || "Target Role"}
+              />
+            )}
+            
             {/* Project Analysis Button */}
             <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
               <button
