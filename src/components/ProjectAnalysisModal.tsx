@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  X, 
-  CheckCircle, 
-  XCircle, 
-  Github, 
-  AlertTriangle, 
+import {
+  X,
+  CheckCircle,
+  XCircle,
+  Github,
+  AlertTriangle,
   AlertCircle,
-  Loader2, 
+  Loader2,
   Plus,
   ArrowRight,
   FileText,
@@ -190,6 +190,12 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
 
   const handleContinue = () => {
     setStep('selection');
+  };
+
+  // New handleSkip function
+  const handleSkip = () => {
+    setUpdatedResume(resumeData); // Set updatedResume to original resumeData
+    setStep('preview'); // Transition to preview step
   };
 
   const handleAddManualProject = () => {
@@ -448,7 +454,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                 {/* Individual Project Analysis */}
                 <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Project-by-Project Analysis:</h3>
-                
+                  
                   {analysisResult.projectAnalysis.map((project, index) => (
                     <div key={index} className={`border-2 rounded-lg sm:rounded-xl p-3 sm:p-5 transition-all ${
                       project.suitable 
@@ -516,15 +522,26 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                 )}
               </div>
               
-              <div className="flex justify-center sm:justify-end">
+              <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 sm:gap-4">
+                {/* New "Skip for now" button */}
+                {analysisResult.summary.unsuitableProjects === 0 && (
+                  <button
+                    onClick={handleSkip}
+                    className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm min-h-[44px] flex items-center justify-center space-x-2"
+                  >
+                    <span>Skip for now</span>
+                  </button>
+                )}
+
+                {/* "Continue" button - Modified text */}
                 <button
                   onClick={handleContinue}
                   className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 sm:space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 min-h-[44px]"
                 >
                   <span className="text-sm sm:text-base">
-                    {analysisResult.summary.unsuitableProjects > 0 
+                    {analysisResult.summary.unsuitableProjects > 0
                       ? `Replace ${analysisResult.summary.unsuitableProjects} Project${analysisResult.summary.unsuitableProjects > 1 ? 's' : ''}`
-                      : 'Add More Projects'
+                      : 'Add More Projects' // Text when no projects need replacement
                     }
                   </span>
                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -838,7 +855,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                         </ul>
                         {project.githubUrl && (
                           <a 
-                            href={project.githubUrl} 
+                            href={project.githubUrl as string} 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm flex items-center space-x-1 mt-2 break-all min-h-[44px]"
