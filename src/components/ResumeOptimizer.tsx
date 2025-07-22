@@ -866,18 +866,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
             )}
             
             {/* Project Analysis Button */}
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-              <button
-                onClick={() => setShowProjectAnalysis(true)}
-                className="w-full py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer"
-              >
-                <Target className="w-5 h-5" />
-                <span>Analyze & Improve Projects</span>
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+            
 
       {/* Project Mismatch Dialog */}
       {showProjectMismatch && (
