@@ -34,71 +34,38 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
     );
   }
 
-  // Build contact info with bold labels and hyperlinks
+  // Build contact info on a single line with | separator and correct font sizes
   const buildContactInfo = () => {
-    const contactElements = [];
+    const parts: React.ReactNode[] = [];
+
+    // Add location first if available
+    if (resumeData.location) {
+      parts.push(<span key="location">{resumeData.location}</span>);
+    }
     
     if (resumeData.phone) {
-      contactElements.push(
-        <span key="phone">
-          <strong>Phone no: </strong>
-          <a 
-            href={`tel:${resumeData.phone}`} 
-            className="text-blue-600 hover:text-blue-800 transition-colors"
-          >
-            {resumeData.phone}
-          </a>
-        </span>
-      );
+      parts.push(<a key="phone" href={`tel:${resumeData.phone}`} className="text-blue-600 hover:text-blue-800 transition-colors">{resumeData.phone}</a>);
     }
     
     if (resumeData.email) {
-      contactElements.push(
-        <span key="email">
-          <strong>Email: </strong>
-          <a 
-            href={`mailto:${resumeData.email}`} 
-            className="text-blue-600 hover:text-blue-800 transition-colors"
-          >
-            {resumeData.email}
-          </a>
-        </span>
-      );
+      parts.push(<a key="email" href={`mailto:${resumeData.email}`} className="text-blue-600 hover:text-blue-800 transition-colors">{resumeData.email}</a>);
     }
     
     if (resumeData.linkedin) {
-      contactElements.push(
-        <span key="linkedin">
-          <strong>LinkedIn: </strong>
-          <a 
-            href={resumeData.linkedin} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 transition-colors"
-          >
-            {resumeData.linkedin}
-          </a>
-        </span>
-      );
+      parts.push(<a key="linkedin" href={resumeData.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors">{resumeData.linkedin}</a>);
     }
     
     if (resumeData.github) {
-      contactElements.push(
-        <span key="github">
-          <strong>GitHub: </strong>
-          <a 
-            href={resumeData.github} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 transition-colors"
-          >
-            {resumeData.github}
-          </a>
-        </span>
-      );
+      parts.push(<a key="github" href={resumeData.github} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors">{resumeData.github}</a>);
     }
-    
-    return contactElements;
+
+    // Join with | separator
+    return parts.map((part, index) => (
+      <React.Fragment key={index}>
+        {part}
+        {index < parts.length - 1 && <span className="mx-1" style={{ fontSize: '10pt' }}>|</span>}
+      </React.Fragment>
+    ));
   };
 
   const contactElements = buildContactInfo();
@@ -112,20 +79,17 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
         'projects',
         'skills',
         'certifications',
-        'education' // Minimal for experienced
+        'education'
       ];
-    } else {
+    } else { // Fresher
       return [
         'summary', // Optional for freshers
         'education', // Prominent for freshers
-        'workExperience', // Internships
+        'workExperience', // Internships & Work Experience
         'projects', // Academic projects
         'skills',
-        'achievements',
-        'extraCurricularActivities',
         'certifications',
-        'languagesKnown',
-        'personalDetails'
+        'achievementsAndExtras' // Combined section for fresher extras
       ];
     }
   };
@@ -133,30 +97,43 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
   const sectionOrder = getSectionOrder();
 
   const renderSection = (sectionName: string) => {
+    // Common styles for section titles
+    const sectionTitleStyle: React.CSSProperties = {
+      fontSize: '10pt', // Corresponds to PDF_CONFIG.fonts.sectionTitle.size
+      fontWeight: 'bold',
+      marginBottom: '4pt', // Corresponds to PDF_CONFIG.spacing.sectionSpacingAfter (after underline)
+      marginTop: '10pt',  // Corresponds to PDF_CONFIG.spacing.sectionSpacingBefore
+      fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+      letterSpacing: '0.5pt',
+      textTransform: 'uppercase'
+    };
+
+    // Common styles for section underlines
+    const sectionUnderlineStyle: React.CSSProperties = {
+      borderBottomWidth: '0.5pt',
+      borderColor: '#808080', // PDF_CONFIG.colors.secondary converted to hex or RGB
+      marginBottom: '4pt', // Corresponds to PDF_CONFIG.spacing.sectionSpacingAfter
+      height: '1px' // Ensure line height
+    };
+
+    // Common styles for body text and bullets
+    const bodyTextStyle: React.CSSProperties = {
+      fontSize: '9.5pt', // Corresponds to PDF_CONFIG.fonts.body.size
+      lineHeight: '1.25', // Corresponds to PDF_CONFIG.spacing.lineHeight
+      fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+      color: '#000' // PDF_CONFIG.colors.primary
+    };
+
     switch (sectionName) {
       case 'summary':
-        if (!resumeData.summary) return null;
+        if (!resumeData.summary || resumeData.summary.trim() === '') return null;
         return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
+          <div style={{ marginBottom: '12pt' /* Equivalent to afterSubsection or spacing after section */ }}>
+            <h2 style={sectionTitleStyle}>
               PROFESSIONAL SUMMARY
             </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
-            <p style={{ 
-              fontSize: '11pt', 
-              lineHeight: '1.15',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
+            <div style={sectionUnderlineStyle}></div>
+            <p style={{ ...bodyTextStyle, marginBottom: '6pt' }}>
               {resumeData.summary}
             </p>
           </div>
@@ -165,58 +142,32 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
       case 'workExperience':
         if (!resumeData.workExperience || resumeData.workExperience.length === 0) return null;
         return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
-              {userType === 'fresher' ? 'INTERNSHIPS & WORK EXPERIENCE' : 'WORK EXPERIENCE'}
+          <div style={{ marginBottom: '12pt' }}>
+            <h2 style={sectionTitleStyle}>
+              {userType === 'fresher' ? 'INTERNSHIPS & WORK EXPERIENCE' : 'EXPERIENCE'}
             </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
+            <div style={sectionUnderlineStyle}></div>
             
             {resumeData.workExperience.map((job, index) => (
-              <div key={index} className="mb-4" style={{ marginBottom: '12pt' }}>
-                <div className="flex justify-between items-start mb-2" style={{ marginBottom: '6pt' }}>
+              <div key={index} style={{ marginBottom: '4pt' /* Corresponds to PDF_CONFIG.spacing.afterSubsection for jobs */ }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2pt' }}>
                   <div>
-                    <div className="font-bold" style={{ 
-                      fontSize: '11pt', 
-                      fontWeight: 'bold',
-                      fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                    }}>
+                    <div style={{ fontSize: '9.5pt', fontWeight: 'bold', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
                       {job.role}
                     </div>
-                    <div style={{ 
-                      fontSize: '11pt',
-                      fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                    }}>
-                      {job.company}
+                    <div style={{ fontSize: '9.5pt', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
+                      {job.company}{job.location ? `, ${job.location}` : ''} {/* Add location */}
                     </div>
                   </div>
-                  <div className="font-bold" style={{ 
-                    fontSize: '11pt', 
-                    fontWeight: 'bold',
-                    fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                  }}>
+                  <div style={{ fontSize: '9.5pt', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
                     {job.year}
                   </div>
                 </div>
                 {job.bullets && job.bullets.length > 0 && (
-                  <ul className="ml-4 space-y-1" style={{ marginLeft: '18pt' }}>
+                  <ul style={{ marginLeft: '12pt' /* PDF_CONFIG.spacing.bulletIndent */, listStyleType: 'disc' }}>
                     {job.bullets.map((bullet, bulletIndex) => (
-                      <li key={bulletIndex} className="leading-relaxed" style={{ 
-                        fontSize: '11pt', 
-                        lineHeight: '1.15',
-                        marginBottom: '6pt',
-                        fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                      }}>
-                        • {bullet}
+                      <li key={bulletIndex} style={{ ...bodyTextStyle, marginBottom: '1pt' /* Small space between bullets */ }}>
+                        {bullet}
                       </li>
                     ))}
                   </ul>
@@ -228,58 +179,35 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
 
       case 'education':
         if (!resumeData.education || resumeData.education.length === 0) return null;
-        // For experienced professionals, show education minimally unless it's important
-        const showEducationProminently = userType === 'fresher';
-        
         return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: showEducationProminently ? '14pt' : '12pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
+          <div style={{ marginBottom: '12pt' }}>
+            <h2 style={sectionTitleStyle}>
               EDUCATION
             </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
+            <div style={sectionUnderlineStyle}></div>
             
             {resumeData.education.map((edu, index) => (
-              <div key={index} className="mb-3" style={{ marginBottom: '12pt' }}>
-                <div className="flex justify-between items-start">
+              <div key={index} style={{ marginBottom: '4pt' /* Corresponds to PDF_CONFIG.spacing.afterSubsection */ }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <div className="font-bold" style={{ 
-                      fontSize: '11pt', 
-                      fontWeight: 'bold',
-                      fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                    }}>
+                    <div style={{ fontSize: '9.5pt', fontWeight: 'bold', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
                       {edu.degree}
                     </div>
-                    <div style={{ 
-                      fontSize: '11pt',
-                      fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                    }}>
-                      {edu.school}
+                    <div style={{ fontSize: '9.5pt', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
+                      {edu.school}{edu.location ? `, ${edu.location}` : ''} {/* Add location for education */}
                     </div>
                     {edu.cgpa && (
-                      <div style={{ 
-                        fontSize: '10pt',
-                        fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-                        color: '#4B5563'
-                      }}>
+                      <div style={{ fontSize: '9.5pt', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif', color: '#4B5563' /* Secondary color */ }}>
                         CGPA: {edu.cgpa}
                       </div>
                     )}
+                    {edu.relevantCoursework && edu.relevantCoursework.length > 0 && (
+                        <div style={{ fontSize: '9.5pt', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif', color: '#4B5563' }}>
+                            Relevant Coursework: {edu.relevantCoursework.join(', ')}
+                        </div>
+                    )}
                   </div>
-                  <div className="font-bold" style={{ 
-                    fontSize: '11pt', 
-                    fontWeight: 'bold',
-                    fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                  }}>
+                  <div style={{ fontSize: '9.5pt', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
                     {edu.year}
                   </div>
                 </div>
@@ -291,42 +219,22 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
       case 'projects':
         if (!resumeData.projects || resumeData.projects.length === 0) return null;
         return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
+          <div style={{ marginBottom: '12pt' }}>
+            <h2 style={sectionTitleStyle}>
               {userType === 'fresher' ? 'ACADEMIC PROJECTS' : 'PROJECTS'}
             </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
+            <div style={sectionUnderlineStyle}></div>
             
             {resumeData.projects.map((project, index) => (
-              <div key={index} className="mb-4" style={{ marginBottom: '12pt' }}>
-                <div className="font-bold mb-1" style={{ 
-                  fontSize: '11pt', 
-                  fontWeight: 'bold',
-                  marginBottom: '6pt',
-                  fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                }}>
+              <div key={index} style={{ marginBottom: '4pt' /* Corresponds to PDF_CONFIG.spacing.afterSubsection */ }}>
+                <div style={{ fontSize: '9.5pt', fontWeight: 'bold', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif', marginBottom: '2pt' }}>
                   {project.title}
                 </div>
                 {project.bullets && project.bullets.length > 0 && (
-                  <ul className="ml-4 space-y-1" style={{ marginLeft: '18pt' }}>
+                  <ul style={{ marginLeft: '12pt' /* PDF_CONFIG.spacing.bulletIndent */, listStyleType: 'disc' }}>
                     {project.bullets.map((bullet, bulletIndex) => (
-                      <li key={bulletIndex} className="leading-relaxed" style={{ 
-                        fontSize: '11pt', 
-                        lineHeight: '1.15',
-                        marginBottom: '6pt',
-                        fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                      }}>
-                        • {bullet}
+                      <li key={bulletIndex} style={{ ...bodyTextStyle, marginBottom: '1pt' }}>
+                        {bullet}
                       </li>
                     ))}
                   </ul>
@@ -339,29 +247,16 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
       case 'skills':
         if (!resumeData.skills || resumeData.skills.length === 0) return null;
         return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
-              TECHNICAL SKILLS
+          <div style={{ marginBottom: '12pt' }}>
+            <h2 style={sectionTitleStyle}>
+              SKILLS
             </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
+            <div style={sectionUnderlineStyle}></div>
             
             {resumeData.skills.map((skill, index) => (
-              <div key={index} className="mb-2" style={{ marginBottom: '6pt' }}>
-                <span style={{ 
-                  fontSize: '11pt',
-                  fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                }}>
-                  <span className="font-bold">• {skill.category}:</span>{' '}
+              <div key={index} style={{ marginBottom: '2pt' /* Small space between skills */ }}>
+                <span style={{ fontSize: '9.5pt', fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
+                  <strong style={{ fontWeight: 'bold' }}>• {skill.category}:</strong>{' '}
                   {skill.list && skill.list.join(', ')}
                 </span>
               </div>
@@ -369,99 +264,21 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
           </div>
         );
 
-      case 'achievements':
-        if (!resumeData.achievements || resumeData.achievements.length === 0) return null;
-        return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
-              ACHIEVEMENTS
-            </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
-            
-            <ul className="ml-4 space-y-1" style={{ marginLeft: '18pt' }}>
-              {resumeData.achievements.map((achievement, index) => (
-                <li key={index} style={{ 
-                  fontSize: '11pt',
-                  marginBottom: '6pt',
-                  fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                }}>
-                  • {achievement}
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-
-      case 'extraCurricularActivities':
-        if (!resumeData.extraCurricularActivities || resumeData.extraCurricularActivities.length === 0) return null;
-        return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
-              EXTRA-CURRICULAR ACTIVITIES
-            </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
-            
-            <ul className="ml-4 space-y-1" style={{ marginLeft: '18pt' }}>
-              {resumeData.extraCurricularActivities.map((activity, index) => (
-                <li key={index} style={{ 
-                  fontSize: '11pt',
-                  marginBottom: '6pt',
-                  fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                }}>
-                  • {activity}
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-
       case 'certifications':
         if (!resumeData.certifications || resumeData.certifications.length === 0) return null;
         return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
+          <div style={{ marginBottom: '12pt' }}>
+            <h2 style={sectionTitleStyle}>
               CERTIFICATIONS
             </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
+            <div style={sectionUnderlineStyle}></div>
             
-            <ul className="ml-4 space-y-1" style={{ marginLeft: '18pt' }}>
+            <ul style={{ marginLeft: '12pt' /* PDF_CONFIG.spacing.bulletIndent */, listStyleType: 'disc' }}>
               {resumeData.certifications.map((cert, index) => {
-                // Handle both string and object formats
                 let certText = '';
                 if (typeof cert === 'string') {
                   certText = cert;
                 } else if (cert && typeof cert === 'object') {
-                  // Handle object format with title and issuer
                   if ('title' in cert && 'issuer' in cert) {
                     certText = `${String(cert.title)} - ${String(cert.issuer)}`;
                   } else if ('title' in cert && 'description' in cert) {
@@ -473,79 +290,73 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
                   } else if ('description' in cert) {
                     certText = cert.description;
                   } else {
-                    certText = JSON.stringify(cert);
+                    certText = Object.values(cert).filter(Boolean).join(' - ');
                   }
                 } else {
                   certText = String(cert);
                 }
                 
                 return (
-                  <li key={index} style={{ 
-                    fontSize: '11pt',
-                    marginBottom: '6pt',
-                    fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                  }}>
-                    • {certText}
+                  <li key={index} style={{ ...bodyTextStyle, marginBottom: '1pt' }}>
+                    {certText}
                   </li>
                 );
               })}
             </ul>
           </div>
         );
+      
+      case 'achievementsAndExtras': // New combined section for freshers
+        const hasAchievements = resumeData.achievements && resumeData.achievements.length > 0;
+        const hasExtraCurricular = resumeData.extraCurricularActivities && resumeData.extraCurricularActivities.length > 0;
+        const hasLanguages = resumeData.languagesKnown && resumeData.languagesKnown.length > 0;
+        const hasPersonalDetails = resumeData.personalDetails && resumeData.personalDetails.trim() !== '';
 
-      case 'languagesKnown':
-        if (!resumeData.languagesKnown || resumeData.languagesKnown.length === 0) return null;
-        return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
-              LANGUAGES KNOWN
-            </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
-            
-            <p style={{ 
-              fontSize: '11pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
-              {resumeData.languagesKnown.join(', ')}
-            </p>
-          </div>
-        );
+        if (!hasAchievements && !hasExtraCurricular && !hasLanguages && !hasPersonalDetails) return null;
 
-      case 'personalDetails':
-        if (!resumeData.personalDetails) return null;
         return (
-          <div className="mb-6" style={{ marginBottom: '18pt' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: '14pt', 
-              fontWeight: 'bold', 
-              marginBottom: '6pt',
-              marginTop: '6pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
-              PERSONAL DETAILS
+          <div style={{ marginBottom: '12pt' }}>
+            <h2 style={sectionTitleStyle}>
+              ACHIEVEMENTS & EXTRAS
             </h2>
-            <div className="border-b border-gray-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: '12pt'
-            }}></div>
-            
-            <p style={{ 
-              fontSize: '11pt',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
-              {resumeData.personalDetails}
-            </p>
+            <div style={sectionUnderlineStyle}></div>
+
+            {hasAchievements && (
+              <div style={{ marginBottom: '4pt' }}>
+                <p style={{ ...bodyTextStyle, fontWeight: 'bold', marginBottom: '2pt' }}>Achievements:</p>
+                <ul style={{ marginLeft: '18pt', listStyleType: 'disc' }}>
+                  {resumeData.achievements!.map((item, index) => (
+                    <li key={index} style={{ ...bodyTextStyle, marginBottom: '1pt' }}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {hasExtraCurricular && (
+              <div style={{ marginBottom: '4pt' }}>
+                <p style={{ ...bodyTextStyle, fontWeight: 'bold', marginBottom: '2pt' }}>Extra-curricular Activities:</p>
+                <ul style={{ marginLeft: '18pt', listStyleType: 'disc' }}>
+                  {resumeData.extraCurricularActivities!.map((item, index) => (
+                    <li key={index} style={{ ...bodyTextStyle, marginBottom: '1pt' }}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {hasLanguages && (
+              <div style={{ marginBottom: '4pt' }}>
+                <p style={{ ...bodyTextStyle, fontWeight: 'bold', marginBottom: '2pt' }}>Languages Known:</p>
+                <ul style={{ marginLeft: '18pt', listStyleType: 'disc' }}>
+                  {resumeData.languagesKnown!.map((item, index) => (
+                    <li key={index} style={{ ...bodyTextStyle, marginBottom: '1pt' }}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {hasPersonalDetails && (
+              <div style={{ marginBottom: '4pt' }}>
+                <p style={{ ...bodyTextStyle, fontWeight: 'bold', marginBottom: '2pt' }}>Personal Details:</p>
+                <p style={{ ...bodyTextStyle, marginLeft: '18pt' }}>{resumeData.personalDetails}</p>
+              </div>
+            )}
           </div>
         );
 
@@ -560,42 +371,47 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
         className="pt-4 px-4 pb-6 sm:pt-6 sm:px-6 sm:pb-8 lg:px-8 max-h-[70vh] sm:max-h-[80vh] lg:max-h-[800px] overflow-y-auto" 
         style={{ 
           fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif', 
-          fontSize: 'clamp(10pt, 2.5vw, 11pt)', 
-          lineHeight: '1.15', 
-          color: '#000'
+          fontSize: '9.5pt', /* PDF_CONFIG.fonts.body.size */
+          lineHeight: '1.25', /* PDF_CONFIG.spacing.lineHeight */
+          color: '#000',
+          padding: '15pt' /* Mimic PDF margins around content */
         }}
       >
         {/* Header */}
-        <div className="text-center mb-4 sm:mb-6" style={{ marginBottom: 'clamp(16pt, 4vw, 24pt)' }}>
-          <h1 className="font-bold mb-3 tracking-widest uppercase" style={{ 
-            fontSize: 'clamp(16pt, 4vw, 18pt)', 
+        <div style={{ textAlign: 'center', marginBottom: '18pt' /* Spacing after contact line */ }}>
+          <h1 style={{ 
+            fontSize: '18pt', /* PDF_CONFIG.fonts.name.size */
             fontWeight: 'bold', 
-            letterSpacing: '2pt',
-            marginBottom: 'clamp(8pt, 2vw, 12pt)',
-            fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
+            letterSpacing: '1pt',
+            marginBottom: '4pt', /* PDF_CONFIG.spacing.afterName */
+            fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+            textTransform: 'uppercase'
           }}>
             {resumeData.name}
           </h1>
           
           {/* Contact Information */}
           {contactElements.length > 0 && (
-            <div className="flex justify-center items-center gap-2 sm:gap-3 flex-wrap mb-3 sm:mb-4" style={{ 
-              fontSize: 'clamp(9pt, 2vw, 11pt)',
-              marginBottom: 'clamp(8pt, 2vw, 12pt)'
+            <div style={{ 
+              fontSize: '9pt', /* PDF_CONFIG.fonts.contact.size */
+              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+              marginBottom: '6pt', /* PDF_CONFIG.spacing.afterContact */
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              flexWrap: 'wrap' 
             }}>
-              {contactElements.map((element, index) => (
-                <React.Fragment key={index}>
-                  {element}
-                  {index < contactElements.length - 1 && <span className="hidden sm:inline">•</span>}
-                </React.Fragment>
-              ))}
+              {contactElements}
             </div>
           )}
           
           {/* Horizontal line under contact info */}
-          <div className="border-b-2 border-secondary-600 mx-4 sm:mx-8" style={{ 
-            borderBottomWidth: '2px', 
-            borderColor: '#4B5563'
+          <div style={{ 
+            borderBottomWidth: '0.5pt', /* PDF_CONFIG line width */
+            borderColor: '#404040', /* PDF_CONFIG color */
+            height: '1px', /* Ensure line is visible */
+            margin: '0 auto', /* Center the line */
+            width: 'calc(100% - 20mm)' /* Adjust width if needed to match PDF_CONFIG line start/end */
           }}></div>
         </div>
 
@@ -604,37 +420,23 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
         
         {/* GitHub References Section - Always at the end */}
         {resumeData.projects?.some(project => project.githubUrl) && (
-          <div className="mb-4 sm:mb-6" style={{ marginBottom: 'clamp(12pt, 3vw, 18pt)' }}>
-            <h2 className="font-bold mb-2 uppercase tracking-wide" style={{ 
-              fontSize: 'clamp(12pt, 3vw, 14pt)', 
-              fontWeight: 'bold', 
-              marginBottom: 'clamp(4pt, 1.5vw, 6pt)',
-              marginTop: 'clamp(4pt, 1.5vw, 6pt)',
-              fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-            }}>
+          <div style={{ marginBottom: '12pt' }}>
+            <h2 style={{ ...sectionTitleStyle, marginTop: '10pt' }}>
               REFERENCED PROJECTS
             </h2>
-            <div className="border-b border-secondary-400 mb-3" style={{ 
-              borderBottomWidth: '1px', 
-              borderColor: '#9CA3AF',
-              marginBottom: 'clamp(8pt, 2vw, 12pt)'
-            }}></div>
+            <div style={sectionUnderlineStyle}></div>
             
-            <ul className="ml-3 sm:ml-4 space-y-1" style={{ marginLeft: 'clamp(12pt, 3vw, 18pt)' }}>
+            <ul style={{ marginLeft: '12pt', listStyleType: 'disc' }}>
               {resumeData.projects
                 .filter(project => project.githubUrl)
                 .map((project, index) => (
-                  <li key={index} style={{ 
-                    fontSize: 'clamp(9pt, 2vw, 11pt)',
-                    marginBottom: 'clamp(4pt, 1vw, 6pt)',
-                    fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
-                  }}>
-                    • <strong>{project.title}:</strong>{' '}
+                  <li key={index} style={{ ...bodyTextStyle, marginBottom: '1pt' }}>
+                    <strong>{project.title}:</strong>{' '}
                     <a 
                       href={project.githubUrl} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-primary-600 hover:text-primary-800 transition-colors break-all"
+                      style={{ color: '#2563eb', textDecoration: 'underline' }}
                     >
                       {project.githubUrl}
                     </a>
