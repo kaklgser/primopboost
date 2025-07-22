@@ -795,13 +795,31 @@ export const exportToPDF = async (resumeData: ResumeData, userType: UserType = '
 
 // Generate Word document with mobile optimization
 export const getFileName = (resumeData: ResumeData, fileExtension: 'pdf' | 'doc'): string => {
+    // Sanitize name: replace spaces with underscores
+    const namePart = resumeData.name.replace(/\s+/g, '_');
+    
+    // The rolePart is no longer included in the filename, so we can remove its declaration.
+    // const rolePart = resumeData.targetRole
+    //     ? `_${resumeData.targetRole.replace(/\s+/g, '_')}`
+    //     : '';
+        
+    return `${namePart}_Resume.${fileExtension}`; // Modified to exclude rolePart
+};
+
+export const exportToWord = async (resumeData: ResumeData, userType: UserType = 'experienced'): Promise<void> => {
+  // Format filename with role if available
+  const getFileName = () => {
+    const namePart = resumeData.name.replace(/\s+/g, '_');
+    return `${namePart}_Resume.doc`;
+  };
+
   try {
     const htmlContent = generateWordHTMLContent(resumeData, userType);
     const blob = new Blob([htmlContent], { 
       type: 'application/vnd.ms-word'
     });
     
-    const fileName = getFileName(resumeData, 'doc');
+    const fileName = getFileName();
     
     triggerMobileDownload(blob, fileName);
     
