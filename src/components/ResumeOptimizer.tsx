@@ -17,11 +17,21 @@ import { getMatchScore, generateBeforeScore, generateAfterScore, getDetailedResu
 import { analyzeProjectAlignment } from '../services/projectAnalysisService';
 import { advancedProjectAnalyzer } from '../services/advancedProjectAnalyzer';
 import { paymentService } from '../services/paymentService';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext'; // Keep this import for internal useAuth calls if any
 import { ResumeData, UserType, MatchScore, DetailedScore } from '../types/resume';
 
-const ResumeOptimizer: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+// Update component signature to accept props
+interface ResumeOptimizerProps {
+  isAuthenticated: boolean;
+  onShowAuth: () => void;
+}
+
+const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
+  isAuthenticated, // Destructure isAuthenticated from props
+  onShowAuth // Destructure onShowAuth from props
+}) => {
+  // const { user, isAuthenticated } = useAuth(); // No longer needed here as isAuthenticated comes from props
+  const { user } = useAuth(); // Keep 'user' if still needed for other logic
   const [resumeText, setResumeText] = useState('');
   const [jobDescription, setJobDescription] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
@@ -112,10 +122,11 @@ const ResumeOptimizer: React.FC = () => {
       return;
     }
 
-    if (!isAuthenticated) {
-      alert('Please sign in to optimize your resume');
-      return;
-    }
+    // This check is now handled by the button's onClick logic
+    // if (!isAuthenticated) {
+    //   alert('Please sign in to optimize your resume');
+    //   return;
+    // }
 
     if (!user) {
       alert('User information not available. Please sign in again.');
@@ -781,29 +792,29 @@ const ResumeOptimizer: React.FC = () => {
               </div>
             </div>
 
-            {/* Optimize Button */}
+            {/* Optimize Button - MODIFIED */}
             <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
               <button
-                onClick={handleOptimize}
-                disabled={!resumeText.trim() || !jobDescription.trim() || !isAuthenticated} // isOptimizing check removed here as it's handled by the new loading screen
+                // Conditional onClick: if authenticated, call handleOptimize, else call onShowAuth
+                onClick={isAuthenticated ? handleOptimize : onShowAuth}
+                disabled={!resumeText.trim() || !jobDescription.trim()} // Only disable if inputs are empty
                 className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
-                  !resumeText.trim() || !jobDescription.trim() || !isAuthenticated
+                  // Conditional styling based on inputs and authentication status
+                  !resumeText.trim() || !jobDescription.trim()
                     ? 'bg-gray-400 cursor-not-allowed text-white'
                     : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl cursor-pointer'
                 }`}
               >
                 <Sparkles className="w-6 h-6" />
-                <span>Optimize My Resume</span>
+                {/* Conditional text based on authentication status */}
+                <span>{isAuthenticated ? 'Optimize My Resume' : 'Sign In to Optimize'}</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
               
-              {!isAuthenticated ? (
+              {/* Optional: Add a small text below the button if not authenticated */}
+              {!isAuthenticated && (
                 <p className="text-center text-sm text-gray-500 mt-3">
-                  Please sign in to optimize your resume
-                </p>
-              ) : (
-                <p className="text-center text-sm text-gray-500 mt-3">
-                  Click to optimize your resume for the target job
+                  You need to be signed in to optimize your resume.
                 </p>
               )}
             </div>
