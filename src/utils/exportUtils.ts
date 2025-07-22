@@ -795,12 +795,17 @@ export const exportToPDF = async (resumeData: ResumeData, userType: UserType = '
 };
 
 // Generate Word document with mobile optimization
-export const exportToWord = (resumeData: ResumeData, userType: UserType = 'experienced'): void => {
-  const getFileName = () => {
+export const getFileName = (resumeData: ResumeData, fileExtension: 'pdf' | 'doc'): string => {
+    // Sanitize name: replace spaces with underscores
     const namePart = resumeData.name.replace(/\s+/g, '_');
-    const rolePart = resumeData.targetRole ? `_${resumeData.targetRole.replace(/\s+/g, '_')}` : '';
-    return `${namePart}${rolePart}_Resume.doc`;
-  };
+    
+    // The rolePart is no longer included in the filename, so we can remove its declaration.
+    // const rolePart = resumeData.targetRole
+    //     ? `_${resumeData.targetRole.replace(/\s+/g, '_')}`
+    //     : '';
+        
+    return `${namePart}_Resume.${fileExtension}`; // Modified to exclude rolePart
+}
 
   try {
     const htmlContent = generateWordHTMLContent(resumeData, userType);
