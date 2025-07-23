@@ -25,7 +25,7 @@ interface ResumeOptimizerProps {
   onShowAuth: () => void;
 }
 
-export const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
+const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
   isAuthenticated,
   onShowAuth
 }) => {
