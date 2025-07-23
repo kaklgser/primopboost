@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, Sparkles, Download, TrendingUp, Target, Award, User, Briefcase, AlertCircle, CheckCircle, Loader2, RefreshCw, Zap, Plus, Eye, EyeOff, Crown, Calendar, Clock, Users, Star, ArrowRight, ArrowLeft, Shield, Settings, LogOut, Menu, X, Upload, BarChart3, Lightbulb } from 'lucide-react';
-//                                                                                         ^^^^^^^^^^^  <-- ADD THIS
 import { FileUpload } from './FileUpload';
 import { InputSection } from './InputSection';
 import { ResumePreview } from './ResumePreview';
@@ -63,16 +62,15 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
   const [showProjectAnalysis, setShowProjectAnalysis] = useState(false);
   const [subscription, setSubscription] = useState<any>(null);
   const [loadingSubscription, setLoadingSubscription] = useState(true);
-  const [currentFormStep, setCurrentFormStep] = useState(1); // Renamed state variable
+  const [currentFormStep, setCurrentFormStep] = useState(1);
   const [showMissingSectionsModal, setShowMissingSectionsModal] = useState(false);
   const [missingSections, setMissingSections] = useState<string[]>([]);
   const [isProcessingMissingSections, setIsProcessingMissingSections] = useState(false);
   const [pendingResumeData, setPendingResumeData] = useState<ResumeData | null>(null);
   const [isCalculatingScore, setIsCalculatingScore] = useState(false);
-  // Using an animation class state for smoother transitions between wizard steps
   const [animationClass, setAnimationClass] = useState('animate-fade-in');
 
-  const totalSteps = 3; // Define total steps for the wizard
+  const totalSteps = 3;
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -103,7 +101,6 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     }
   };
 
-  // Step validation logic for "Next" button
   const isNextDisabled = useCallback(() => {
     if (currentFormStep === 1 && !resumeText.trim()) {
       return true;
@@ -111,29 +108,26 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     if (currentFormStep === 2 && !jobDescription.trim()) {
       return true;
     }
-    // No specific required fields for step 3 before optimization,
-    // as optimization button itself has its own disabling logic.
     return false;
   }, [currentFormStep, resumeText, jobDescription]);
 
   const handleNextStep = () => {
     if (isNextDisabled()) {
-      // Alerts are already handled by isNextDisabled for specific cases
       return;
     }
-    setAnimationClass('animate-slide-out-left'); // Animate current step out
+    setAnimationClass('animate-slide-out-left');
     setTimeout(() => {
       setCurrentFormStep(prev => prev + 1);
-      setAnimationClass('animate-slide-in-right'); // Animate next step in
-    }, 300); // Match animation duration
+      setAnimationClass('animate-slide-in-right');
+    }, 300);
   };
 
   const handleBackStep = () => {
-    setAnimationClass('animate-slide-out-right'); // Animate current step out
+    setAnimationClass('animate-slide-out-right');
     setTimeout(() => {
       setCurrentFormStep(prev => prev - 1);
-      setAnimationClass('animate-slide-in-left'); // Animate previous step in
-    }, 300); // Match animation duration
+      setAnimationClass('animate-slide-in-left');
+    }, 300);
   };
 
   const handleOptimize = async () => {
@@ -561,13 +555,37 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
         <Upload className="w-5 h-5 mr-2 text-blue-600" />
         Upload Your Resume
       </h2>
-      <FileUpload onFileUpload={handleFileUpload} isDisabled={false} />
+      <FileUpload onFileUpload={handleFileUpload} isDisabled={false} /> {/* Always enabled for active step */}
+      
+      {/* Optional: Add a success message for file upload */}
       {resumeText && (
         <div className="mt-4 p-3 bg-green-50 text-green-800 rounded-lg flex items-center text-sm">
           <CheckCircle className="w-4 h-4 mr-2" />
           Resume content loaded ({resumeText.length} characters)
         </div>
       )}
+
+      {/* NEW: Display resume content here */}
+      {resumeText && (
+        <div className="mt-4">
+          <label htmlFor="resumePreviewText" className="block text-sm font-medium text-gray-700 mb-2">
+            Loaded Resume Content:
+          </label>
+          <textarea
+            id="resumePreviewText"
+            value={resumeText}
+            readOnly // Make it read-only
+            rows={10} // Give it enough height to show content
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-800 focus:outline-none resize-y"
+            style={{ minHeight: '150px' }} // Ensure a minimum height
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Review the extracted text. This is what our AI will process.
+          </p>
+        </div>
+      )}
+      {/* END NEW */}
+
       <div className="mt-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
           <User className="w-5 h-5 mr-2 text-indigo-600" />
@@ -796,8 +814,8 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-8"> {/* Adjusted horizontal padding */}
-        {!optimizedResume ? ( // Show the wizard form if no optimized resume yet
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-8">
+        {!optimizedResume ? (
           <>
             {/* Hero Section */}
             <div className="text-center mb-8">
@@ -857,8 +875,8 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                   {renderWizardContent()}
                 </div>
 
-                {/* Navigation Footer */}
-                <div className="bg-gray-50 px-6 py-4 lg:px-8 lg:py-6 border-t border-secondary-200 flex justify-between items-center flex-shrink-0">
+                {/* Navigation Footer - INTEGRATED HERE */}
+                <div className="bg-gray-50 px-6 py-4 lg:px-8 lg:py-6 border-t border-secondary-200 rounded-b-xl flex justify-between items-center flex-shrink-0">
                   <button
                     onClick={handleBackStep}
                     disabled={currentFormStep === 1}
