@@ -566,6 +566,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
       )}
 
       {/* Display resume content here (REQUIRED IN STEP 1) */}
+      {/* This block is exactly as requested, providing read-only preview of content */}
       {resumeText && (
         <div className="mt-4">
           <label htmlFor="resumePreviewText" className="block text-sm font-medium text-gray-700 mb-2">
@@ -620,17 +621,18 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     </div>
   );
 
-  // Component for Step 2: Job Details Only (removed resume content section as per requirement)
+  // Component for Step 2: Job Details Only (resume content section NOT included here)
   const Step2Content = () => (
     <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
         <FileText className="w-5 h-5 mr-2 text-green-600" />
         Enter Job Details
       </h2>
+      {/* InputSection will ONLY display Job Description, as per its own modification */}
       <InputSection
-        resumeText={resumeText} // Still passed, but InputSection itself now handles only jobDescription display
+        resumeText={resumeText} // Passed, but not displayed/edited by InputSection
         jobDescription={jobDescription}
-        onResumeChange={setResumeText} // Still passed, but InputSection won't use for resumeText input
+        onResumeChange={setResumeText} // Passed, but not used by InputSection for resumeText input
         onJobDescriptionChange={setJobDescription}
         isReadOnly={false}
       />
