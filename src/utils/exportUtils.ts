@@ -446,41 +446,8 @@ function drawProjects(state: PageState, projects: any[]): number {
   return totalHeight;
 }
 
-// Draw GitHub references section
-function drawGitHubReferences(state: PageState, projects: any[]): number {
-  const githubProjects = projects.filter(project => project.githubUrl);
-  
-  if (!githubProjects || githubProjects.length === 0) return 0;
-  
-  // Add extra spacing before GitHub references section
-  state.currentY += PDF_CONFIG.spacing.sectionSpacingBefore;
-  
-  let totalHeight = drawSectionTitle(state, 'REFERENCED PROJECTS');
-  
-  githubProjects.forEach((project, index) => {
-    // Check space
-    if (!checkPageSpace(state, 10)) { // Reduced estimated height
-      addNewPage(state);
-    }
-    
-    const projectText = `• ${project.title}: ${project.githubUrl}`;
-    const projectHeight = drawText(state, projectText, PDF_CONFIG.margins.left + PDF_CONFIG.spacing.bulletIndent, { // Indent like bullets
-      fontSize: PDF_CONFIG.fonts.body.size,
-      maxWidth: PDF_CONFIG.contentWidth - PDF_CONFIG.spacing.bulletIndent // Adjust max width
-    });
-    
-    totalHeight += projectHeight;
-    
-    // Add space between projects
-    if (index < githubProjects.length - 1) {
-      state.currentY += 1; // Smaller gap
-      totalHeight += 1;
-    }
-  });
-  
-  state.currentY += PDF_CONFIG.spacing.bulletListSpacing; // Add a bit more space after the last entry
-  return totalHeight;
-}
+// drawGitHubReferences and its call have been removed as per requirement.
+// It will not be present in this file.
 
 
 // Draw skills section
@@ -745,10 +712,8 @@ export const exportToPDF = async (resumeData: ResumeData, userType: UserType = '
         drawAchievementsAndExtras(state, resumeData); // Combined section for fresher extras
     }
 
-    // Add GitHub references section if any projects have GitHub URLs
-    if (resumeData.projects?.some(p => p.githubUrl)) {
-      drawGitHubReferences(state, resumeData.projects);
-    }
+    // Removed the call to drawGitHubReferences(state, resumeData.projects); as per requirement.
+
 
     // Add page numbers to all pages (only if multiple pages)
     const totalPages = state.currentPage;
@@ -793,28 +758,22 @@ export const exportToPDF = async (resumeData: ResumeData, userType: UserType = '
   }
 };
 
-// Generate Word document with mobile optimization
+// Centralized getFileName function (from exportUtils.ts)
 export const getFileName = (resumeData: ResumeData, fileExtension: 'pdf' | 'doc'): string => {
-    // Sanitize name: replace spaces with underscores
     const namePart = resumeData.name.replace(/\s+/g, '_');
-    
     return `${namePart}_Resume.${fileExtension}`;
 };
 
+// Generate Word document with mobile optimization
 export const exportToWord = async (resumeData: ResumeData, userType: UserType = 'experienced'): Promise<void> => {
-  // Format filename with role if available
-  const getFileName = () => {
-    const namePart = resumeData.name.replace(/\s+/g, '_');
-    return `${namePart}_Resume.doc`;
-  };
+  // Use the centralized getFileName
+  const fileName = getFileName(resumeData, 'doc');
 
   try {
     const htmlContent = generateWordHTMLContent(resumeData, userType);
     const blob = new Blob([htmlContent], { 
       type: 'application/vnd.ms-word'
     });
-    
-    const fileName = getFileName();
     
     triggerMobileDownload(blob, fileName);
     
@@ -940,21 +899,8 @@ const generateWordHTMLContent = (data: ResumeData, userType: UserType = 'experie
     </ul>
   ` : '';
 
-  const githubReferencesHtml = data.projects?.some(project => project.githubUrl) ? `
-    <div class="section-title">REFERENCED PROJECTS</div>
-    <div class="section-underline"></div>
-    <ul class="bullets" style="margin-left: 5mm; margin-bottom: 6pt; margin-top: 6pt; list-style-type: disc;">
-      ${data.projects
-        .filter(project => project.githubUrl)
-        .map(project => `
-          <li class="bullet" style="font-size: 9.5pt; line-height: 1.4; margin: 0 0 2pt 0; font-family: Calibri, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            ${project.title}: <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" style="color: #2563eb !important; text-decoration: underline !important;">${project.githubUrl}</a>
-          </li>
-        `).join('')}
-    </ul>
-  ` : '';
+  // githubReferencesHtml has been removed as per requirement.
 
-  // Handle fresher-specific sections
   const achievementsAndExtrasHtml = userType === 'fresher' && (data.achievements?.length > 0 || data.extraCurricularActivities?.length > 0 || data.languagesKnown?.length > 0 || data.personalDetails?.trim() !== '') ? `
     <div class="section-title">ACHIEVEMENTS & EXTRAS</div>
     <div class="section-underline"></div>
@@ -1149,7 +1095,6 @@ const generateWordHTMLContent = (data: ResumeData, userType: UserType = 'experie
       
       ${sectionOrderHtml}
 
-      ${githubReferencesHtml}
     </body>
     </html>
   `;
