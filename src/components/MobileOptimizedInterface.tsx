@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FileText, BarChart3, ChevronDown, ChevronUp, ArrowUp, RefreshCw, Download, TrendingUp, Share2, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { FileText, BarChart3, ChevronDown, ChevronUp, ArrowUp, RefreshCw, Download, Share2, Loader2, CheckCircle, AlertCircle, TrendingUp, Briefcase, User, Users, MapPin, Target, ArrowRight, ArrowLeft, Plus, Trash2, Edit3, Sparkles, Zap, Lightbulb } from 'lucide-react';
 import { exportToPDF, exportToWord } from '../utils/exportUtils';
 import { ResumeData } from '../types/resume';
 
@@ -9,6 +9,15 @@ interface Section {
   icon: React.ReactNode;
   component: React.ReactNode;
   resumeData?: ResumeData;
+  // Potentially add other fields if used in the component, e.g., type for ResumePreviewMobile
+  userType?: UserType; // Added userType to Section interface if ResumePreview uses it directly
+  jobDescription?: string; // Added jobDescription to Section interface
+  targetRole?: string; // Added targetRole to Section interface
+  beforeScore?: any; // Assuming these are passed for analysis components
+  afterScore?: any;
+  initialResumeScore?: any;
+  finalResumeScore?: any;
+  changedSections?: string[];
 }
 
 interface MobileOptimizedInterfaceProps {
@@ -43,7 +52,8 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
   // Close export menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (showExportMenu && !event.target) {
+      // Ensure the click is outside the button and the menu
+      if (showExportMenu && event.target instanceof HTMLElement && !event.target.closest('.export-menu-container')) {
         setShowExportMenu(false);
       }
     };
@@ -56,10 +66,9 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
 
   const navigateToSection = (index: number) => {
     setActiveSection(index);
-    // Smooth scroll to section
-    const element = document.getElementById(`section-${index}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Smooth scroll to top of the content when navigating sections
+    if (containerRef.current) {
+        containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -94,19 +103,19 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
     e.preventDefault();
     e.stopPropagation();
     
-    if (isExportingPDF || isExportingWord) return; // Prevent double clicks
+    if (isExportingPDF || isExportingWord) return;
     
-    const currentSection = sections[activeSection];
-    if (!currentSection?.resumeData) {
+    // Ensure we have resumeData from the first section for export
+    const resumeSection = sections.find(s => s.id === 'resume');
+    const resumeDataToExport = resumeSection?.resumeData;
+
+    if (!resumeDataToExport) {
       setExportStatus({
         type: 'pdf',
         status: 'error',
         message: 'No resume data available to export'
       });
-      
-      setTimeout(() => {
-        setExportStatus({ type: null, status: null, message: '' });
-      }, 3000);
+      setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 3000);
       return;
     }
     
@@ -114,17 +123,13 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
     setExportStatus({ type: null, status: null, message: '' });
     
     try {
-      await exportToPDF(currentSection.resumeData);
+      await exportToPDF(resumeDataToExport, resumeSection.userType); // Pass userType for PDF customization
       setExportStatus({
         type: 'pdf',
         status: 'success',
         message: 'PDF exported successfully!'
       });
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setExportStatus({ type: null, status: null, message: '' });
-      }, 3000);
+      setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 3000);
     } catch (error) {
       console.error('PDF export failed:', error);
       setExportStatus({
@@ -132,11 +137,7 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
         status: 'error',
         message: 'PDF export failed. Please try again.'
       });
-      
-      // Clear error message after 5 seconds
-      setTimeout(() => {
-        setExportStatus({ type: null, status: null, message: '' });
-      }, 5000);
+      setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 5000);
     } finally {
       setIsExportingPDF(false);
       setShowExportMenu(false);
@@ -147,19 +148,19 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
     e.preventDefault();
     e.stopPropagation();
     
-    if (isExportingWord || isExportingPDF) return; // Prevent double clicks
+    if (isExportingWord || isExportingPDF) return;
     
-    const currentSection = sections[activeSection];
-    if (!currentSection?.resumeData) {
+    // Ensure we have resumeData from the first section for export
+    const resumeSection = sections.find(s => s.id === 'resume');
+    const resumeDataToExport = resumeSection?.resumeData;
+
+    if (!resumeDataToExport) {
       setExportStatus({
         type: 'word',
         status: 'error',
         message: 'No resume data available to export'
       });
-      
-      setTimeout(() => {
-        setExportStatus({ type: null, status: null, message: '' });
-      }, 3000);
+      setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 3000);
       return;
     }
     
@@ -167,17 +168,13 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
     setExportStatus({ type: null, status: null, message: '' });
     
     try {
-      exportToWord(currentSection.resumeData);
+      exportToWord(resumeDataToExport, resumeSection.userType); // Pass userType for Word customization
       setExportStatus({
         type: 'word',
         status: 'success',
         message: 'Word document exported successfully!'
       });
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setExportStatus({ type: null, status: null, message: '' });
-      }, 3000);
+      setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 3000);
     } catch (error) {
       console.error('Word export failed:', error);
       setExportStatus({
@@ -185,11 +182,7 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
         status: 'error',
         message: 'Word export failed. Please try again.'
       });
-      
-      // Clear error message after 5 seconds
-      setTimeout(() => {
-        setExportStatus({ type: null, status: null, message: '' });
-      }, 5000);
+      setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 5000);
     } finally {
       setIsExportingWord(false);
       setShowExportMenu(false);
@@ -200,25 +193,31 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
     e.preventDefault();
     e.stopPropagation();
     
-    const currentSection = sections[activeSection];
-    if (!currentSection?.resumeData) {
+    // Ensure we have resumeData from the first section for share
+    const resumeSection = sections.find(s => s.id === 'resume');
+    const resumeDataToShare = resumeSection?.resumeData;
+
+    if (!resumeDataToShare) {
       setExportStatus({
-        type: 'pdf',
+        type: 'pdf', // Assuming share often means PDF
         status: 'error',
         message: 'No resume data available to share'
       });
-      
-      setTimeout(() => {
-        setExportStatus({ type: null, status: null, message: '' });
-      }, 3000);
+      setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 3000);
       return;
     }
     
     if (navigator.share) {
       try {
+        // You generally can't directly share a generated file Blob with navigator.share yet.
+        // You'd typically need a publicly accessible URL for the file, or generate a base64 Data URL.
+        // For simplicity, this example just shares basic text/title. If actual file sharing is needed,
+        // you'd need a backend endpoint to temporarily host the PDF/Word or convert to data URL if size allows.
         await navigator.share({
-          title: `${currentSection.resumeData.name}'s Resume`,
-          text: 'Check out my optimized resume!',
+          title: `${resumeDataToShare.name}'s Optimized Resume`,
+          text: 'Check out my optimized resume generated by PrimoBoost AI!',
+          // url: 'URL_TO_YOUR_RESUME_PDF', // Uncomment and set if you host PDFs publicly
+          // files: [new File([pdfBlob], 'resume.pdf', { type: 'application/pdf' })] // Experimental, not widely supported
         });
         
         setExportStatus({
@@ -226,36 +225,25 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
           status: 'success',
           message: 'Shared successfully!'
         });
-        
-        setTimeout(() => {
-          setExportStatus({ type: null, status: null, message: '' });
-        }, 3000);
+        setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 3000);
       } catch (error) {
         console.error('Error sharing:', error);
-        
-        // Don't show error for user cancellation
-        if (error instanceof Error && error.name !== 'AbortError') {
+        if (error instanceof Error && error.name !== 'AbortError') { // Don't show error for user cancellation
           setExportStatus({
             type: 'pdf',
             status: 'error',
             message: 'Sharing failed. Please try again.'
           });
-          
-          setTimeout(() => {
-            setExportStatus({ type: null, status: null, message: '' });
-          }, 5000);
+          setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 5000);
         }
       }
     } else {
       setExportStatus({
         type: 'pdf',
         status: 'error',
-        message: 'Sharing not supported on this device'
+        message: 'Sharing not supported on this device. Try exporting directly.'
       });
-      
-      setTimeout(() => {
-        setExportStatus({ type: null, status: null, message: '' });
-      }, 5000);
+      setTimeout(() => { setExportStatus({ type: null, status: null, message: '' }); }, 5000);
     }
     
     setShowExportMenu(false);
@@ -308,7 +296,7 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
       </div>
 
       {/* Floating Export Button */}
-      <div className="fixed top-20 right-4 z-40">
+      <div className="fixed top-20 right-4 z-40 export-menu-container"> {/* Added class for click outside */}
         <div className="relative">
           <button
             onClick={toggleExportMenu}
@@ -379,11 +367,13 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
               
               {/* Export Status Message */}
               {exportStatus.status && (
-                <div className={`mt-3 p-2 rounded-lg border text-xs ${
-                  exportStatus.status === 'success' 
-                    ? 'bg-green-50 border-green-200 text-green-800' 
-                    : 'bg-red-50 border-red-200 text-red-800'
-                }`}>
+                <div 
+                  className={`mt-3 p-2 rounded-lg border text-xs ${
+                    exportStatus.status === 'success' 
+                      ? 'bg-green-50 border-green-200 text-green-800' 
+                      : 'bg-red-50 border-red-200 text-red-800'
+                  }`}
+                >
                   <div className="flex items-center">
                     {exportStatus.status === 'success' ? (
                       <CheckCircle className="w-3 h-3 mr-1 flex-shrink-0" />
@@ -399,84 +389,84 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="pb-24">
-        {sections.map((section, index) => (
-          <div
-            key={section.id}
-            id={`section-${index}`}
-            className={`transition-all duration-300 ${
-              index === activeSection ? 'block' : 'hidden'
-            }`}
-          >
-            {/* Section Header */}
-            <div className="bg-white border-b border-gray-200" style={{ margin: '24px', marginBottom: '16px', borderRadius: '12px', padding: '24px' }}>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                    index === 0 ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'
-                  }`}>
-                    {section.icon}
+      {/* Main Content (Sliding Viewport) */}
+      <div className="relative overflow-hidden"> {/* Changed to relative overflow-hidden */}
+        <div 
+          className="flex transition-transform duration-300 ease-in-out" 
+          style={{ transform: `translateX(-${activeSection * 100}%)` }}
+        > {/* New sliding track div */}
+          {sections.map((section, index) => (
+            <div
+              key={section.id}
+              id={`section-${index}`}
+              className="w-full flex-shrink-0" // Removed conditional block/hidden, added w-full flex-shrink-0
+            >
+              {/* Section Header */}
+              <div className="bg-white border-b border-gray-200" style={{ margin: '24px', marginBottom: '16px', borderRadius: '12px', padding: '24px' }}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      index === 0 ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'
+                    }`}>
+                      {section.icon}
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-bold text-gray-900" style={{ fontSize: '20px', lineHeight: '1.2' }}>
+                        {section.title}
+                      </h1>
+                      <p className="text-sm text-gray-600 mt-1" style={{ fontSize: '14px' }}>
+                        {index === 0 
+                          ? 'Your optimized resume with professional formatting'
+                          : 'Detailed analysis of improvements and scoring'
+                        }
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h1 className="text-xl font-bold text-gray-900" style={{ fontSize: '20px', lineHeight: '1.2' }}>
-                      {section.title}
-                    </h1>
-                    <p className="text-sm text-gray-600 mt-1" style={{ fontSize: '14px' }}>
-                      {index === 0 
-                        ? 'Your optimized resume with professional formatting'
-                        : 'Detailed analysis of improvements and scoring'
-                      }
-                    </p>
+
+                  {/* Section Counter */}
+                  <div className="bg-gray-100 px-3 py-1 rounded-full">
+                    <span className="text-xs font-medium text-gray-700">
+                      {index + 1}/{sections.length}
+                    </span>
                   </div>
                 </div>
 
-                {/* Section Counter */}
-                <div className="bg-gray-100 px-3 py-1 rounded-full">
-                  <span className="text-xs font-medium text-gray-700">
-                    {index + 1}/{sections.length}
-                  </span>
-                </div>
+                {/* Quick Stats for Analysis Section */}
+                {index === 1 && ( // Assuming index 1 is the analysis section
+                  <div className="grid grid-cols-3 gap-3 mt-4">
+                    <div className="bg-green-50 p-3 rounded-lg text-center">
+                      <div className="text-lg font-bold text-green-700">92%</div>
+                      <div className="text-sm text-green-600 mt-1">Score</div>
+                      <div className="text-xs text-green-500 mt-2">Improved</div>
+                    </div>
+                    <div className="bg-blue-50 p-3 rounded-lg text-center">
+                      <div className="text-lg font-bold text-blue-700">+35</div>
+                      <div className="text-sm text-blue-600 mt-1">Improvement</div>
+                      <div className="text-xs text-blue-500 mt-2">Points gained</div>
+                    </div>
+                    <div className="bg-purple-50 p-3 rounded-lg text-center">
+                      <div className="text-lg font-bold text-purple-700">ATS</div>
+                      <div className="text-sm text-purple-600 mt-1">Ready</div>
+                      <div className="text-xs text-purple-500 mt-2">Compatibility</div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Quick Stats for Analysis Section */}
-              {index === 1 && (
-                <div className="grid grid-cols-3 gap-3 mt-4">
-                  <div className="bg-green-50 p-3 rounded-lg text-center">
-                    <div className="text-lg font-bold text-green-700">92%</div>
-                    <div className="text-xs text-green-600">Score</div>
-                  </div>
-                  <div className="bg-blue-50 p-3 rounded-lg text-center">
-                    <div className="text-lg font-bold text-blue-700">+35</div>
-                    <div className="text-xs text-blue-600">Improved</div>
-                  </div>
-                  <div className="bg-purple-50 p-3 rounded-lg text-center">
-                    <div className="text-lg font-bold text-purple-700">ATS</div>
-                    <div className="text-xs text-purple-600">Ready</div>
-                  </div>
-                </div>
-              )}
+              {/* Section Content */}
+              <div style={{ margin: '24px' }}>
+                {section.component} {/* Directly render the component passed in the section prop */}
+              </div>
             </div>
-
-            {/* Section Content */}
-            <div style={{ margin: '24px' }}>
-              {index === 0 ? (
-                // Resume Preview with Collapsible Sections
-                <ResumePreviewMobile component={section.component} />
-              ) : (
-                // Analysis View with Progressive Disclosure
-                <AnalysisViewMobile component={section.component} />
-              )}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Floating Action Button - Scroll to Top */}
       {scrollY > 200 && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-20 right-6 z-40 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 active:bg-blue-800 transition-all duration-200 min-h-[44px] min-w-[44px]"
+          className="fixed bottom-6 right-6 z-40 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 active:bg-blue-800 transition-all duration-200 min-h-[44px] min-w-[44px]"
           style={{ 
             transform: scrollY > 400 ? 'scale(1)' : 'scale(0.9)',
             WebkitTapHighlightColor: 'transparent',
@@ -490,7 +480,7 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
       {/* Export Status Toast (Fixed at bottom) */}
       {exportStatus.status && (
         <div 
-          className={`fixed bottom-24 left-1/2 transform -translate-x-1/2 px-4 py-3 rounded-lg shadow-lg z-50 max-w-[90%] animate-fadeIn ${
+          className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 px-4 py-3 rounded-lg shadow-lg z-50 max-w-[90%] animate-fadeIn ${
             exportStatus.status === 'success' 
               ? 'bg-green-600 text-white' 
               : 'bg-red-600 text-white'
@@ -510,19 +500,20 @@ export const MobileOptimizedInterface: React.FC<MobileOptimizedInterfaceProps> =
   );
 };
 
-// Resume Preview Component with Collapsible Sections
+// Resume Preview Component (now receives the actual component to render, e.g., ResumePreview itself)
 const ResumePreviewMobile: React.FC<{ component: React.ReactNode }> = ({ component }) => {
+  // This component acts as a wrapper/container for the actual ResumePreview component
+  // which is passed via `section.component` prop from MobileOptimizedInterface.
+  // It handles the collapsible logic if you decide to implement it here later.
   return (
     <div className="space-y-4">
-      {/* Resume Content */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {component}
-      </div>
+      {/* The actual ResumePreview component is rendered directly here */}
+      {component}
     </div>
   );
 };
 
-// Analysis View Component with Progressive Disclosure
+// Analysis View Component (now receives the actual component to render, e.g., ComprehensiveAnalysis)
 const AnalysisViewMobile: React.FC<{ component: React.ReactNode }> = ({ component }) => {
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set(['overview']));
 
@@ -606,7 +597,7 @@ const AnalysisViewMobile: React.FC<{ component: React.ReactNode }> = ({ componen
             {expandedCards.has(card.id) && (
               <div className="px-4 pb-4 transition-all duration-200">
                 <div className="pt-3 border-t border-gray-100">
-                  {card.id === 'overview' && component}
+                  {card.id === 'overview' && component} {/* Render the ComprehensiveAnalysis component here */}
                   {card.id !== 'overview' && (
                     <div className="text-sm text-gray-700 leading-relaxed" style={{ fontSize: '16px', lineHeight: '1.5' }}>
                       Detailed content for {card.title} would appear here with proper spacing and readability.
