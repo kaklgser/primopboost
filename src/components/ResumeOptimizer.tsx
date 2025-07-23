@@ -71,6 +71,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
   // Using an animation class state for smoother transitions between wizard steps
   const [animationClass, setAnimationClass] = useState('animate-fade-in');
 
+  const totalSteps = 3; // Define total steps for the wizard
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -550,39 +551,70 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     }
   ];
 
-  // --- Wizard Logic Start ---
+  // --- Wizard Step Content Components ---
 
-  // Component for Step 1
+  // Component for Step 1: Upload Resume & User Type
   const Step1Content = () => (
     <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
         <Upload className="w-5 h-5 mr-2 text-blue-600" />
-        Upload Resume
+        Upload Your Resume
       </h2>
-      <FileUpload onFileUpload={handleFileUpload} isDisabled={false} /> {/* Always enabled for active step */}
-      {/* Optional: Add a success message for file upload */}
+      <FileUpload onFileUpload={handleFileUpload} isDisabled={false} />
       {resumeText && (
         <div className="mt-4 p-3 bg-green-50 text-green-800 rounded-lg flex items-center text-sm">
           <CheckCircle className="w-4 h-4 mr-2" />
           Resume content loaded ({resumeText.length} characters)
         </div>
       )}
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <User className="w-5 h-5 mr-2 text-indigo-600" />
+          I am a...
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <button
+            onClick={() => setUserType('fresher')}
+            className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200 ${
+              userType === 'fresher'
+                ? 'border-green-500 bg-green-50 shadow-md'
+                : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
+            }`}
+          >
+            <Users className="w-8 h-8 mx-auto mb-3 text-current" />
+            <span className="font-medium">Fresher/New Graduate</span>
+            <span className="text-xs text-gray-500 mt-1">0-2 years experience</span>
+          </button>
+          <button
+            onClick={() => setUserType('experienced')}
+            className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200 ${
+              userType === 'experienced'
+                ? 'border-blue-500 bg-blue-50 shadow-md'
+                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+            }`}
+          >
+            <Briefcase className="w-8 h-8 mx-auto mb-3 text-current" />
+            <span className="font-medium">Experienced Professional</span>
+            <span className="text-xs text-gray-500 mt-1">2+ years experience</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 
-  // Component for Step 2
+  // Component for Step 2: Resume & Job Details
   const Step2Content = () => (
     <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
         <FileText className="w-5 h-5 mr-2 text-green-600" />
-        Resume & Job Details
+        Enter Job Details
       </h2>
       <InputSection
         resumeText={resumeText}
         jobDescription={jobDescription}
         onResumeChange={setResumeText}
         onJobDescriptionChange={setJobDescription}
-        isReadOnly={false} // Always enabled for active step
+        isReadOnly={false}
       />
       {jobDescription && (
         <div className="mt-4 p-3 bg-green-50 text-green-800 rounded-lg flex items-center text-sm">
@@ -590,7 +622,6 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
           Job description loaded ({jobDescription.length} characters)
         </div>
       )}
-      {/* Help tip for job description */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-6">
         <div className="flex items-start space-x-3">
           <Lightbulb className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
@@ -606,7 +637,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     </div>
   );
 
-  // Component for Step 3
+  // Component for Step 3: Social Links, Target Role, Optimize Button
   const Step3Content = () => (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -665,44 +696,63 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
           </div>
         </div>
       </div>
-
+      
+      {/* Optimize Button Section */}
       <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-          <User className="w-5 h-5 mr-2 text-indigo-600" />
-          Experience Level
+          <Zap className="w-5 h-5 mr-2 text-blue-600" />
+          Ready to Optimize?
         </h2>
-        <div className="grid grid-cols-2 gap-4">
-          <button
-            onClick={() => setUserType('fresher')}
-            className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
-              userType === 'fresher'
-                ? 'border-green-500 bg-green-50 shadow-md'
-                : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
-            }`}
-          >
-            <User className={`w-6 h-6 mb-2 ${userType === 'fresher' ? 'text-green-600' : 'text-gray-500'}`} />
-            <span className="font-medium">Fresher/New Graduate</span>
-            <span className="text-xs text-gray-500 mt-1">Recent graduate or entry-level professional</span>
-          </button>
+        <p className="text-gray-600 mb-4">
+          Click the button below to generate your AI-optimized resume.
+          {isAuthenticated && subscription && subscription.optimizationsTotal > 0 &&
+            ` You have ${subscription.optimizationsTotal - subscription.optimizationsUsed} optimizations remaining.`
+          }
+        </p>
+        <button
+          onClick={isAuthenticated ? handleOptimize : onShowAuth}
+          disabled={isOptimizing || !resumeText.trim() || !jobDescription.trim() || !isAuthenticated || (isAuthenticated && !subscription) || (isAuthenticated && subscription && (subscription.optimizationsTotal - subscription.optimizationsUsed <= 0))}
+          className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
+            isOptimizing || !resumeText.trim() || !jobDescription.trim() || !isAuthenticated || (isAuthenticated && !subscription) || (isAuthenticated && subscription && (subscription.optimizationsTotal - subscription.optimizationsUsed <= 0))
+              ? 'bg-gray-400 cursor-not-allowed text-white'
+              : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl cursor-pointer'
+          }`}
+        >
+          {isOptimizing ? (
+            <>
+              <Loader2 className="w-6 h-6 animate-spin" />
+              <span>Optimizing...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-6 h-6" />
+              <span>{isAuthenticated ? 'Optimize My Resume' : 'Sign In to Optimize'}</span>
+              <ArrowRight className="w-5 h-5" />
+            </>
+          )}
+        </button>
 
-          <button
-            onClick={() => setUserType('experienced')}
-            className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
-              userType === 'experienced'
-                ? 'border-blue-500 bg-blue-50 shadow-md'
-                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-            }`}
-          >
-            <Briefcase className={`w-6 h-6 mb-2 ${userType === 'experienced' ? 'text-blue-600' : 'text-gray-500'}`} />
-            <span className="font-medium">Experienced Professional</span>
-            <span className="text-xs text-gray-500 mt-1">Professional with 1+ years of work experience</span>
-          </button>
-        </div>
+        {!isAuthenticated && (
+          <p className="text-center text-sm text-gray-500 mt-3">
+            Please sign in to unlock resume optimization.
+          </p>
+        )}
+        {isAuthenticated && !subscription && (
+          <p className="text-center text-sm text-gray-500 mt-3">
+            You need a subscription to optimize your resume. <button onClick={() => setShowSubscriptionPlans(true)} className="text-blue-600 hover:underline">View Plans</button>
+          </p>
+        )}
+        {isAuthenticated && subscription && (subscription.optimizationsTotal - subscription.optimizationsUsed <= 0) && (
+          <p className="text-center text-sm text-gray-500 mt-3">
+            You've used all your optimizations. <button onClick={() => setShowSubscriptionPlans(true)} className="text-blue-600 hover:underline">Upgrade your plan</button>
+          </p>
+        )}
       </div>
     </>
   );
 
-  const renderCurrentFormStepContent = () => {
+  // This function conditionally renders the content for the current step
+  const renderWizardContent = () => {
     return (
       <div key={currentFormStep} className={`transition-transform duration-300 ease-in-out ${animationClass}`}>
         {currentFormStep === 1 && <Step1Content />}
@@ -712,7 +762,14 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     );
   };
 
-  // --- Wizard Logic End ---
+  const getStepTitle = () => {
+    switch (currentFormStep) {
+      case 1: return 'Upload Resume & User Type';
+      case 2: return 'Enter Job Details';
+      case 3: return 'Additional Info & Optimize';
+      default: return '';
+    }
+  };
 
 
   if (showMobileInterface && optimizedResume) {
@@ -739,7 +796,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-8"> {/* Adjusted horizontal padding */}
-        {!optimizedResume ? (
+        {!optimizedResume ? ( // Show the wizard form if no optimized resume yet
           <>
             {/* Hero Section */}
             <div className="text-center mb-8">
@@ -762,30 +819,29 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
             {/* Process Steps Indicator */}
             <div className="flex flex-col md:flex-row justify-center gap-4 mb-8 max-w-4xl mx-auto">
-              {[
-                { step: 1, title: 'Upload Resume', description: 'Upload your current resume or paste the text' },
-                { step: 2, title: 'Add Job Details', description: 'Paste the job description you\'re targeting' },
-                { step: 3, title: 'Review & Optimize', description: 'Finalize details and get your optimized resume' }
-              ].map((stepInfo) => (
+              {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
                 <div
-                  key={stepInfo.step}
+                  key={step}
                   className={`bg-white rounded-xl p-6 border flex-1 transition-all duration-300 ${
-                    currentFormStep === stepInfo.step
+                    currentFormStep === step
                       ? 'border-blue-300 ring-2 ring-blue-200 transform scale-105 shadow-lg'
                       : 'border-gray-200 opacity-70'
                   }`}
                 >
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                    currentFormStep === stepInfo.step ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600'
+                    currentFormStep === step ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600'
                   }`}>
-                    <span className="font-bold text-lg">{stepInfo.step}</span>
+                    <span className="font-bold text-lg">{step < currentFormStep ? <CheckCircle className="w-5 h-5" /> : step}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{stepInfo.title}</h3>
-                  <p className="text-sm text-gray-600">{stepInfo.description}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {step === 1 ? 'Upload Resume' : step === 2 ? 'Add Job Details' : 'Review & Optimize'}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {step === 1 ? 'Upload your current resume or paste the text' : step === 2 ? 'Paste the job description you\'re targeting' : 'Finalize details and get your optimized resume'}
+                  </p>
                 </div>
               ))}
             </div>
-
 
             {isAuthenticated && !loadingSubscription && (
               <div className="mb-8">
@@ -795,74 +851,88 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
             <div className="max-w-7xl mx-auto space-y-6">
               {/* Render current form step content */}
-              {renderCurrentFormStepContent()}
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 flex flex-col"> {/* Wrapper for wizard content */}
+                <div className={`p-6 lg:p-8 flex-1 overflow-y-auto ${animationClass}`}>
+                  {renderWizardContent()}
+                </div>
 
-              {/* Navigation Buttons for Form Steps */}
-              <div className="flex justify-between items-center bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                <button
-                  onClick={handleBackStep}
-                  disabled={currentFormStep === 1}
-                  className={`py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 flex items-center space-x-2 ${
-                    currentFormStep === 1
-                      ? 'bg-gray-300 cursor-not-allowed text-gray-600'
-                      : 'bg-blue-500 hover:bg-blue-600 text-white'
-                  }`}
-                >
-                  <ArrowRight className="w-5 h-5 transform rotate-180" />
-                  <span>Back</span>
-                </button>
-
-                {currentFormStep < 3 ? (
+                {/* Navigation Footer */}
+                <div className="bg-gray-50 px-6 py-4 lg:px-8 lg:py-6 border-t border-secondary-200 flex justify-between items-center flex-shrink-0">
                   <button
-                    onClick={handleNextStep}
-                    disabled={isNextDisabled()}
-                    className={`py-3 px-6 rounded-xl font-bold text-base transition-all duration-300 flex items-center space-x-2 ${
-                      isNextDisabled()
-                        ? 'bg-gray-400 cursor-not-allowed text-white'
-                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl cursor-pointer'
+                    onClick={handleBackStep}
+                    disabled={currentFormStep === 1}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      currentFormStep === 1
+                        ? 'text-secondary-400 cursor-not-allowed'
+                        : 'text-secondary-700 hover:bg-secondary-100 hover:text-secondary-900'
                     }`}
                   >
-                    <span>Next</span>
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>Back</span>
                   </button>
-                ) : (
-                  <button
-                    onClick={isAuthenticated ? handleOptimize : onShowAuth}
-                    disabled={!resumeText.trim() || !jobDescription.trim()}
-                    className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
-                      !resumeText.trim() || !jobDescription.trim()
-                        ? 'bg-gray-400 cursor-not-allowed text-white'
-                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl cursor-pointer'
-                    }`}
-                  >
-                    <Sparkles className="w-6 h-6" />
-                    <span>{isAuthenticated ? 'Optimize My Resume' : 'Sign In to Optimize'}</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </button>
-                )}
+
+                  <div className="text-sm text-secondary-500">
+                    Step {currentFormStep} of {totalSteps}
+                  </div>
+
+                  {currentFormStep < totalSteps ? (
+                    <button
+                      onClick={handleNextStep}
+                      disabled={isNextDisabled()}
+                      className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                        isNextDisabled()
+                          ? 'bg-secondary-300 text-secondary-500 cursor-not-allowed'
+                          : 'bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg'
+                      }`}
+                    >
+                      <span>Next</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    // On the last step (Step 3), show the Optimize button directly
+                    <button
+                      onClick={isAuthenticated ? handleOptimize : onShowAuth}
+                      disabled={isOptimizing || !resumeText.trim() || !jobDescription.trim() || !isAuthenticated || (isAuthenticated && !subscription) || (isAuthenticated && subscription && (subscription.optimizationsTotal - subscription.optimizationsUsed <= 0))}
+                      className={`flex items-center space-x-3 px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                        isOptimizing || !resumeText.trim() || !jobDescription.trim() || !isAuthenticated || (isAuthenticated && !subscription) || (isAuthenticated && subscription && (subscription.optimizationsTotal - subscription.optimizationsUsed <= 0))
+                          ? 'bg-gray-400 cursor-not-allowed text-white'
+                          : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl cursor-pointer'
+                      }`}
+                    >
+                      {isOptimizing ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <span>Optimizing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-5 h-5" />
+                          <span>{isAuthenticated ? 'Optimize My Resume' : 'Sign In to Optimize'}</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {!isAuthenticated && currentFormStep === 3 && (
+              {!isAuthenticated && currentFormStep === totalSteps && ( // Only show auth message on final step if not authenticated
                 <p className="text-center text-sm text-gray-500 mt-3">
                   You need to be signed in to optimize your resume.
                 </p>
               )}
-
-              {/* Project Analysis Button - visible only if optimizedResume is not null */}
-              {optimizedResume && (
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                  <button
-                    onClick={() => setShowProjectAnalysis(true)}
-                    className="w-full py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer"
-                  >
-                    <Target className="w-5 h-5" />
-                    <span>Analyze & Improve Projects</span>
-                  </button>
-                </div>
+               {isAuthenticated && !subscription && currentFormStep === totalSteps && (
+                <p className="text-center text-sm text-gray-500 mt-3">
+                  You need a subscription to optimize your resume. <button onClick={() => setShowSubscriptionPlans(true)} className="text-blue-600 hover:underline">View Plans</button>
+                </p>
+              )}
+              {isAuthenticated && subscription && (subscription.optimizationsTotal - subscription.optimizationsUsed <= 0) && currentFormStep === totalSteps && (
+                <p className="text-center text-sm text-gray-500 mt-3">
+                  You've used all your optimizations. <button onClick={() => setShowSubscriptionPlans(true)} className="text-blue-600 hover:underline">Upgrade your plan</button>
+                </p>
               )}
             </div>
           </>
-        ) : (
+        ) : ( // Optimized Resume View (when optimizedResume is not null)
           <div className="max-w-7xl mx-auto space-y-6">
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
               <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
