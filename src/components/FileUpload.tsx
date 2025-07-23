@@ -62,7 +62,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {/* Upload Area */}
       <div
         className={`relative border-2 border-dashed rounded-xl p-2 sm:p-4 lg:p-6 text-center transition-all duration-200 cursor-pointer ${
