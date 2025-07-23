@@ -66,6 +66,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload }) => {
       {/* Upload Area */}
       <div
         className={`relative border-2 border-dashed rounded-xl p-4 sm:p-6 lg:p-8 text-center transition-all duration-200 cursor-pointer ${
+        className={`relative border-2 border-dashed rounded-xl p-3 sm:p-4 lg:p-6 text-center transition-all duration-200 cursor-pointer ${
           isDragging
             ? 'border-primary-400 bg-primary-50 scale-105'
             : uploadedFile
