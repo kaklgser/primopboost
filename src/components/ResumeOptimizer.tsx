@@ -52,7 +52,7 @@ interface ResumeOptimizerProps {
 
 
 
-const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
+export const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   isAuthenticated,
 
