@@ -565,11 +565,11 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
         </div>
       )}
 
-      {/* NEW: Display resume content here */}
+      {/* Display resume content here */}
       {resumeText && (
         <div className="mt-4">
           <label htmlFor="resumePreviewText" className="block text-sm font-medium text-gray-700 mb-2">
-            Loaded Resume Content:
+            Resume Content: {/* Updated Label */}
           </label>
           <textarea
             id="resumePreviewText"
@@ -584,7 +584,6 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
           </p>
         </div>
       )}
-      {/* END NEW */}
 
       <div className="mt-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
