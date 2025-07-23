@@ -620,7 +620,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     </div>
   );
 
-  // Component for Step 2: Resume & Job Details
+  // Component for Step 2: Job Details Only (removed resume content section)
   const Step2Content = () => (
     <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
@@ -628,9 +628,9 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
         Enter Job Details
       </h2>
       <InputSection
-        resumeText={resumeText}
+        resumeText={resumeText} // Still passed, but InputSection won't display it
         jobDescription={jobDescription}
-        onResumeChange={setResumeText}
+        onResumeChange={setResumeText} // Still passed, but InputSection won't use for resumeText
         onJobDescriptionChange={setJobDescription}
         isReadOnly={false}
       />
@@ -874,7 +874,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                   {renderWizardContent()}
                 </div>
 
-                {/* Navigation Footer - INTEGRATED HERE */}
+                {/* Navigation Footer */}
                 <div className="bg-gray-50 px-6 py-4 lg:px-8 lg:py-6 border-t border-secondary-200 rounded-b-xl flex justify-between items-center flex-shrink-0">
                   <button
                     onClick={handleBackStep}
