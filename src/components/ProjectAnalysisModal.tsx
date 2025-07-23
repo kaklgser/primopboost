@@ -859,6 +859,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm flex items-center space-x-1 mt-2 break-all min-h-[44px]"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <Github className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
                             <span className="font-mono text-xs break-all">{project.githubUrl.replace('https://github.com/', '')}</span>
@@ -875,7 +876,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                       <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
                       <div className="text-xs sm:text-sm text-blue-800">
                         <p className="font-medium mb-1 break-words">GitHub Links in Exported Resume</p>
-                        <p className="break-words">GitHub links will be included in the exported resume as references. They will appear in a separate section at the end of your resume.</p>
+                        <p className="break-words">GitHub links are **not** included in the final exported document.</p> {/* Updated text */}
                       </div>
                     </div>
                     
