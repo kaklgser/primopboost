@@ -5,7 +5,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext'; // Import AuthPr
 import { Header } from './components/Header';
 import { Navigation } from './components/navigation/Navigation';
 import { MobileNavBar } from './components/navigation/MobileNavBar';
-import ResumeOptimizer from './components/ResumeOptimizer';
+import { ResumeOptimizer } from './components/ResumeOptimizer'
 import { AboutUs } from './components/pages/AboutUs';
 import { Contact } from './components/pages/Contact';
 import { Tutorials } from './components/pages/Tutorials';
