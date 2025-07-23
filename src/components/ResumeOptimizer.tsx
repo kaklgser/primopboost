@@ -828,7 +828,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
               )}
             </div>
           </>
-        ) : (
+        <div className="container mx-auto px-0 py-8">
           <div className="max-w-7xl mx-auto space-y-6">
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
               <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
