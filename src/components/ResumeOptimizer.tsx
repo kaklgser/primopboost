@@ -665,7 +665,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     </>
   );
 
-  const renderCurrentFormStep = () => {
+  const renderCurrentFormStepContent = () => {
     switch (currentFormStep) {
       case 1:
         return <Step1Content />;
@@ -704,7 +704,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-8"> {/* Adjusted horizontal padding */}
         {!optimizedResume ? (
           <>
             {/* Hero Section */}
@@ -738,7 +738,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                   className={`bg-white rounded-xl p-6 border flex-1 transition-all duration-300 ${
                     currentFormStep === stepInfo.step
                       ? 'border-blue-300 ring-2 ring-blue-200 transform scale-105 shadow-lg'
-                      : 'border-gray-200 opacity-70' // Dim and slightly scale down inactive steps
+                      : 'border-gray-200 opacity-70'
                   }`}
                 >
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${
@@ -761,7 +761,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
             <div className="max-w-7xl mx-auto space-y-6">
               {/* Render current form step content */}
-              {renderCurrentFormStep()}
+              {renderCurrentFormStepContent()}
 
               {/* Navigation Buttons for Form Steps */}
               <div className="flex justify-between items-center bg-white rounded-xl shadow-lg p-6 border border-gray-200">
@@ -781,7 +781,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                 {currentFormStep < 3 ? (
                   <button
                     onClick={handleNextStep}
-                    disabled={isNextDisabled()} // Use the memoized check
+                    disabled={isNextDisabled()}
                     className={`py-3 px-6 rounded-xl font-bold text-base transition-all duration-300 flex items-center space-x-2 ${
                       isNextDisabled()
                         ? 'bg-gray-400 cursor-not-allowed text-white'
