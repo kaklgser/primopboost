@@ -62,12 +62,15 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
   const [showProjectAnalysis, setShowProjectAnalysis] = useState(false);
   const [subscription, setSubscription] = useState<any>(null);
   const [loadingSubscription, setLoadingSubscription] = useState(true);
-  const [currentFormStep, setCurrentFormStep] = useState(1);
+  const [currentFormStep, setCurrentFormStep] = useState(1); // Renamed state variable
   const [showMissingSectionsModal, setShowMissingSectionsModal] = useState(false);
   const [missingSections, setMissingSections] = useState<string[]>([]);
   const [isProcessingMissingSections, setIsProcessingMissingSections] = useState(false);
   const [pendingResumeData, setPendingResumeData] = useState<ResumeData | null>(null);
   const [isCalculatingScore, setIsCalculatingScore] = useState(false);
+  // Using an animation class state for smoother transitions between wizard steps
+  const [animationClass, setAnimationClass] = useState('animate-fade-in');
+
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -116,11 +119,19 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
       // Alerts are already handled by isNextDisabled for specific cases
       return;
     }
-    setCurrentFormStep(prev => prev + 1);
+    setAnimationClass('animate-slide-out-left'); // Animate current step out
+    setTimeout(() => {
+      setCurrentFormStep(prev => prev + 1);
+      setAnimationClass('animate-slide-in-right'); // Animate next step in
+    }, 300); // Match animation duration
   };
 
   const handleBackStep = () => {
-    setCurrentFormStep(prev => prev - 1);
+    setAnimationClass('animate-slide-out-right'); // Animate current step out
+    setTimeout(() => {
+      setCurrentFormStep(prev => prev - 1);
+      setAnimationClass('animate-slide-in-left'); // Animate previous step in
+    }, 300); // Match animation duration
   };
 
   const handleOptimize = async () => {
@@ -549,6 +560,13 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
         Upload Resume
       </h2>
       <FileUpload onFileUpload={handleFileUpload} isDisabled={false} /> {/* Always enabled for active step */}
+      {/* Optional: Add a success message for file upload */}
+      {resumeText && (
+        <div className="mt-4 p-3 bg-green-50 text-green-800 rounded-lg flex items-center text-sm">
+          <CheckCircle className="w-4 h-4 mr-2" />
+          Resume content loaded ({resumeText.length} characters)
+        </div>
+      )}
     </div>
   );
 
@@ -566,6 +584,25 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
         onJobDescriptionChange={setJobDescription}
         isReadOnly={false} // Always enabled for active step
       />
+      {jobDescription && (
+        <div className="mt-4 p-3 bg-green-50 text-green-800 rounded-lg flex items-center text-sm">
+          <CheckCircle className="w-4 h-4 mr-2" />
+          Job description loaded ({jobDescription.length} characters)
+        </div>
+      )}
+      {/* Help tip for job description */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-6">
+        <div className="flex items-start space-x-3">
+          <Lightbulb className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-blue-800">
+            <p className="font-medium mb-1">Tips for better optimization:</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Include the **complete job posting** with responsibilities, requirements, and qualifications.</li>
+              <li>The more detailed the job description, the better our AI can tailor your resume.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 
@@ -666,16 +703,13 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
   );
 
   const renderCurrentFormStepContent = () => {
-    switch (currentFormStep) {
-      case 1:
-        return <Step1Content />;
-      case 2:
-        return <Step2Content />;
-      case 3:
-        return <Step3Content />;
-      default:
-        return null; // Should not happen
-    }
+    return (
+      <div key={currentFormStep} className={`transition-transform duration-300 ease-in-out ${animationClass}`}>
+        {currentFormStep === 1 && <Step1Content />}
+        {currentFormStep === 2 && <Step2Content />}
+        {currentFormStep === 3 && <Step3Content />}
+      </div>
+    );
   };
 
   // --- Wizard Logic End ---
