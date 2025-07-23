@@ -34,6 +34,33 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
     );
   }
 
+  // --- Moved style constants here (top of component function body) ---
+  const sectionTitleStyle: React.CSSProperties = {
+    fontSize: '10pt', // Corresponds to PDF_CONFIG.fonts.sectionTitle.size
+    fontWeight: 'bold',
+    marginBottom: '4pt', // Corresponds to PDF_CONFIG.spacing.sectionSpacingAfter (after underline)
+    marginTop: '10pt',  // Corresponds to PDF_CONFIG.spacing.sectionSpacingBefore
+    fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+    letterSpacing: '0.5pt',
+    textTransform: 'uppercase'
+  };
+
+  const sectionUnderlineStyle: React.CSSProperties = {
+    borderBottomWidth: '0.5pt',
+    borderColor: '#808080', // PDF_CONFIG.colors.secondary converted to hex or RGB
+    marginBottom: '4pt', // Corresponds to PDF_CONFIG.spacing.sectionSpacingAfter
+    height: '1px' // Ensure line height
+  };
+
+  const bodyTextStyle: React.CSSProperties = {
+    fontSize: '9.5pt', // Corresponds to PDF_CONFIG.fonts.body.size
+    lineHeight: '1.25', // Corresponds to PDF_CONFIG.spacing.lineHeight
+    fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+    color: '#000' // PDF_CONFIG.colors.primary
+  };
+  // --- End of moved style constants ---
+
+
   // Build contact info on a single line with | separator and correct font sizes
   const buildContactInfo = () => {
     const parts: React.ReactNode[] = [];
@@ -97,32 +124,8 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
   const sectionOrder = getSectionOrder();
 
   const renderSection = (sectionName: string) => {
-    // Common styles for section titles
-    const sectionTitleStyle: React.CSSProperties = {
-      fontSize: '10pt', // Corresponds to PDF_CONFIG.fonts.sectionTitle.size
-      fontWeight: 'bold',
-      marginBottom: '4pt', // Corresponds to PDF_CONFIG.spacing.sectionSpacingAfter (after underline)
-      marginTop: '10pt',  // Corresponds to PDF_CONFIG.spacing.sectionSpacingBefore
-      fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-      letterSpacing: '0.5pt',
-      textTransform: 'uppercase'
-    };
-
-    // Common styles for section underlines
-    const sectionUnderlineStyle: React.CSSProperties = {
-      borderBottomWidth: '0.5pt',
-      borderColor: '#808080', // PDF_CONFIG.colors.secondary converted to hex or RGB
-      marginBottom: '4pt', // Corresponds to PDF_CONFIG.spacing.sectionSpacingAfter
-      height: '1px' // Ensure line height
-    };
-
-    // Common styles for body text and bullets
-    const bodyTextStyle: React.CSSProperties = {
-      fontSize: '9.5pt', // Corresponds to PDF_CONFIG.fonts.body.size
-      lineHeight: '1.25', // Corresponds to PDF_CONFIG.spacing.lineHeight
-      fontFamily: 'Calibri, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-      color: '#000' // PDF_CONFIG.colors.primary
-    };
+    // Style constants are now accessible from outside this function scope
+    // No need to redefine them here.
 
     switch (sectionName) {
       case 'summary':
@@ -306,7 +309,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
           </div>
         );
       
-      case 'achievementsAndExtras': // New combined section for freshers
+      case 'achievementsAndExtras': // Combined section for freshers
         const hasAchievements = resumeData.achievements && resumeData.achievements.length > 0;
         const hasExtraCurricular = resumeData.extraCurricularActivities && resumeData.extraCurricularActivities.length > 0;
         const hasLanguages = resumeData.languagesKnown && resumeData.languagesKnown.length > 0;
