@@ -412,7 +412,7 @@ function drawProjects(state: PageState, projects: any[]): number {
     }
 
     // Project title
-    const titleHeight = drawText(state, project.title, PDF_CONFIG.margins.left, {
+    drawText(state, project.title, PDF_CONFIG.margins.left, {
       fontSize: PDF_CONFIG.fonts.jobTitle.size,
       fontWeight: PDF_CONFIG.fonts.jobTitle.weight
     });
@@ -631,9 +631,10 @@ function drawAchievementsAndExtras(state: PageState, resumeData: ResumeData): nu
 // Main export function with mobile optimization
 export const exportToPDF = async (resumeData: ResumeData, userType: UserType = 'experienced'): Promise<void> => {
   // Format filename with role if available
-  const getFileName = () => {
-    const namePart = resumeData.name.replace(/\s+/g, '_');
-    return `${namePart}_Resume.pdf`;
+  const getFileName = (data: ResumeData, fileExtension: 'pdf' | 'doc') => {
+    const namePart = data.name.replace(/\s+/g, '_');
+    const rolePart = data.targetRole ? `_${data.targetRole.replace(/\s+/g, '_')}` : '';
+    return `${namePart}${rolePart}_Resume.${fileExtension}`;
   };
 
   try {
@@ -734,7 +735,7 @@ export const exportToPDF = async (resumeData: ResumeData, userType: UserType = '
       }
     }
 
-    const fileName = getFileName();
+    const fileName = getFileName(resumeData, 'pdf'); // Pass resumeData and 'pdf' extension
     
     if (isMobileDevice()) {
       const pdfBlob = doc.output('blob');
@@ -761,7 +762,8 @@ export const exportToPDF = async (resumeData: ResumeData, userType: UserType = '
 // Centralized getFileName function (from exportUtils.ts)
 export const getFileName = (resumeData: ResumeData, fileExtension: 'pdf' | 'doc'): string => {
     const namePart = resumeData.name.replace(/\s+/g, '_');
-    return `${namePart}_Resume.${fileExtension}`;
+    const rolePart = resumeData.targetRole ? `_${resumeData.targetRole.replace(/\s+/g, '_')}` : ''; // Re-added rolePart logic
+    return `${namePart}${rolePart}_Resume.${fileExtension}`; // Reverted to include rolePart
 };
 
 // Generate Word document with mobile optimization
