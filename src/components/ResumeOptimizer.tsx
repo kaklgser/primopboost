@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, Sparkles, Download, TrendingUp, Target, Award, User, Briefcase, AlertCircle, CheckCircle, Loader2, RefreshCw, Zap, Plus, Eye, EyeOff, Crown, Calendar, Clock, Users, Star, ArrowRight, Shield, Settings, LogOut, Menu, X, Upload, BarChart3, Lightbulb } from 'lucide-react';
 import { FileUpload } from './FileUpload';
 import { InputSection } from './InputSection';
@@ -98,13 +98,22 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     }
   };
 
-  const handleNextStep = () => {
+  // Step validation logic for "Next" button
+  const isNextDisabled = useCallback(() => {
     if (currentFormStep === 1 && !resumeText.trim()) {
-      alert('Please upload your resume or paste its content to proceed.');
-      return;
+      return true;
     }
     if (currentFormStep === 2 && !jobDescription.trim()) {
-      alert('Please provide the job description to proceed.');
+      return true;
+    }
+    // No specific required fields for step 3 before optimization,
+    // as optimization button itself has its own disabling logic.
+    return false;
+  }, [currentFormStep, resumeText, jobDescription]);
+
+  const handleNextStep = () => {
+    if (isNextDisabled()) {
+      // Alerts are already handled by isNextDisabled for specific cases
       return;
     }
     setCurrentFormStep(prev => prev + 1);
@@ -530,6 +539,147 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     }
   ];
 
+  // --- Wizard Logic Start ---
+
+  // Component for Step 1
+  const Step1Content = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <Upload className="w-5 h-5 mr-2 text-blue-600" />
+        Upload Resume
+      </h2>
+      <FileUpload onFileUpload={handleFileUpload} isDisabled={false} /> {/* Always enabled for active step */}
+    </div>
+  );
+
+  // Component for Step 2
+  const Step2Content = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <FileText className="w-5 h-5 mr-2 text-green-600" />
+        Resume & Job Details
+      </h2>
+      <InputSection
+        resumeText={resumeText}
+        jobDescription={jobDescription}
+        onResumeChange={setResumeText}
+        onJobDescriptionChange={setJobDescription}
+        isReadOnly={false} // Always enabled for active step
+      />
+    </div>
+  );
+
+  // Component for Step 3
+  const Step3Content = () => (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <User className="w-5 h-5 mr-2 text-purple-600" />
+            Social Links (Optional)
+          </h2>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                LinkedIn Profile URL
+              </label>
+              <input
+                type="url"
+                value={linkedinUrl}
+                onChange={(e) => setLinkedinUrl(e.target.value)}
+                placeholder="https://linkedin.com/in/yourprofile"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                GitHub Profile URL
+              </label>
+              <input
+                type="url"
+                value={githubUrl}
+                onChange={(e) => setGithubUrl(e.target.value)}
+                placeholder="https://github.com/yourusername"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <Briefcase className="w-5 h-5 mr-2 text-orange-600" />
+            Target Role (Optional)
+          </h2>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Role Title
+            </label>
+            <input
+              type="text"
+              value={targetRole}
+              onChange={(e) => setTargetRole(e.target.value)}
+              placeholder="e.g., Senior Software Engineer, Product Manager..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              Specify the exact role title for more targeted project recommendations
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+          <User className="w-5 h-5 mr-2 text-indigo-600" />
+          Experience Level
+        </h2>
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            onClick={() => setUserType('fresher')}
+            className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
+              userType === 'fresher'
+                ? 'border-green-500 bg-green-50 shadow-md'
+                : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
+            }`}
+          >
+            <User className={`w-6 h-6 mb-2 ${userType === 'fresher' ? 'text-green-600' : 'text-gray-500'}`} />
+            <span className="font-medium">Fresher/New Graduate</span>
+            <span className="text-xs text-gray-500 mt-1">Recent graduate or entry-level professional</span>
+          </button>
+
+          <button
+            onClick={() => setUserType('experienced')}
+            className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
+              userType === 'experienced'
+                ? 'border-blue-500 bg-blue-50 shadow-md'
+                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+            }`}
+          >
+            <Briefcase className={`w-6 h-6 mb-2 ${userType === 'experienced' ? 'text-blue-600' : 'text-gray-500'}`} />
+            <span className="font-medium">Experienced Professional</span>
+            <span className="text-xs text-gray-500 mt-1">Professional with 1+ years of work experience</span>
+          </button>
+        </div>
+      </div>
+    </>
+  );
+
+  const renderCurrentFormStep = () => {
+    switch (currentFormStep) {
+      case 1:
+        return <Step1Content />;
+      case 2:
+        return <Step2Content />;
+      case 3:
+        return <Step3Content />;
+      default:
+        return null; // Should not happen
+    }
+  };
+
+  // --- Wizard Logic End ---
+
 
   if (showMobileInterface && optimizedResume) {
     return <MobileOptimizedInterface sections={mobileSections} />;
@@ -576,8 +726,33 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
               </div>
             </div>
 
-            {/* Process Steps */}
-            
+            {/* Process Steps Indicator */}
+            <div className="flex flex-col md:flex-row justify-center gap-4 mb-8 max-w-4xl mx-auto">
+              {[
+                { step: 1, title: 'Upload Resume', description: 'Upload your current resume or paste the text' },
+                { step: 2, title: 'Add Job Details', description: 'Paste the job description you\'re targeting' },
+                { step: 3, title: 'Review & Optimize', description: 'Finalize details and get your optimized resume' }
+              ].map((stepInfo) => (
+                <div
+                  key={stepInfo.step}
+                  className={`bg-white rounded-xl p-6 border flex-1 transition-all duration-300 ${
+                    currentFormStep === stepInfo.step
+                      ? 'border-blue-300 ring-2 ring-blue-200 transform scale-105 shadow-lg'
+                      : 'border-gray-200 opacity-70' // Dim and slightly scale down inactive steps
+                  }`}
+                >
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                    currentFormStep === stepInfo.step ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600'
+                  }`}>
+                    <span className="font-bold text-lg">{stepInfo.step}</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{stepInfo.title}</h3>
+                  <p className="text-sm text-gray-600">{stepInfo.description}</p>
+                </div>
+              ))}
+            </div>
+
+
             {isAuthenticated && !loadingSubscription && (
               <div className="mb-8">
                 <SubscriptionStatus onUpgrade={() => setShowSubscriptionPlans(true)} />
@@ -585,128 +760,8 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
             )}
 
             <div className="max-w-7xl mx-auto space-y-6">
-              {/* Conditional Rendering for Step 1: Upload Resume */}
-              <div className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 ${currentFormStep > 1 ? 'opacity-60 pointer-events-none' : ''}`}>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <Upload className="w-5 h-5 mr-2 text-blue-600" />
-                  Upload Resume
-                </h2>
-                <FileUpload onFileUpload={handleFileUpload} isDisabled={currentFormStep > 1} />
-              </div>
-
-              {/* Conditional Rendering for Step 2: Resume & Job Details */}
-              <div className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 ${currentFormStep !== 2 ? 'opacity-60 pointer-events-none' : ''}`}>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <FileText className="w-5 h-5 mr-2 text-green-600" />
-                  Resume & Job Details
-                </h2>
-                <InputSection
-                  resumeText={resumeText}
-                  jobDescription={jobDescription}
-                  onResumeChange={setResumeText}
-                  onJobDescriptionChange={setJobDescription}
-                  isReadOnly={currentFormStep !== 2} // Disable if not current step
-                />
-              </div>
-
-              {/* Conditional Rendering for Step 3: Social Links, Target Role, Experience Level */}
-              <div className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 ${currentFormStep !== 3 ? 'opacity-60 pointer-events-none' : ''}`}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                      <User className="w-5 h-5 mr-2 text-purple-600" />
-                      Social Links (Optional)
-                    </h2>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          LinkedIn Profile URL
-                        </label>
-                        <input
-                          type="url"
-                          value={linkedinUrl}
-                          onChange={(e) => setLinkedinUrl(e.target.value)}
-                          placeholder="https://linkedin.com/in/yourprofile"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                          readOnly={currentFormStep !== 3} // Disable if not current step
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          GitHub Profile URL
-                        </label>
-                        <input
-                          type="url"
-                          value={githubUrl}
-                          onChange={(e) => setGithubUrl(e.target.value)}
-                          placeholder="https://github.com/yourusername"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                          readOnly={currentFormStep !== 3} // Disable if not current step
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                      <Briefcase className="w-5 h-5 mr-2 text-orange-600" />
-                      Target Role (Optional)
-                    </h2>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Role Title
-                      </label>
-                      <input
-                        type="text"
-                        value={targetRole}
-                        onChange={(e) => setTargetRole(e.target.value)}
-                        placeholder="e.g., Senior Software Engineer, Product Manager..."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                        readOnly={currentFormStep !== 3} // Disable if not current step
-                      />
-                      <p className="text-xs text-gray-500 mt-2">
-                        Specify the exact role title for more targeted project recommendations
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                    <User className="w-5 h-5 mr-2 text-indigo-600" />
-                    Experience Level
-                  </h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      onClick={() => setUserType('fresher')}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                        userType === 'fresher'
-                          ? 'border-green-500 bg-green-50 shadow-md'
-                          : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
-                      }`}
-                      disabled={currentFormStep !== 3} // Disable if not current step
-                    >
-                      <User className={`w-6 h-6 mb-2 ${userType === 'fresher' ? 'text-green-600' : 'text-gray-500'}`} />
-                      <span className="font-medium">Fresher/New Graduate</span>
-                      <span className="text-xs text-gray-500 mt-1">Recent graduate or entry-level professional</span>
-                    </button>
-
-                    <button
-                      onClick={() => setUserType('experienced')}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                        userType === 'experienced'
-                          ? 'border-blue-500 bg-blue-50 shadow-md'
-                          : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                      }`}
-                      disabled={currentFormStep !== 3} // Disable if not current step
-                    >
-                      <Briefcase className={`w-6 h-6 mb-2 ${userType === 'experienced' ? 'text-blue-600' : 'text-gray-500'}`} />
-                      <span className="font-medium">Experienced Professional</span>
-                      <span className="text-xs text-gray-500 mt-1">Professional with 1+ years of work experience</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              {/* Render current form step content */}
+              {renderCurrentFormStep()}
 
               {/* Navigation Buttons for Form Steps */}
               <div className="flex justify-between items-center bg-white rounded-xl shadow-lg p-6 border border-gray-200">
@@ -726,9 +781,9 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                 {currentFormStep < 3 ? (
                   <button
                     onClick={handleNextStep}
-                    disabled={(currentFormStep === 1 && !resumeText.trim()) || (currentFormStep === 2 && !jobDescription.trim())}
+                    disabled={isNextDisabled()} // Use the memoized check
                     className={`py-3 px-6 rounded-xl font-bold text-base transition-all duration-300 flex items-center space-x-2 ${
-                      ((currentFormStep === 1 && !resumeText.trim()) || (currentFormStep === 2 && !jobDescription.trim()))
+                      isNextDisabled()
                         ? 'bg-gray-400 cursor-not-allowed text-white'
                         : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl cursor-pointer'
                     }`}
