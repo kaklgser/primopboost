@@ -44,7 +44,7 @@ FRESHER REQUIREMENTS:
 SECTION ORDER FOR FRESHERS:
 1. Contact Information
 2. Professional Summary (OPTIONAL - only if relevant experience exists)
-3. Technical Skills
+3. 
 4. Education (PROMINENT)
 5. Internships & Work Experience (IMPORTANT - includes all internships, trainings, and work)
 6. Academic Projects (IMPORTANT)
