@@ -413,7 +413,7 @@ export const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
       } else {
         updatedResume = {
           ...parsedResumeData,
-          projects: [...(parsedParsedData.projects || []), newProject]
+          projects: [...(parsedResumeData.projects || []), newProject]
         };
       }
       
@@ -566,6 +566,7 @@ export const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
       )}
 
       {/* Display resume content here (REQUIRED IN STEP 1) */}
+      {/* This block is exactly as requested, providing read-only preview of content */}
       {resumeText && (
         <div className="mt-4">
           <label htmlFor="resumePreviewText" className="block text-sm font-medium text-gray-700 mb-2">
@@ -629,9 +630,9 @@ export const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
       </h2>
       {/* InputSection will ONLY display Job Description, as per its own modification */}
       <InputSection
-        resumeText={resumeText} // Still passed, but InputSection itself now handles only jobDescription display
+        resumeText={resumeText} // Passed, but not displayed/edited by InputSection
         jobDescription={jobDescription}
-        onResumeChange={setResumeText} // Still passed, but InputSection won't use for resumeText input
+        onResumeChange={setResumeText} // Passed, but not used by InputSection for resumeText input
         onJobDescriptionChange={setJobDescription}
         isReadOnly={false}
       />
@@ -875,7 +876,7 @@ export const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                   {renderWizardContent()}
                 </div>
 
-                {/* Navigation Footer */}
+                {/* Navigation Footer - INTEGRATED HERE */}
                 <div className="bg-gray-50 px-6 py-4 lg:px-8 lg:py-6 border-t border-secondary-200 rounded-b-xl flex justify-between items-center flex-shrink-0">
                   <button
                     onClick={handleBackStep}
