@@ -549,11 +549,11 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm" onClick={handleBackdropClick}>
-<div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-
+      {/* Main modal container */}
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl h-full overflow-y-auto flex flex-col">
 
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-6 border-b border-gray-200">
+        <div className="relative bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-6 border-b border-gray-200 flex-shrink-0">
           <button
             onClick={onClose}
             className="absolute top-2 right-2 sm:top-4 sm:right-4 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-white/50 min-w-[44px] min-h-[44px]"
@@ -590,7 +590,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
                   <div className="text-xs sm:text-sm font-medium text-gray-900">{getSectionName(section)}</div>
                   <div className="text-xs text-gray-500 hidden sm:block">
                     {index < currentStep ? 'Completed' :
-                      index === currentStep ? 'Current' : 'Pending'}
+                    index === currentStep ? 'Current' : 'Pending'}
                   </div>
                 </div>
                 {index < missingSections.length - 1 && index < currentStep && (
@@ -604,7 +604,8 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
         </div>
 
         {/* Content */}
-<div className="p-3 sm:p-6 overflow-y-auto flex-1 min-h-0">
+        {/* MODIFIED LINE: Removed overflow-y-auto and min-h-0 as scrolling is now handled by the parent modal container */}
+        <div className="p-3 sm:p-6 flex-1"> 
           {currentSection === 'workExperience' && renderWorkExperienceForm()}
           {currentSection === 'projects' && renderProjectsForm()}
           {currentSection === 'certifications' && renderCertificationsForm()}
@@ -612,7 +613,8 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 p-3 sm:p-6 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 flex-shrink-0">
+        {/* MODIFIED LINE: Removed flex-shrink-0 and min-h-0 */}
+        <div className="bg-gray-50 p-3 sm:p-6 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
           <button
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
