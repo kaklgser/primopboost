@@ -35,20 +35,19 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChang
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden lg:flex items-center space-x-4 xl:space-x-8">
+      <nav className="hidden md:flex items-center space-x-8">
         {navigationItems.map((item) => (
           <button
             key={item.id}
             onClick={() => handlePageChange(item.id)}
-            className={`flex items-center space-x-2 px-3 py-2 xl:px-4 xl:py-2 rounded-lg font-medium transition-all duration-200 min-h-touch ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
               currentPage === item.id
-                ? 'bg-primary-100 text-primary-700 shadow-md'
-                : 'text-secondary-700 hover:text-primary-600 hover:bg-primary-50'
+                ? 'bg-blue-100 text-blue-700 shadow-md'
+                : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
             }`}
           >
             {item.icon}
-            <span className="hidden xl:inline">{item.label}</span>
-            <span className="xl:hidden">{item.label.split(' ')[0]}</span>
+            <span>{item.label}</span>
           </button>
         ))}
       </nav>
@@ -56,22 +55,22 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChang
       {/* Mobile Menu Toggle */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="lg:hidden min-w-touch min-h-touch p-2 text-secondary-700 hover:bg-secondary-100 rounded-lg transition-colors"
+        className="md:hidden p-2 text-gray-700"
       >
         {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="absolute top-12 left-0 right-0 bg-white border-t border-secondary-200 shadow-md lg:hidden rounded-b-xl mx-4 overflow-hidden">
+        <div className="absolute top-12 left-0 right-0 bg-white border-t border-gray-200 shadow-md md:hidden">
           {navigationItems.map((item) => (
             <button
               key={item.id}
               onClick={() => handlePageChange(item.id)}
-              className={`w-full flex items-center px-4 py-3 text-sm font-medium min-h-touch transition-colors ${
+              className={`w-full flex items-center px-4 py-3 text-sm font-medium ${
                 currentPage === item.id
-                  ? 'bg-primary-100 text-primary-700'
-                  : 'text-secondary-700 hover:bg-secondary-100'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               {item.icon}
@@ -79,10 +78,10 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChang
             </button>
           ))}
 
-          {/* Sign In / Sign {stack: "SyntaxError: The requested module '/src/components/navigation/Navigation.tsx?t=1753465734506' does not provide an export named 'Navigation'", message: "The requested module '/src/components/navigation/Navigation.tsx?t=1753465734506' does not provide an export named 'Navigation'", name: "SyntaxError"}Out Button */}
+          {/* Sign In / Sign Out Button */}
           <button
             onClick={handleAuthAction}
-            className="w-full flex items-center px-4 py-3 text-sm font-medium text-secondary-700 hover:bg-secondary-100 min-h-touch transition-colors"
+            className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100"
           >
             {user ? <LogOut className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
             <span className="ml-2">{user ? 'Sign Out' : 'Sign In'}</span>
