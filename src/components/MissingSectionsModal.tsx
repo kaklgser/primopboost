@@ -657,7 +657,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
         </div>
 
         {/* Footer */}
-      <div className="bg-gray-50 p-3 sm:p-6 border-t border-gray-200 flex flex-row justify-between items-center gap-3 flex-wrap">
+      <div className="bg-gray-50 p-3 sm:p-6 border-t border-gray-200 flex flex-row justify-between items-center gap-3 flex-wrap sm:mb-8">
 
         <button
   onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
