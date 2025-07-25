@@ -548,12 +548,14 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
   };
 
   return (
-     <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4 backdrop-blur-sm"
-    style={{ overscrollBehavior: 'contain' }}
-    onClick={handleBackdropClick}
+<div
+  className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center p-2 sm:p-4 backdrop-blur-sm"
+  onClick={handleBackdropClick}
+>
+<div
+    className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl overflow-y-auto"
+    style={{ maxHeight: '90vh', overscrollBehavior: 'contain' }}
   >
-<div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl  overflow-hidden flex flex-col"  style={{ height: '90dvh' }} >
 
 
         {/* Header */}
