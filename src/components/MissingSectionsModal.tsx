@@ -577,7 +577,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
 
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-6 border-b border-gray-200">
+        <div className="relative bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-6 sm:mb-20 border-b border-gray-200">
           <button
             onClick={onClose}
             className="absolute top-2 right-2 sm:top-4 sm:right-4 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-white/50 min-w-[44px] min-h-[44px]"
