@@ -445,7 +445,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm" onClick={handleBackdropClick}>
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl max-h-[100vh] sm:max-h-[95vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl max-h-[95vh] sm:max-h-[95vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="relative bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-6 border-b border-gray-200">
           <button
