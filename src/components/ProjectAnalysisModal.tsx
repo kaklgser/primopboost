@@ -326,7 +326,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm">
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-6xl max-h-[98vh] sm:max-h-[95vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-6xl h-full overflow-hidden flex flex-col"> {/* MODIFIED LINE */}
         {/* Header */}
         <div className="relative bg-gradient-to-r from-blue-50 to-purple-50 p-3 sm:p-6 border-b border-gray-200">
           <button
@@ -366,9 +366,9 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
 
         {/* Progress Steps */}
         <div className="px-3 sm:px-6 pt-3 sm:pt-6 flex-shrink-0">
-          <div className="flex flex-row items-center justify-around mb-4 sm:mb-8 gap-4"> {/* Modified this line */}
-            <div className="flex items-center w-auto"> {/* Modified this line */}
-              <div className="w-auto flex items-center"> {/* Modified this line */}
+          <div className="flex flex-row items-center justify-around mb-4 sm:mb-8 gap-4">
+            <div className="flex items-center w-auto">
+              <div className="w-auto flex items-center">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                 step === 'analysis' ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600'
               }`}>
@@ -385,8 +385,8 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                 step === 'analysis' ? 'w-0' : step === 'selection' ? 'w-1/2' : 'w-full'
               }`}></div>
             </div>
-            <div className="flex items-center w-auto"> {/* Modified this line */}
-              <div className="w-auto flex items-center"> {/* Modified this line */}
+            <div className="flex items-center w-auto">
+              <div className="w-auto flex items-center">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                 step === 'selection' ? 'bg-blue-600 text-white' : step === 'preview' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'
               }`}>
@@ -397,14 +397,14 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                 <div className="text-xs text-gray-500 hidden sm:block">Choose projects</div>
               </div>
               </div>
-            </div>
+              </div>
             <div className="w-full sm:w-16 h-1 bg-gray-200 hidden sm:block">
               <div className={`h-1 bg-blue-600 transition-all ${
                 step === 'preview' ? 'w-full' : 'w-0'
               }`}></div>
               </div>
-            <div className="flex items-center w-auto"> {/* Modified this line */}
-              <div className="w-auto flex items-center"> {/* Modified this line */}
+            <div className="flex items-center w-auto">
+              <div className="w-auto flex items-center">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                 step === 'preview' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'
               }`}>
@@ -434,7 +434,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                   <Target className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
                   Project Analysis Results
                 </h2>
-                
+                
                 {/* Summary Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 text-center shadow-sm border border-gray-100">
@@ -454,18 +454,18 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                 {/* Individual Project Analysis */}
                 <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Project-by-Project Analysis:</h3>
-                  
+                  
                   {analysisResult.projectAnalysis.map((project, index) => (
                     <div key={index} className={`border-2 rounded-lg sm:rounded-xl p-3 sm:p-5 transition-all ${
-                      project.suitable 
-                        ? 'border-green-300 bg-gradient-to-r from-green-50 to-green-100' 
+                      project.suitable 
+                        ? 'border-green-300 bg-gradient-to-r from-green-50 to-green-100' 
                         : 'border-red-300 bg-gradient-to-r from-red-50 to-red-100'
                     }`}>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                         <div className="flex items-start sm:items-center space-x-3 sm:space-x-4 flex-1">
                           <div className={`p-2 sm:p-3 rounded-full flex-shrink-0 ${
-                            project.suitable 
-                              ? 'bg-green-200 text-green-700' 
+                            project.suitable 
+                              ? 'bg-green-200 text-green-700' 
                               : 'bg-red-200 text-red-700'
                           }`}>
                             {project.suitable ? <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" /> : <XCircle className="w-4 h-4 sm:w-5 sm:h-5" />}
@@ -479,8 +479,8 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                                 Score: {project.suitable ? '80+' : '<80'} / 100
                               </span>
                               <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                project.suitable 
-                                  ? 'bg-green-200 text-green-800' 
+                                project.suitable 
+                                  ? 'bg-green-200 text-green-800' 
                                   : 'bg-red-200 text-red-800'
                               }`}>
                                 {project.suitable ? '✅ KEEP' : '❌ REPLACE'}
@@ -513,7 +513,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                       <div>
                         <h4 className="font-bold text-orange-800 text-sm sm:text-lg">Action Required</h4>
                         <p className="text-orange-700 text-xs sm:text-sm break-words">
-                          We found <strong>{analysisResult.summary.unsuitableProjects}</strong> project{analysisResult.summary.unsuitableProjects > 1 ? 's' : ''} that don't align well with your target role. 
+                          We found <strong>{analysisResult.summary.unsuitableProjects}</strong> project{analysisResult.summary.unsuitableProjects > 1 ? 's' : ''} that don't align well with your target role. 
                           You can replace {analysisResult.summary.unsuitableProjects === 1 ? 'it' : 'them'} with more relevant projects to improve your resume score.
                         </p>
                       </div>
@@ -521,7 +521,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                   </div>
                 )}
               </div>
-              
+              
               <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 sm:gap-4">
                 {/* New "Skip for now" button */}
                 {analysisResult.summary.unsuitableProjects === 0 && (
@@ -557,7 +557,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                     <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-orange-600" />
                     Replacement Projects
                   </h2>
-                  
+                  
                   <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                     {analysisResult.projectAnalysis.filter(p => !p.suitable && p.replacementSuggestion).map((project, index) => (
                       <div key={index} className="border border-gray-200 rounded-lg bg-white p-3 sm:p-4">
@@ -582,7 +582,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                             {selectedReplacements[project.title] ? 'Selected' : 'Select'}
                           </button>
                         </div>
-                        
+                        
                         {project.replacementSuggestion && (
                           <div className="ml-6 sm:ml-10 border-l-2 border-blue-200 pl-3 sm:pl-4">
                             <div className="flex flex-col sm:flex-row sm:items-center mb-2 space-y-2 sm:space-y-0">
@@ -592,9 +592,9 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                                 </div>
                                 <h4 className="font-medium text-blue-800 text-sm sm:text-base break-words">{project.replacementSuggestion.title}</h4>
                               </div>
-                              <a 
-                                href={project.replacementSuggestion.githubUrl} 
-                                target="_blank" 
+                              <a 
+                                href={project.replacementSuggestion.githubUrl} 
+                                target="_blank" 
                                 rel="noopener noreferrer"
                                 className="sm:ml-2 text-blue-600 hover:text-blue-800 min-w-[44px] min-h-[44px] flex items-center"
                                 onClick={(e) => e.stopPropagation()}
@@ -617,7 +617,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                   </div>
                 </div>
               )}
-              
+              
               {/* Suggested Projects Section */}
               {analysisResult.suggestedProjects.length > 0 && (
                 <div className="bg-green-50 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-green-200">
@@ -625,7 +625,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                     <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-600" />
                     Suggested Additional Projects
                   </h2>
-                  
+                  
                   <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                     {analysisResult.suggestedProjects.map((project, index) => (
                       <div key={index} className="border border-gray-200 rounded-lg bg-white p-3 sm:p-4">
@@ -637,9 +637,9 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                             <div className="flex-1 min-w-0">
                               <h3 className="font-semibold text-gray-900 text-sm sm:text-base break-words">{project.title}</h3>
                               <div className="flex flex-col sm:flex-row sm:items-center mt-1 space-y-1 sm:space-y-0">
-                                <a 
-                                  href={project.githubUrl} 
-                                  target="_blank" 
+                                <a 
+                                  href={project.githubUrl} 
+                                  target="_blank" 
                                   rel="noopener noreferrer"
                                   className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm flex items-center space-x-1 break-all min-h-[44px]"
                                   onClick={(e) => e.stopPropagation()}
@@ -661,7 +661,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                             {selectedSuggestions[project.title] ? 'Selected' : 'Select'}
                           </button>
                         </div>
-                        
+                        
                         <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-gray-700 mt-3">
                           {project.bulletPoints.map((bullet, i) => (
                             <li key={i} className="flex items-start break-words">
@@ -675,7 +675,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                   </div>
                 </div>
               )}
-              
+              
               {/* Manual Project Addition */}
               <div className="bg-purple-50 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-purple-200">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 mb-4">
@@ -691,7 +691,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                     <span>{showManualForm ? 'Cancel' : 'Add Project'}</span>
                   </button>
                 </div>
-                
+                
                 {showManualForm && (
                   <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
                     <div className="space-y-3 sm:space-y-4">
@@ -707,7 +707,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                           className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm min-h-[44px]"
                         />
                       </div>
-                      
+                      
                       <div>
                         <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                           Tech Stack *
@@ -745,7 +745,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                           ))}
                         </div>
                       </div>
-                      
+                      
                       <div>
                         <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                           Brief Description (Optional)
@@ -757,7 +757,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                           className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 h-20 resize-none text-sm"
                         />
                       </div>
-                      
+                      
                       {manualBullets.length > 0 ? (
                         <div className="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200">
                           <h4 className="font-medium text-green-800 mb-2 flex items-center text-sm">
@@ -792,7 +792,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                           )}
                         </button>
                       )}
-                      
+                      
                       {manualBullets.length > 0 && (
                         <button
                           onClick={handleAddManualProject}
@@ -805,7 +805,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                   </div>
                 )}
               </div>
-              
+              
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
                 <div className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
                   {countSelectedProjects()} project{countSelectedProjects() !== 1 ? 's' : ''} selected
@@ -837,10 +837,10 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                     Resume Updated with GitHub Projects
                   </h2>
                 </div>
-                
+                
                 <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200 mb-3 sm:mb-4">
                   <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-sm sm:text-base">Projects Section Preview</h3>
-                  
+                  
                   <div className="space-y-3 sm:space-y-4 max-h-60 sm:max-h-80 overflow-y-auto">
                     {updatedResume.projects?.map((project, index) => (
                       <div key={index} className="border-l-2 border-green-300 pl-3 sm:pl-4">
@@ -854,9 +854,9 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                           ))}
                         </ul>
                         {project.githubUrl && (
-                          <a 
-                            href={project.githubUrl as string} 
-                            target="_blank" 
+                          <a 
+                            href={project.githubUrl as string} 
+                            target="_blank" 
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm flex items-center space-x-1 mt-2 break-all min-h-[44px]"
                             onClick={(e) => e.stopPropagation()}
@@ -869,7 +869,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                     ))}
                   </div>
                 </div>
-                
+                
                 <div className="bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-200">
                   <div className="flex flex-col space-y-3">
                     <div className="flex items-start">
@@ -879,7 +879,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                         <p className="break-words">GitHub links are **not** included in the final exported document.</p> {/* Updated text */}
                       </div>
                     </div>
-                    
+                    
                     {updatedResume.projects?.some(p => p.githubUrl) && (
                       <div className="mt-2 bg-white p-2 sm:p-3 rounded-lg border border-blue-100">
                         <h5 className="font-medium text-blue-800 mb-2 text-xs sm:text-sm">🔗 Referenced Projects</h5>
@@ -889,9 +889,9 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                             .map((p, idx) => (
                               <li key={idx} className="text-xs sm:text-sm break-words">
                                 <span className="font-medium break-words">{p.title}:</span>{' '}
-                                <a 
-                                  href={p.githubUrl as string} 
-                                  target="_blank" 
+                                <a 
+                                  href={p.githubUrl as string} 
+                                  target="_blank" 
                                   rel="noopener noreferrer"
                                   className="text-blue-600 hover:text-blue-800 break-all min-h-[44px] inline-flex items-center"
                                 >
@@ -906,7 +906,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                   </div>
                 </div>
               </div>
-              
+              
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
                 <button
                   onClick={() => setStep('selection')}
