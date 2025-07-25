@@ -16,28 +16,28 @@ export const MobileNavBar: React.FC<MobileNavBarProps> = ({ currentPage, onPageC
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-secondary-200 shadow-lg lg:hidden safe-area">
-      <div className="flex items-center justify-around pb-safe-bottom">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg md:hidden">
+      <div className="flex items-center justify-around" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => onPageChange(item.id)}
-            className={`flex flex-col items-center justify-center py-2 sm:py-3 px-2 min-w-touch min-h-touch transition-colors touch-spacing ${
+            className={`flex flex-col items-center justify-center py-3 px-2 min-w-[64px] min-h-[64px] transition-colors ${
               currentPage === item.id
-                ? 'text-primary-600'
-                : 'text-secondary-600 hover:text-primary-600'
+                ? 'text-blue-600'
+                : 'text-gray-600'
             }`}
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            <div className={`p-1.5 rounded-full mb-1 transition-colors ${
-              currentPage === item.id ? 'bg-primary-100' : 'hover:bg-secondary-100'
+            <div className={`p-1.5 rounded-full mb-1 ${
+              currentPage === item.id ? 'bg-blue-100' : ''
             }`}>
               {item.icon}
             </div>
-            <span className="text-xs font-medium leading-tight">{item.label}</span>
+            <span className="text-xs font-medium">{item.label}</span>
           </button>
         ))}
       </div>
     </div>
   );
-};
+} 
