@@ -148,7 +148,7 @@ Rules:
   "languagesKnown": [],
   "personalDetails": ""
 }
-
+  
 
 
 Resume:
