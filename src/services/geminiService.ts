@@ -44,7 +44,7 @@ FRESHER REQUIREMENTS:
 SECTION ORDER FOR FRESHERS:
 1. Contact Information
 2. Professional Summary (OPTIONAL - only if relevant experience exists)
-3. 
+3. Technical Skills
 4. Education (PROMINENT)
 5. Internships & Work Experience (IMPORTANT - includes all internships, trainings, and work)
 6. Academic Projects (IMPORTANT)
@@ -59,7 +59,7 @@ SECTION ORDER FOR FRESHERS:
   const prompt = `${getPromptForUserType(userType)}
 
 CRITICAL REQUIREMENTS FOR BULLET POINTS:
-1. Each bullet point must contain EXACTLY 20 words (no more, no less)
+1. Each bullet point must contain EXACTLY 15 words (no more, no less)
 2. Include at least 20 relevant keywords from the job description across all bullet points
 3. Use STRONG ACTION VERBS only (no weak verbs like "helped", "assisted", "worked on", "was responsible for", "participated in", "involved in", "contributed to")
 4. Start each bullet with powerful verbs like: Developed, Implemented, Architected, Optimized, Engineered, Designed, Led, Managed, Created, Built, Delivered, Achieved, Increased, Reduced, Streamlined, Automated, Transformed, Executed, Spearheaded, Established
@@ -70,7 +70,7 @@ CRITICAL REQUIREMENTS FOR BULLET POINTS:
 9. All section titles should be in ALL CAPS (e.g., WORK EXPERIENCE)
 10. Dates should be on the same line as roles/education, using format "Jan 2023 – Mar 2024"
 11. Ensure at least 70% of resume keywords match the job description for better ATS compatibility
-12. Avoid using adjectives like "passionate", "dedicated", or "hardworking" unless contextually backed with measurable achievements
+12. Avoid using adjectives like "passionate", "dedicated", or "hardworking" unless contextually backed with measurable achievements DO NOT add adjectives like “dedicated”, “motivated”, or “hardworking” unless backed by resume content.
 
 SKILLS REQUIREMENTS:
 1. Generate comprehensive skills based on the resume content and job description
@@ -78,6 +78,7 @@ SKILLS REQUIREMENTS:
 3. Each category should have 5-8 specific skills
 4. Match skills to job requirements and industry standards
 5. Include both technical and soft skills relevant to the role
+6.NO NEED TO GENERATE SOFT SKILLS 
 
 SOCIAL LINKS REQUIREMENTS - CRITICAL:
 1. LinkedIn URL: "${linkedinUrl || ''}" - ONLY include if this is NOT empty
@@ -128,6 +129,7 @@ JSON Structure:
   "email": "",
   "linkedin": "",
   "github": "",
+  "targetRole": "",
   ${userType === 'experienced' ? '"summary": "",' : '"summary": "",'}
   "education": [
     {"degree": "", "school": "", "year": "", "cgpa": ""}
