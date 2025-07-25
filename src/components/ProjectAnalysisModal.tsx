@@ -393,7 +393,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                 <Plus className="w-5 h-5" />
               </div>
               <div className="ml-3">
-                <div className="text-sm font-medium text-gray-900">Selection</div>
+                <div className="text-sm font-medium text-gray-900 hidden sm:block">Selection</div>
                 <div className="text-xs text-gray-500 hidden sm:block">Choose projects</div>
               </div>
               </div>
@@ -411,7 +411,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                 <FileText className="w-5 h-5" />
               </div>
               <div className="ml-3">
-                <div className="text-sm font-medium text-gray-900">Preview</div>
+                <div className="text-sm font-medium text-gray-900 hidden sm:block">Preview</div>
                 <div className="text-xs text-gray-500 hidden sm:block">Review changes</div>
               </div>
               </div>
