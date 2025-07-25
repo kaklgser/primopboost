@@ -1148,7 +1148,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
 
 
-            <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-3 gap-4 mb-8"> {/* Added this wrapping div */}
 
               <div className={`bg-blue-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
 
@@ -1202,7 +1202,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
               </div>
 
-            </div>
+            </div> {/* Closing tag for the new wrapping div */}
 
 
 
@@ -1582,19 +1582,19 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
                     </div>
 
-                  </div>
+                </div>
 
-                  <div className="mt-6 text-center">
+                <div className="mt-6 text-center">
 
-                    <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-2xl font-bold text-blue-600">
 
-                      +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
-
-                    </div>
+                    +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
 
                   </div>
 
                 </div>
+
+              </div>
 
               </div>
 
@@ -1980,7 +1980,9 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
                       </span>
 
-                  
+                    ))}
+
+                </div>
 
                 </div>
 
