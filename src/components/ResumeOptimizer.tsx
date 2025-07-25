@@ -270,7 +270,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       setParsedResumeData(parsedResume);
 
-      
+      
 
       const missing = checkForMissingSections(parsedResume);
 
@@ -290,7 +290,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       await continueOptimizationProcess(parsedResume);
 
-      
+      
 
     } catch (error) {
 
@@ -336,13 +336,13 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       setInitialResumeScore(initialScore);
 
-      
+      
 
       setOptimizedResume(resumeData);
 
       setParsedResumeData(resumeData);
 
-      
+      
 
       if (resumeData.projects && resumeData.projects.length > 0) {
 
@@ -370,7 +370,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const checkForMissingSections = (resumeData: ResumeData): string[] => {
 
@@ -398,7 +398,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const handleMissingSectionsProvided = async (data: any) => {
 
@@ -420,7 +420,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       };
 
-      
+      
 
       setShowMissingSectionsModal(false);
 
@@ -444,7 +444,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const proceedWithFinalOptimization = async (resumeData: ResumeData, initialScore: DetailedScore) => {
 
@@ -470,7 +470,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const proceedWithOptimization = async (resumeData: ResumeData, initialScore: DetailedScore) => {
 
@@ -494,11 +494,11 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       );
 
-      
+      
 
       let finalResumeData = finalOptimizedResume;
 
-      
+      
 
       if (finalOptimizedResume.projects && finalOptimizedResume.projects.length > 0) {
 
@@ -514,7 +514,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
           );
 
-          
+          
 
           const suitableProjects = finalOptimizedResume.projects?.filter(project => {
 
@@ -524,7 +524,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
           }) || [];
 
-          
+          
 
           const replacementProjects = projectAnalysis.replacementSuggestions.map(suggestion => ({
 
@@ -536,11 +536,11 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
           }));
 
-          
+          
 
           const finalProjects = [...suitableProjects];
 
-          
+          
 
           for (const newProject of replacementProjects) {
 
@@ -556,7 +556,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
           }
 
-          
+          
 
           finalResumeData = {
 
@@ -566,7 +566,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
           };
 
-          
+          
 
           console.log(`Project replacement: ${finalOptimizedResume.projects.length} original → ${suitableProjects.length} kept + ${finalProjects.length - suitableProjects.length} new = ${finalProjects.length} total`);
 
@@ -594,7 +594,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       setAfterScore(afterScoreData);
 
-      
+      
 
       const finalScore = await getDetailedResumeScore(finalResumeData, jobDescription);
 
@@ -616,7 +616,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       }
 
-      
+      
 
       if (window.innerWidth < 768) {
 
@@ -638,7 +638,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const handleProjectMismatchResponse = (proceed: boolean) => {
 
@@ -660,7 +660,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const handleProjectOptionSelect = (option: 'manual' | 'ai') => {
 
@@ -678,7 +678,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const generateAIProject = async (jd: string, resume: ResumeData) => {
 
@@ -700,7 +700,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const addTechToStack = () => {
 
@@ -720,7 +720,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const removeTechFromStack = (tech: string) => {
 
@@ -734,13 +734,13 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const handleManualProjectSubmit = async () => {
 
     if (!manualProject.title || !parsedResumeData) return;
 
-    
+    
 
     setIsOptimizing(true);
 
@@ -748,7 +748,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       const projectDescription = await generateProjectDescription(manualProject, jobDescription);
 
-      
+      
 
       const newProject = {
 
@@ -758,21 +758,21 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       };
 
-      
+      
 
       let updatedResume;
 
-      
+      
 
       if (lowScoringProjects.length > 0) {
 
-        const filteredProjects = parsedResumeData.projects?.filter(project => 
+        const filteredProjects = parsedResumeData.projects?.filter(project => 
 
           !lowScoringProjects.some(lowProject => lowProject.title === project.title)
 
         ) || [];
 
-        
+        
 
         updatedResume = {
 
@@ -794,7 +794,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       }
 
-      
+      
 
       setShowManualProjectAdd(false);
 
@@ -812,7 +812,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const generateProjectDescription = async (project: any, jd: string): Promise<string> => {
 
@@ -830,13 +830,13 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
     console.log('handleProjectsAdded called with:', updatedResumeData);
 
-    
+    
 
     setOptimizedResume(updatedResumeData);
 
     setParsedResumeData(updatedResumeData);
 
-    
+    
 
     if (initialResumeScore) {
 
@@ -850,7 +850,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   };
 
-  
+  
 
   const generateScoresAfterProjectAdd = async (updatedResume: ResumeData) => {
 
@@ -866,7 +866,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
       setAfterScore(afterScoreData);
 
-      
+      
 
       if (initialResumeScore) {
 
@@ -912,13 +912,13 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
     console.log('Projects updated, triggering final AI re-optimization...');
 
-    
+    
 
     setOptimizedResume(updatedResume);
 
     setParsedResumeData(updatedResume);
 
-    
+    
 
     if (initialResumeScore) {
 
@@ -1159,8 +1159,8 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                   <Upload className="w-6 h-6 text-blue-600" />
 
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 hidden sm:block">Upload Resume</h3>
-                <p className="text-sm text-gray-600 hidden sm:block">Upload your current resume or paste the text</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 hidden sm:block">Upload Resume</h3>
+                <p className="text-sm text-gray-600 hidden sm:block">Upload your current resume or paste the text</p>
 
               </div>
 
@@ -1382,7 +1382,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
                   Experience Level
 
-                </h2>
+                </b>
 
                 <div className="grid grid-cols-2 gap-4">
 
@@ -1508,13 +1508,40 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
               )}
 
-            </div>
+          </div>
 
-          </>
+        </>
 
         ) : (
 
           <div className="max-w-7xl mx-auto space-y-6">
+
+            {/* NEW BUTTON CODE STARTS HERE */}
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => {
+                  // Reset everything for a fresh resume session
+                  setResumeText('');
+                  setJobDescription('');
+                  setLinkedinUrl('');
+                  setGithubUrl('');
+                  setTargetRole('');
+                  setUserType('fresher');
+                  setOptimizedResume(null);
+                  setParsedResumeData(null);
+                  setInitialResumeScore(null);
+                  setFinalResumeScore(null);
+                  setBeforeScore(null);
+                  setAfterScore(null);
+                  setChangedSections([]);
+                  setCurrentStep(1);
+                }}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl shadow transition-all"
+              >
+                + Create New Resume
+              </button>
+            </div>
+            {/* NEW BUTTON CODE ENDS HERE */}
 
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
 
@@ -1552,7 +1579,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
                     Resume Score Analysis
 
-                  </h2>
+                  </b>
 
                 </div>
 
@@ -1794,9 +1821,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
               </div>
 
-            </div>
-
-          </div>
+            </b>
 
         </div>
 
@@ -2104,7 +2129,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
           </div>
 
-        </div>
+        </b>
 
       )}
 
