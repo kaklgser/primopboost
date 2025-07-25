@@ -661,7 +661,15 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
             disabled={!isValid}
             className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors disabled:cursor-not-allowed text-sm min-h-[44px]"
           >
-            {currentStep === missingSections.length - 1 ? 'Complete' : 'Next'}
+           <span className="hidden sm:inline">
+  {currentStep === missingSections.length - 1 ? 'Complete' : 'Next'}
+</span>
+{currentStep === missingSections.length - 1 ? (
+  <CheckCircle className="inline sm:hidden w-5 h-5" />
+) : (
+  <ArrowRight className="inline sm:hidden w-5 h-5" />
+)}
+
           </button>
         </div>
       </div>
