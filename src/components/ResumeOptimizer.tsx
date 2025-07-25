@@ -1980,7 +1980,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
                       </span>
 
-                  </div>
+                  
 
                 </div>
 
