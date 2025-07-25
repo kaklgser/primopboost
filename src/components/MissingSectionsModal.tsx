@@ -567,7 +567,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
   return (
 <div
-  className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center p-2 sm:p-4 backdrop-blur-sm"
+  className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center p-2 sm:p-200 backdrop-blur-sm"
   onClick={handleBackdropClick}
 >
 <div
