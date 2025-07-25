@@ -647,7 +647,9 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
             disabled={currentStep === 0}
             className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm min-h-[44px]"
           >
-            Previous
+         <span className="hidden sm:inline">Previous</span>
+<ArrowLeft className="inline sm:hidden w-5 h-5" />
+
           </button>
 
           <div className="text-xs sm:text-sm text-gray-500 order-first sm:order-none ">
