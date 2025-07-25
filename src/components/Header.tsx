@@ -92,10 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
               <div className="hidden xs:block">
                 <h1 className="text-lg sm:text-xl font-bold text-secondary-900">PrimoBoost AI</h1>
-                <p className="text-xs text-secondary-500 flex items-center">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Upgrade Your Resume, Unlock Your Future
-                </p>
+               
               </div>
               <div className="xs:hidden">
                 <h1 className="text-base font-bold text-secondary-900">PrimoBoost AI</h1>
