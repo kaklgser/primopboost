@@ -622,7 +622,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
             Previous
           </button>
 
-          <div className="text-xs sm:text-sm text-gray-500 order-first sm:order-none">
+          <div className="text-xs sm:text-sm text-gray-500 order-first sm:order-none mb-3">
             Step {currentStep + 1} of {missingSections.length}
           </div>
 
