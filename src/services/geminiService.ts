@@ -1,13 +1,14 @@
 import { ResumeData, UserType } from '../types/resume';
 
-const GEMINI_API_KEY = 'AIzaSyAYxmudWmbhrzaFTg2btswt6V2QHiAR_BE';
+const GEMINI_API_KEY = 'AIzaSyDZWV51wiJ976BaWu8P7yE1MxWiE4oIMvQ';
 
 export const optimizeResume = async (
   resume: string, 
   jobDescription: string, 
   userType: UserType,
   linkedinUrl?: string, 
-  githubUrl?: string
+  githubUrl?: string,
+  targetRole?: string
 ): Promise<ResumeData> => {
   const getPromptForUserType = (type: UserType) => {
     if (type === 'experienced') {
@@ -37,14 +38,16 @@ FRESHER REQUIREMENTS:
 3. Include additional sections that showcase potential: Achievements, Extra-curricular Activities, Languages
 4. Focus on academic projects, internships, and transferable skills
 5. Highlight learning ability, enthusiasm, and relevant coursework
+6. ALL INTERNSHIPS, TRAININGS, and WORK EXPERIENCE should be categorized under "workExperience" section
+7. Extract CGPA from education if mentioned (e.g., "CGPA: 8.4/10" or "GPA: 3.8/4.0")
 
 SECTION ORDER FOR FRESHERS:
 1. Contact Information
 2. Professional Summary (OPTIONAL - only if relevant experience exists)
 3. Technical Skills
 4. Education (PROMINENT)
-5. Academic Projects (IMPORTANT)
-6. Internships/Work Experience (if any)
+5. Internships & Work Experience (IMPORTANT - includes all internships, trainings, and work)
+6. Academic Projects (IMPORTANT)
 7. Achievements (if present in original resume)
 8. Extra-curricular Activities (if present in original resume)
 9. Certifications
@@ -84,6 +87,9 @@ SOCIAL LINKS REQUIREMENTS - CRITICAL:
 5. DO NOT create, modify, or generate any social media links
 6. Use EXACTLY what is provided - no modifications
 
+TARGET ROLE INFORMATION:
+${targetRole ? `Target Role: "${targetRole}"` : 'No specific target role provided'}
+
 CONDITIONAL SECTION GENERATION:
 ${userType === 'experienced' ? `
 - Professional Summary: REQUIRED - Create a compelling 2-3 line summary
@@ -93,7 +99,9 @@ ${userType === 'experienced' ? `
 ` : `
 - Professional Summary: OPTIONAL - only include if candidate has relevant internships/experience
 - Education: PROMINENT - include degree, institution, year, relevant coursework if applicable
+- Education: INCLUDE CGPA if mentioned in original resume (e.g., "CGPA: 8.4/10")
 - Academic Projects: IMPORTANT - treat as main experience section
+- Work Experience: COMBINE all internships, trainings, and work experience under this single section
 - Achievements: Include if present in original resume (academic awards, competitions, etc.)
 - Extra-curricular Activities: Include if present (leadership roles, clubs, volunteer work)
 - Languages Known: Include if present (list languages with proficiency levels if available)
@@ -122,7 +130,7 @@ JSON Structure:
   "github": "",
   ${userType === 'experienced' ? '"summary": "",' : '"summary": "",'}
   "education": [
-    {"degree": "", "school": "", "year": ""}
+    {"degree": "", "school": "", "year": "", "cgpa": ""}
   ],
   "workExperience": [
     {"role": "", "company": "", "year": "", "bullets": []}
@@ -153,7 +161,7 @@ LinkedIn URL provided: ${linkedinUrl || 'NONE - leave empty'}
 GitHub URL provided: ${githubUrl || 'NONE - leave empty'}`;
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -229,6 +237,45 @@ GitHub URL provided: ${githubUrl || 'NONE - leave empty'}`;
           ...skill,
           count: skill.list ? skill.list.length : 0
         }));
+      }
+
+      // Ensure certifications are strings, not objects
+      if (parsedResult.certifications && Array.isArray(parsedResult.certifications)) {
+        parsedResult.certifications = parsedResult.certifications.map((cert: any) => {
+          if (typeof cert === 'object' && cert !== null) {
+            // Handle various object formats
+            if (cert.title && cert.description) {
+              return `${cert.title} - ${cert.description}`;
+            } else if (cert.title && cert.issuer) {
+              return `${cert.title} - ${cert.issuer}`;
+            } else if (cert.title) {
+              return cert.title;
+            } else if (cert.name) {
+              return cert.name;
+            } else if (cert.description) {
+              return cert.description;
+            } else {
+              // Convert any other object structure to string
+              return Object.values(cert).filter(Boolean).join(' - ');
+            }
+          }
+          // If it's already a string, return as is
+          return String(cert);
+        });
+      }
+
+      // Ensure work experience is properly formatted
+      if (parsedResult.workExperience && Array.isArray(parsedResult.workExperience)) {
+        parsedResult.workExperience = parsedResult.workExperience.filter((work: any) => 
+          work && work.role && work.company && work.year
+        );
+      }
+
+      // Ensure projects are properly formatted
+      if (parsedResult.projects && Array.isArray(parsedResult.projects)) {
+        parsedResult.projects = parsedResult.projects.filter((project: any) => 
+          project && project.title && project.bullets && project.bullets.length > 0
+        );
       }
 
       // CRITICAL: Only use provided social links - empty string if not provided
