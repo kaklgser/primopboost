@@ -252,7 +252,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
         return (
           <div style={{ marginBottom: '12pt' }}>
             <h2 style={sectionTitleStyle}>
-              SKILLS
+              TECHNICAL SKILLS
             </h2>
             <div style={sectionUnderlineStyle}></div>
             
@@ -421,33 +421,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
         {/* Dynamic sections based on user type */}
         {sectionOrder.map((sectionName) => renderSection(sectionName))}
         
-        {/* GitHub References Section - Always at the end */}
-        {resumeData.projects?.some(project => project.githubUrl) && (
-          <div style={{ marginBottom: '12pt' }}>
-            <h2 style={{ ...sectionTitleStyle, marginTop: '10pt' }}>
-              REFERENCED PROJECTS
-            </h2>
-            <div style={sectionUnderlineStyle}></div>
-            
-            <ul style={{ marginLeft: '12pt', listStyleType: 'disc' }}>
-              {resumeData.projects
-                .filter(project => project.githubUrl)
-                .map((project, index) => (
-                  <li key={index} style={{ ...bodyTextStyle, marginBottom: '1pt' }}>
-                    <strong>{project.title}:</strong>{' '}
-                    <a 
-                      href={project.githubUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      style={{ color: '#2563eb', textDecoration: 'underline' }}
-                    >
-                      {project.githubUrl}
-                    </a>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
+        {/* The GitHub References Section has been removed as per requirement. */}
       </div>
     </div>
   );
