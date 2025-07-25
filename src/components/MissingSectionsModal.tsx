@@ -250,14 +250,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
   const renderWorkExperienceForm = () => (
     <div className="space-y-4 sm:space-y-6">
-   <div className="text-center mb-4 sm:mb-6 mt-0 sm:mt-0">
-
-        <div className="bg-blue-100 w-10 h-10 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
-          <Briefcase className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
-        </div>
-        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Add Work Experience</h3>
-        <p className="text-sm sm:text-base text-gray-600">Please provide your work experience details</p>
-      </div>
+  Add Work Experience</h3>
 
       {workExperience.map((work, workIndex) => (
         <div key={workIndex} className="border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 space-y-3 sm:space-y-4">
