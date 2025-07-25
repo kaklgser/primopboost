@@ -375,7 +375,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                 <Target className="w-5 h-5" />
               </div>
               <div className="ml-3">
-                <div className="text-sm font-medium text-gray-900">Analysis</div>
+                <div className="text-sm font-medium text-gray-900 hidden sm:block ">Analysis</div>
                 <div className="text-xs text-gray-500 hidden sm:block">Review project fit</div>
               </div>
               </div>
