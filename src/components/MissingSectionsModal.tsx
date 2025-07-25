@@ -374,7 +374,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
           </div>
         </div>
       ))}
-      
+      
       <button
         onClick={addProject}
         className="w-full border-2 border-dashed border-gray-300 rounded-lg sm:rounded-xl p-3 sm:p-4 text-gray-600 hover:text-gray-800 hover:border-gray-400 transition-colors flex items-center justify-center text-sm min-h-[44px]"
@@ -414,7 +414,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
           )}
         </div>
       ))}
-      
+      
       <button
         onClick={addCertification}
         className="w-full border-2 border-dashed border-gray-300 rounded-lg sm:rounded-xl p-3 sm:p-4 text-gray-600 hover:text-gray-800 hover:border-gray-400 transition-colors flex items-center justify-center text-sm min-h-[44px]"
@@ -445,7 +445,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm" onClick={handleBackdropClick}>
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl h-full overflow-hidden flex flex-col"> {/* Modified line */}
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl h-full overflow-y-auto flex flex-col"> {/* MODIFIED LINE: Changed overflow-hidden to overflow-y-auto */}
         {/* Header */}
         <div className="relative bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-6 border-b border-gray-200">
           <button
@@ -454,7 +454,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
-          
+          
           <div className="text-center">
             <div className="bg-gradient-to-r from-orange-600 to-red-600 w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
               <AlertCircle className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -498,7 +498,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-3 sm:p-6 overflow-y-auto flex-1 min-h-0">
+        <div className="p-3 sm:p-6 flex-1 min-h-0"> {/* MODIFIED LINE: Removed overflow-y-auto */}
           {currentSection === 'workExperience' && renderWorkExperienceForm()}
           {currentSection === 'projects' && renderProjectsForm()}
           {currentSection === 'certifications' && renderCertificationsForm()}
@@ -513,11 +513,11 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
           >
             Previous
           </button>
-          
+          
           <div className="text-xs sm:text-sm text-gray-500 order-first sm:order-none">
             Step {currentStep + 1} of {missingSections.length}
           </div>
-          
+          
           <button
             onClick={handleNext}
             disabled={!isValid}
