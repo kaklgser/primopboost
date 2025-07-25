@@ -572,7 +572,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 >
 <div
     className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl overflow-y-auto"
-    style={{ maxHeight: '100vh', overscrollBehavior: 'contain' }}
+    style={{ maxHeight: '80vh', overscrollBehavior: 'contain' }}
   >
 
 
