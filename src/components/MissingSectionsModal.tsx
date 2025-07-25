@@ -585,7 +585,48 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
 
 
-        <div className="p-3 sm:p-6 overflow-y-auto grow shrink basis-0 pb-[120px] sm:pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 mb-4 sm:mb-8">
+            {missingSections.map((section, index) => (
+  <div key={section} className="flex items-center w-auto sm:w-auto">
+    <div
+      className={`w-10 h-10 rounded-full flex items-center justify-center ${
+        index < currentStep
+          ? 'bg-green-500 text-white'
+          : index === currentStep
+          ? 'bg-blue-500 text-white'
+          : 'bg-gray-200 text-gray-500'
+      }`}
+    >
+      {index < currentStep ? (
+        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+      ) : (
+        getSectionIcon(section)
+      )}
+    </div>
+
+    {/* Only show text on desktop */}
+    <div className="ml-2 hidden sm:block">
+      <div className="text-sm font-medium text-gray-900">
+        {getSectionName(section)}
+      </div>
+      <div className="text-xs text-gray-500">
+        {index < currentStep
+          ? 'Completed'
+          : index === currentStep
+          ? 'Current'
+          : 'Pending'}
+      </div>
+    </div>
+
+    {/* Optional line between steps */}
+    {index < missingSections.length - 1 && (
+      <div className="w-6 h-px bg-gray-300 mx-2 sm:w-16 sm:h-1 sm:mx-4"></div>
+    )}
+  </div>
+))}
+
+          </div>
+        </div><div className="p-3 sm:p-6 overflow-y-auto grow shrink basis-0 pb-[120px] sm:pb-6">
   <div className="flex flex-row items-center justify-center gap-4 sm:gap-6 mb-2 sm:mb-6">
     {missingSections.map((section, index) => (
       <div key={section} className="flex items-center">
@@ -627,10 +668,6 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
     ))}
   </div>
 </div>
-))}
-
-          </div>
-        </div>
 
         {/* Content */}
 <div className="p-3 sm:p-6 overflow-y-auto grow shrink basis-0 pb-[100px]">
