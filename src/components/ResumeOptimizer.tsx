@@ -1148,16 +1148,11 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
 
 
-            <div className="flex flex-col md:flex-row justify-center gap-4 mb-8 max-w-4xl mx-auto">
-
-              <div className={`bg-blue-50 rounded-xl p-6 border ${currentStep === 1 ? 'border-blue-300 ring-2 ring-blue-200' : 'border-gray-200'} flex-1`}>
-
-                <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-
-                  <span className="text-blue-600 font-bold text-lg">1</span>
-
-                </div>
-
+              <div className={`bg-blue-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
+                               sm:flex-1 sm:p-6 sm:w-auto sm:h-auto ${currentStep === 1 ? 'border-blue-300 ring-2 ring-blue-200' : 'border-gray-200'}`}>
+                <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-0 sm:mb-4">
+                  <Upload className="w-6 h-6 text-blue-600" />
+                </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Upload Resume</h3>
 
                 <p className="text-sm text-gray-600">Upload your current resume or paste the text</p>
