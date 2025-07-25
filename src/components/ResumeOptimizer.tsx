@@ -1171,22 +1171,15 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
               </div>
 
 
-              <div className={`bg-purple-50 rounded-xl p-6 border ${currentStep === 3 ? 'border-purple-300 ring-2 ring-purple-200' : 'border-gray-200'} flex-1`}>
-
-                <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-
-                  <span className="text-purple-600 font-bold text-lg">3</span>
-
-                </div>
-
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Get Optimized</h3>
-
-                <p className="text-sm text-gray-600">Download your enhanced, ATS-ready resume</p>
-
-              </div>
-
-            </div>
-
+              <  <div className={`bg-purple-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
+                               sm:flex-1 sm:p-6 sm:w-auto sm:h-auto ${currentStep === 3 ? 'border-purple-300 ring-2 ring-purple-200' : 'border-gray-200'}`}>
+                <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-0 sm:mb-4">
+                  <Sparkles className="w-6 h-6 text-purple-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 hidden sm:block">Get Optimized</h3>
+                <p className="text-sm text-gray-600 hidden sm:block">Download your enhanced, ATS-ready resume</p>
+              </div>
+            </div>
 
 
             {isAuthenticated && !loadingSubscription && (
