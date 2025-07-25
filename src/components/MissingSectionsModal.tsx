@@ -604,7 +604,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
         </div>
 
         {/* Content */}
-<div className="p-3 sm:p-6 overflow-y-auto flex-1 ">
+<div className="p-3 sm:p-6 overflow-y-auto flex-1 grow shrink basis-0">
           {currentSection === 'workExperience' && renderWorkExperienceForm()}
           {currentSection === 'projects' && renderProjectsForm()}
           {currentSection === 'certifications' && renderCertificationsForm()}
