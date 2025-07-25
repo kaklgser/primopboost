@@ -581,7 +581,8 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
         </div>
 
         {/* Progress Bar */}
-        <div className="p-3 sm:p-6 overflow-y-auto grow shrink basis-0 pb-[120px] sm:pb-6">
+        <div className="p-3 sm:p-6 overflow-y-auto grow shrink basis-0 pb-[100px]">
+
 
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 mb-4 sm:mb-8">
