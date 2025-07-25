@@ -659,15 +659,14 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
         {/* Footer */}
       <div className="bg-gray-50 p-3 sm:p-6 border-t border-gray-200 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
 
-          <button
-            onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-            disabled={currentStep === 0}
-            className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm min-h-[44px]"
-          >
-         <span className="hidden sm:inline">Previous</span>
-<ArrowLeft className="inline sm:hidden w-5 h-5" />
-
-          </button>
+        <button
+  onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+  disabled={currentStep === 0}
+  className="flex-1 sm:w-auto px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm min-h-[44px] flex justify-center items-center"
+>
+  <ArrowLeft className="w-4 h-4 sm:mr-2" />
+  <span className="hidden sm:inline">Previous</span>
+</button
 
           <div className="text-xs sm:text-sm text-gray-500 order-first sm:order-none ">
             Step {currentStep + 1} of {missingSections.length}
