@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { X, Plus, Briefcase, Code, Award, AlertCircle, CheckCircle, Calendar, Building, Phone, Mail, Link, Github, ArrowLeft, ArrowRight, CheckCircle }
- from 'lucide-react';
+import { X, Plus, Briefcase, Code, Award, AlertCircle, CheckCircle, Calendar, Building, Phone, Mail, Link, Github, ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
+
 
 interface WorkExperience {
   role: string;
