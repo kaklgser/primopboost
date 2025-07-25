@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import { FileText, Sparkles, Download, TrendingUp, Target, Award, User, Briefcase, AlertCircle, CheckCircle, Loader2, RefreshCw, Zap, Plus, Eye, EyeOff, Crown, Calendar, Clock, Users, Star, ArrowRight, Shield, Settings, LogOut, Menu, X, Upload, BarChart3, Lightbulb } from 'lucide-react';
+// ... all existing imports
+import { ArrowLeft, FileText, BarChart3, SwitchHorizontal } from 'lucide-react'; // Added ArrowLeft, SwitchHorizontal
 
 import { FileUpload } from './FileUpload';
 
@@ -44,2174 +45,2123 @@ import { ResumeData, UserType, MatchScore, DetailedScore } from '../types/resume
 
 interface ResumeOptimizerProps {
 
-  isAuthenticated: boolean;
+  isAuthenticated: boolean;
 
-  onShowAuth: () => void;
+  onShowAuth: () => void;
 
 }
-
-const handleStartNewResume = () => {
-  setOptimizedResume(null);
-  setResumeText('');
-  setJobDescription('');
-  setLinkedinUrl('');
-  setGithubUrl('');
-  setTargetRole('');
-  setBeforeScore(null);
-  setAfterScore(null);
-  setInitialResumeScore(null);
-  setFinalResumeScore(null);
-  setChangedSections([]);
-  setCurrentStep(1);
-};
 
 
 const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
-  isAuthenticated,
+  isAuthenticated,
 
-  onShowAuth
+  onShowAuth
 
 }) => {
 
-  const { user } = useAuth();
+  const { user } = useAuth();
 
-  const [resumeText, setResumeText] = useState('');
+  const [resumeText, setResumeText] = useState('');
 
-  const [jobDescription, setJobDescription] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
 
-  const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('');
 
-  const [githubUrl, setGithubUrl] = useState('');
+  const [githubUrl, setGithubUrl] = useState('');
 
-  const [targetRole, setTargetRole] = useState('');
+  const [targetRole, setTargetRole] = useState('');
 
-  const [userType, setUserType] = useState<UserType>('fresher');
+  const [userType, setUserType] = useState<UserType>('fresher');
 
-  const [optimizedResume, setOptimizedResume] = useState<ResumeData | null>(null);
+  const [optimizedResume, setOptimizedResume] = useState<ResumeData | null>(null);
+  const [activeTab, setActiveTab] = useState<'resume' | 'analysis'>('resume'); // NEW: Added activeTab state
 
-  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [isOptimizing, setIsOptimizing] = useState(false);
 
-  const [showProjectMismatch, setShowProjectMismatch] = useState(false);
+  const [showProjectMismatch, setShowProjectMismatch] = useState(false);
 
-  const [showProjectOptions, setShowProjectOptions] = useState(false);
+  const [showProjectOptions, setShowProjectOptions] = useState(false);
 
-  const [showManualProjectAdd, setShowManualProjectAdd] = useState(false);
+  const [showManualProjectAdd, setShowManualProjectAdd] = useState(false);
 
-  const [lowScoringProjects, setLowScoringProjects] = useState<any[]>([]);
+  const [lowScoringProjects, setLowScoringProjects] = useState<any[]>([]);
 
-  const [initialResumeScore, setInitialResumeScore] = useState<DetailedScore | null>(null);
+  const [initialResumeScore, setInitialResumeScore] = useState<DetailedScore | null>(null);
 
-  const [finalResumeScore, setFinalResumeScore] = useState<DetailedScore | null>(null);
+  const [finalResumeScore, setFinalResumeScore] = useState<DetailedScore | null>(null);
 
-  const [parsedResumeData, setParsedResumeData] = useState<ResumeData | null>(null);
+  const [parsedResumeData, setParsedResumeData] = useState<ResumeData | null>(null);
 
-  const [manualProject, setManualProject] = useState({
+  const [manualProject, setManualProject] = useState({
 
-    title: '',
+    title: '',
 
-    startDate: '',
+    startDate: '',
 
-    endDate: '',
+    endDate: '',
 
-    techStack: [] as string[],
+    techStack: [] as string[],
 
-    oneLiner: ''
+    oneLiner: ''
 
-  });
+  });
 
-  const [newTechStack, setNewTechStack] = useState('');
+  const [newTechStack, setNewTechStack] = useState('');
 
-  const [beforeScore, setBeforeScore] = useState<MatchScore | null>(null);
+  const [beforeScore, setBeforeScore] = useState<MatchScore | null>(null);
 
-  const [afterScore, setAfterScore] = useState<MatchScore | null>(null);
+  const [afterScore, setAfterScore] = useState<MatchScore | null>(null);
 
-  const [changedSections, setChangedSections] = useState<string[]>([]);
+  const [changedSections, setChangedSections] = useState<string[]>([]);
 
-  const [showMobileInterface, setShowMobileInterface] = useState(false);
+  const [showMobileInterface, setShowMobileInterface] = useState(false);
 
-  const [showProjectEnhancement, setShowProjectEnhancement] = useState(false);
+  const [showProjectEnhancement, setShowProjectEnhancement] = useState(false);
 
-  const [showSubscriptionPlans, setShowSubscriptionPlans] = useState(false);
+  const [showSubscriptionPlans, setShowSubscriptionPlans] = useState(false);
 
-  const [showProjectAnalysis, setShowProjectAnalysis] = useState(false);
+  const [showProjectAnalysis, setShowProjectAnalysis] = useState(false);
 
-  const [subscription, setSubscription] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
 
-  const [loadingSubscription, setLoadingSubscription] = useState(true);
+  const [loadingSubscription, setLoadingSubscription] = useState(true);
 
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
 
-  const [showMissingSectionsModal, setShowMissingSectionsModal] = useState(false);
+  const [showMissingSectionsModal, setShowMissingSectionsModal] = useState(false);
 
-  const [missingSections, setMissingSections] = useState<string[]>([]);
+  const [missingSections, setMissingSections] = useState<string[]>([]);
 
-  const [isProcessingMissingSections, setIsProcessingMissingSections] = useState(false);
+  const [isProcessingMissingSections, setIsProcessingMissingSections] = useState(false);
 
-  const [pendingResumeData, setPendingResumeData] = useState<ResumeData | null>(null);
+  const [pendingResumeData, setPendingResumeData] = useState<ResumeData | null>(null);
 
-  const [isCalculatingScore, setIsCalculatingScore] = useState(false);
+  const [isCalculatingScore, setIsCalculatingScore] = useState(false);
 
 
+  // NEW: handleStartNewResume function
+  const handleStartNewResume = () => {
+    setOptimizedResume(null);
+    setResumeText('');
+    setJobDescription('');
+    setLinkedinUrl('');
+    setGithubUrl('');
+    setTargetRole('');
+    setUserType('fresher'); // Reset userType as well
+    setBeforeScore(null);
+    setAfterScore(null);
+    setInitialResumeScore(null);
+    setFinalResumeScore(null);
+    setParsedResumeData(null); // Ensure parsedResumeData is also reset
+    setManualProject({ title: '', startDate: '', endDate: '', techStack: [], oneLiner: '' }); // Reset manual project
+    setNewTechStack(''); // Reset new tech stack input
+    setLowScoringProjects([]); // Reset low scoring projects
+    setChangedSections([]);
+    setCurrentStep(1);
+    setActiveTab('resume'); // Reset active tab to resume when starting new
+  };
 
-  useEffect(() => {
 
-    if (isAuthenticated && user) {
+  useEffect(() => {
 
-      checkSubscriptionStatus();
+    if (isAuthenticated && user) {
 
-    } else {
+      checkSubscriptionStatus();
 
-      setLoadingSubscription(false);
+    } else {
 
-    }
+      setLoadingSubscription(false);
 
-  }, [isAuthenticated, user]);
+    }
 
+  }, [isAuthenticated, user]);
 
 
-  const checkSubscriptionStatus = async () => {
 
-    if (!user) return;
+  const checkSubscriptionStatus = async () => {
 
-    try {
+    if (!user) return;
 
-      const userSubscription = await paymentService.getUserSubscription(user.id);
+    try {
 
-      setSubscription(userSubscription);
+      const userSubscription = await paymentService.getUserSubscription(user.id);
 
-    } catch (error) {
+      setSubscription(userSubscription);
 
-      console.error('Error checking subscription:', error);
+    } catch (error) {
 
-    } finally {
+      console.error('Error checking subscription:', error);
 
-      setLoadingSubscription(false);
+    } finally {
 
-    }
+      setLoadingSubscription(false);
 
-  };
+    }
 
+  };
 
 
-  const handleFileUpload = async (text: string) => {
 
-    try {
+  const handleFileUpload = async (text: string) => {
 
-      setResumeText(text);
+    try {
 
-    } catch (error) {
+      setResumeText(text);
 
-      console.error('Error handling file upload:', error);
+    } catch (error) {
 
-      alert('Error processing file. Please try a different format or check if the file is corrupted.');
+      console.error('Error handling file upload:', error);
 
-    }
+      alert('Error processing file. Please try a different format or check if the file is corrupted.');
 
-  };
+    }
 
+  };
 
 
-  useEffect(() => {
 
-    if (resumeText.trim().length > 0 && currentStep === 1) {
+  useEffect(() => {
 
-      setCurrentStep(2);
+    if (resumeText.trim().length > 0 && currentStep === 1) {
 
-    }
+      setCurrentStep(2);
 
-  }, [resumeText, currentStep]);
+    }
 
+  }, [resumeText, currentStep]);
 
 
-  useEffect(() => {
 
-    if (jobDescription.trim().length > 0 && currentStep === 2) {
+  useEffect(() => {
 
-      setCurrentStep(3);
+    if (jobDescription.trim().length > 0 && currentStep === 2) {
 
-    }
+      setCurrentStep(3);
 
-  }, [jobDescription, currentStep]);
+    }
 
+  }, [jobDescription, currentStep]);
 
 
-  const handleOptimize = async () => {
 
-    if (!resumeText.trim() || !jobDescription.trim()) {
+  const handleOptimize = async () => {
 
-      alert('Please provide both resume content and job description');
+    if (!resumeText.trim() || !jobDescription.trim()) {
 
-      return;
+      alert('Please provide both resume content and job description');
 
-    }
+      return;
 
-    if (!user) {
+    }
 
-      alert('User information not available. Please sign in again.');
+    if (!user) {
 
-      return;
+      alert('User information not available. Please sign in again.');
 
-    }
+      return;
 
-    if (!subscription) {
+    }
 
-      setShowSubscriptionPlans(true);
+    if (!subscription) {
 
-      return;
+      setShowSubscriptionPlans(true);
 
-    }
+      return;
 
-    const remaining = subscription.optimizationsTotal - subscription.optimizationsUsed;
+    }
 
-    if (remaining <= 0) {
+    const remaining = subscription.optimizationsTotal - subscription.optimizationsUsed;
 
-      alert('You have used all your optimizations. Please upgrade your plan.');
+    if (remaining <= 0) {
 
-      setShowSubscriptionPlans(true);
+      alert('You have used all your optimizations. Please upgrade your plan.');
 
-      return;
+      setShowSubscriptionPlans(true);
 
-    }
+      return;
 
+    }
 
 
-    setIsOptimizing(true);
 
-    try {
+    setIsOptimizing(true);
 
-      const parsedResume = await optimizeResume(resumeText, jobDescription, userType, linkedinUrl, githubUrl, targetRole);
+    try {
 
-      setParsedResumeData(parsedResume);
+      const parsedResume = await optimizeResume(resumeText, jobDescription, userType, linkedinUrl, githubUrl, targetRole);
 
-      
+      setParsedResumeData(parsedResume);
 
-      const missing = checkForMissingSections(parsedResume);
 
-      if (missing.length > 0) {
+      const missing = checkForMissingSections(parsedResume);
 
-        setMissingSections(missing);
+      if (missing.length > 0) {
 
-        setPendingResumeData(parsedResume);
+        setMissingSections(missing);
 
-        setShowMissingSectionsModal(true);
+        setPendingResumeData(parsedResume);
 
-        setIsOptimizing(false);
+        setShowMissingSectionsModal(true);
 
-        return;
+        setIsOptimizing(false);
 
-      }
+        return;
 
-      await continueOptimizationProcess(parsedResume);
+      }
 
-      
+      await continueOptimizationProcess(parsedResume);
 
-    } catch (error) {
 
-      console.error('Error optimizing resume:', error);
+    } catch (error) {
 
-      alert('Failed to optimize resume. Please try again.');
+      console.error('Error optimizing resume:', error);
 
-    } finally {
+      alert('Failed to optimize resume. Please try again.');
 
-      setIsOptimizing(false);
+    } finally {
 
-    }
+      setIsOptimizing(false);
 
-  };
+    }
 
+  };
 
 
-  const continueOptimizationProcess = async (resumeData: ResumeData) => {
 
-    try {
+  const continueOptimizationProcess = async (resumeData: ResumeData) => {
 
-      await handleInitialResumeProcessing(resumeData);
+    try {
 
-    } catch (error) {
+      await handleInitialResumeProcessing(resumeData);
 
-      console.error('Error in optimization process:', error);
+    } catch (error) {
 
-      alert('Failed to continue optimization. Please try again.');
+      console.error('Error in optimization process:', error);
 
-    }
+      alert('Failed to continue optimization. Please try again.');
 
-  };
+    }
 
+  };
 
 
-  const handleInitialResumeProcessing = async (resumeData: ResumeData) => {
 
-    try {
+  const handleInitialResumeProcessing = async (resumeData: ResumeData) => {
 
-      setIsCalculatingScore(true);
+    try {
 
-      const initialScore = await getDetailedResumeScore(resumeData, jobDescription);
+      setIsCalculatingScore(true);
 
-      setInitialResumeScore(initialScore);
+      const initialScore = await getDetailedResumeScore(resumeData, jobDescription);
 
-      
+      setInitialResumeScore(initialScore);
 
-      setOptimizedResume(resumeData);
 
-      setParsedResumeData(resumeData);
+      setOptimizedResume(resumeData);
 
-      
+      setParsedResumeData(resumeData);
 
-      if (resumeData.projects && resumeData.projects.length > 0) {
 
-        setShowProjectAnalysis(true);
+      if (resumeData.projects && resumeData.projects.length > 0) {
 
-      } else {
+        setShowProjectAnalysis(true);
 
-        await proceedWithFinalOptimization(resumeData, initialScore);
+      } else {
 
-      }
+        await proceedWithFinalOptimization(resumeData, initialScore);
 
-    } catch (error) {
+      }
 
-      console.error('Error in initial resume processing:', error);
+    } catch (error) {
 
-      alert('Failed to process resume. Please try again.');
+      console.error('Error in initial resume processing:', error);
 
-      setIsProcessingMissingSections(false);
+      alert('Failed to process resume. Please try again.');
 
-    } finally {
+      setIsProcessingMissingSections(false);
 
-      setIsCalculatingScore(false);
+    } finally {
 
-    }
+      setIsCalculatingScore(false);
 
-  };
+    }
 
-  
+  };
 
-  const checkForMissingSections = (resumeData: ResumeData): string[] => {
 
-    const missing: string[] = [];
+  const checkForMissingSections = (resumeData: ResumeData): string[] => {
 
-    if (!resumeData.workExperience || resumeData.workExperience.length === 0) {
+    const missing: string[] = [];
 
-      missing.push('workExperience');
+    if (!resumeData.workExperience || resumeData.workExperience.length === 0) {
 
-    }
+      missing.push('workExperience');
 
-    if (!resumeData.projects || resumeData.projects.length === 0) {
+    }
 
-      missing.push('projects');
+    if (!resumeData.projects || resumeData.projects.length === 0) {
 
-    }
+      missing.push('projects');
 
-    if (!resumeData.certifications || resumeData.certifications.length === 0) {
+    }
 
-      missing.push('certifications');
+    if (!resumeData.certifications || resumeData.certifications.length === 0) {
 
-    }
+      missing.push('certifications');
 
-    return missing;
+    }
 
-  };
+    return missing;
 
-  
+  };
 
-  const handleMissingSectionsProvided = async (data: any) => {
 
-    setIsProcessingMissingSections(true);
+  const handleMissingSectionsProvided = async (data: any) => {
 
-    try {
+    setIsProcessingMissingSections(true);
 
-      if (!pendingResumeData) return;
+    try {
 
-      const updatedResume = {
+      if (!pendingResumeData) return;
 
-        ...pendingResumeData,
+      const updatedResume = {
 
-        ...(data.workExperience && { workExperience: data.workExperience }),
+        ...pendingResumeData,
 
-        ...(data.projects && { projects: data.projects }),
+        ...(data.workExperience && { workExperience: data.workExperience }),
 
-        ...(data.certifications && { certifications: data.certifications })
+        ...(data.projects && { projects: data.projects }),
 
-      };
+        ...(data.certifications && { certifications: data.certifications })
 
-      
+      };
 
-      setShowMissingSectionsModal(false);
 
-      setMissingSections([]);
+      setShowMissingSectionsModal(false);
 
-      setPendingResumeData(null);
+      setMissingSections([]);
 
-      await handleInitialResumeProcessing(updatedResume);
+      setPendingResumeData(null);
 
-    } catch (error) {
+      await handleInitialResumeProcessing(updatedResume);
 
-      console.error('Error processing missing sections:', error);
+    } catch (error) {
 
-      alert('Failed to process the provided information. Please try again.');
+      console.error('Error processing missing sections:', error);
 
-    } finally {
+      alert('Failed to process the provided information. Please try again.');
 
-      setIsProcessingMissingSections(false);
+    } finally {
 
-    }
+      setIsProcessingMissingSections(false);
 
-  };
+    }
 
-  
+  };
 
-  const proceedWithFinalOptimization = async (resumeData: ResumeData, initialScore: DetailedScore) => {
 
-    try {
+  const proceedWithFinalOptimization = async (resumeData: ResumeData, initialScore: DetailedScore) => {
 
-      setIsOptimizing(true);
+    try {
 
-      await proceedWithOptimization(resumeData, initialScore);
+      setIsOptimizing(true);
 
-    } catch (error) {
+      await proceedWithOptimization(resumeData, initialScore);
 
-      console.error('Error in final optimization:', error);
+    } catch (error) {
 
-      alert('Failed to complete final optimization. Please try again.');
+      console.error('Error in final optimization:', error);
 
-      setIsOptimizing(false);
+      alert('Failed to complete final optimization. Please try again.');
 
-    } finally {
+      setIsOptimizing(false);
 
-      setIsOptimizing(false);
+    } finally {
 
-    }
+      setIsOptimizing(false);
 
-  };
+    }
 
-  
+  };
 
-  const proceedWithOptimization = async (resumeData: ResumeData, initialScore: DetailedScore) => {
 
-    try {
+  const proceedWithOptimization = async (resumeData: ResumeData, initialScore: DetailedScore) => {
 
-      console.log('Starting final AI optimization pass...');
+    try {
 
-      const finalOptimizedResume = await optimizeResume(
+      console.log('Starting final AI optimization pass...');
 
-        JSON.stringify(resumeData),
+      const finalOptimizedResume = await optimizeResume(
 
-        jobDescription,
+        JSON.stringify(resumeData),
 
-        userType,
+        jobDescription,
 
-        linkedinUrl,
+        userType,
 
-        githubUrl,
+        linkedinUrl,
 
-        targetRole
+        githubUrl,
 
-      );
+        targetRole
 
-      
+      );
 
-      let finalResumeData = finalOptimizedResume;
 
-      
+      let finalResumeData = finalOptimizedResume;
 
-      if (finalOptimizedResume.projects && finalOptimizedResume.projects.length > 0) {
 
-        try {
+      if (finalOptimizedResume.projects && finalOptimizedResume.projects.length > 0) {
 
-          const projectAnalysis = await advancedProjectAnalyzer.analyzeAndReplaceProjects(
+        try {
 
-            finalOptimizedResume,
+          const projectAnalysis = await advancedProjectAnalyzer.analyzeAndReplaceProjects(
 
-            targetRole || 'Software Engineer',
+            finalOptimizedResume,
 
-            jobDescription
+            targetRole || 'Software Engineer',
 
-          );
+            jobDescription
 
-          
+          );
 
-          const suitableProjects = finalOptimizedResume.projects?.filter(project => {
 
-            const analysis = projectAnalysis.projectsToReplace.find(p => p.title === project.title);
+          const suitableProjects = finalOptimizedResume.projects?.filter(project => {
 
-            return !analysis || analysis.score >= 80;
+            const analysis = projectAnalysis.projectsToReplace.find(p => p.title === project.title);
 
-          }) || [];
+            return !analysis || analysis.score >= 80;
 
-          
+          }) || [];
 
-          const replacementProjects = projectAnalysis.replacementSuggestions.map(suggestion => ({
 
-            title: suggestion.title,
+          const replacementProjects = projectAnalysis.replacementSuggestions.map(suggestion => ({
 
-            bullets: suggestion.bullets,
+            title: suggestion.title,
 
-            githubUrl: suggestion.githubUrl
+            bullets: suggestion.bullets,
 
-          }));
+            githubUrl: suggestion.githubUrl
 
-          
+          }));
 
-          const finalProjects = [...suitableProjects];
 
-          
+          const finalProjects = [...suitableProjects];
 
-          for (const newProject of replacementProjects) {
 
-            if (finalProjects.length < 3) {
+          for (const newProject of replacementProjects) {
 
-              finalProjects.push(newProject);
+            if (finalProjects.length < 3) {
 
-            } else {
+              finalProjects.push(newProject);
 
-              break;
+            } else {
 
-            }
+              break;
 
-          }
+            }
 
-          
+          }
 
-          finalResumeData = {
 
-            ...finalOptimizedResume,
+          finalResumeData = {
 
-            projects: finalProjects
+            ...finalOptimizedResume,
 
-          };
+            projects: finalProjects
 
-          
+          };
 
-          console.log(`Project replacement: ${finalOptimizedResume.projects.length} original → ${suitableProjects.length} kept + ${finalProjects.length - suitableProjects.length} new = ${finalProjects.length} total`);
 
-        } catch (projectError) {
+          console.log(`Project replacement: ${finalOptimizedResume.projects.length} original → ${suitableProjects.length} kept + ${finalProjects.length - suitableProjects.length} new = ${finalProjects.length} total`);
 
-          console.warn('Project analysis failed, using original projects:', projectError);
+        } catch (projectError) {
 
-        }
+          console.warn('Project analysis failed, using original projects:', projectError);
 
-      }
+        }
 
+      }
 
 
-      const beforeScoreData = generateBeforeScore(reconstructResumeText(resumeData));
 
-      setBeforeScore(beforeScoreData);
+      const beforeScoreData = generateBeforeScore(reconstructResumeText(resumeData));
 
+      setBeforeScore(beforeScoreData);
 
 
-      setOptimizedResume(finalResumeData);
 
+      setOptimizedResume(finalResumeData);
 
 
-      const afterScoreData = generateAfterScore(JSON.stringify(finalResumeData));
 
-      setAfterScore(afterScoreData);
+      const afterScoreData = generateAfterScore(JSON.stringify(finalResumeData));
 
-      
+      setAfterScore(afterScoreData);
 
-      const finalScore = await getDetailedResumeScore(finalResumeData, jobDescription);
 
-      setFinalResumeScore(finalScore);
+      const finalScore = await getDetailedResumeScore(finalResumeData, jobDescription);
 
+      setFinalResumeScore(finalScore);
 
 
-      const sections = ['workExperience', 'education', 'projects', 'skills', 'certifications'];
 
-      setChangedSections(sections);
+      const sections = ['workExperience', 'education', 'projects', 'skills', 'certifications'];
 
+      setChangedSections(sections);
 
 
-      const optimizationResult = await paymentService.useOptimization(user.id);
 
-      if (optimizationResult.success) {
+      const optimizationResult = await paymentService.useOptimization(user.id);
 
-        await checkSubscriptionStatus();
+      if (optimizationResult.success) {
 
-      }
+        await checkSubscriptionStatus();
 
-      
+      }
 
-      if (window.innerWidth < 768) {
 
-        setShowMobileInterface(true);
+      if (window.innerWidth < 768) {
 
-      }
+        setShowMobileInterface(true);
 
-    } catch (error) {
+      }
 
-      console.error('Error optimizing resume:', error);
+    } catch (error) {
 
-      alert('Failed to optimize resume. Please try again.');
+      console.error('Error optimizing resume:', error);
 
-    } finally {
+      alert('Failed to optimize resume. Please try again.');
 
-      setIsOptimizing(false);
+    } finally {
 
-    }
+      setIsOptimizing(false);
 
-  };
+    }
 
-  
+  };
 
-  const handleProjectMismatchResponse = (proceed: boolean) => {
 
-    setShowProjectMismatch(false);
+  const handleProjectMismatchResponse = (proceed: boolean) => {
 
-    if (proceed) {
+    setShowProjectMismatch(false);
 
-      setShowProjectOptions(true);
+    if (proceed) {
 
-    } else {
+      setShowProjectOptions(true);
 
-      if (parsedResumeData && initialResumeScore) {
+    } else {
 
-        proceedWithOptimization(parsedResumeData, initialResumeScore);
+      if (parsedResumeData && initialResumeScore) {
 
-      }
+        proceedWithOptimization(parsedResumeData, initialResumeScore);
 
-    }
+      }
 
-  };
+    }
 
-  
+  };
 
-  const handleProjectOptionSelect = (option: 'manual' | 'ai') => {
 
-    setShowProjectOptions(false);
+  const handleProjectOptionSelect = (option: 'manual' | 'ai') => {
 
-    if (option === 'manual') {
+    setShowProjectOptions(false);
 
-      setShowManualProjectAdd(true);
+    if (option === 'manual') {
 
-    } else {
+      setShowManualProjectAdd(true);
 
-      setShowProjectEnhancement(true);
+    } else {
 
-    }
+      setShowProjectEnhancement(true);
 
-  };
+    }
 
-  
+  };
 
-  const generateAIProject = async (jd: string, resume: ResumeData) => {
 
-    return {
+  const generateAIProject = async (jd: string, resume: ResumeData) => {
 
-      title: "AI-Generated Project Based on Job Requirements",
+    return {
 
-      bullets: [
+      title: "AI-Generated Project Based on Job Requirements",
 
-        "Developed a full-stack application using technologies mentioned in job description",
+      bullets: [
 
-        "Implemented key features that align with role requirements and responsibilities",
+        "Developed a full-stack application using technologies mentioned in job description",
 
-        "Utilized modern development practices and tools relevant to the target position"
+        "Implemented key features that align with role requirements and responsibilities",
 
-      ]
+        "Utilized modern development practices and tools relevant to the target position"
 
-    };
+      ]
 
-  };
+    };
 
-  
+  };
 
-  const addTechToStack = () => {
 
-    if (newTechStack.trim() && !manualProject.techStack.includes(newTechStack.trim())) {
+  const addTechToStack = () => {
 
-      setManualProject(prev => ({
+    if (newTechStack.trim() && !manualProject.techStack.includes(newTechStack.trim())) {
 
-        ...prev,
+      setManualProject(prev => ({
 
-        techStack: [...prev.techStack, newTechStack.trim()],
+        ...prev,
 
-      }));
+        techStack: [...prev.techStack, newTechStack.trim()],
 
-      setNewTechStack('');
+      }));
 
-    }
+      setNewTechStack('');
 
-  };
+    }
 
-  
+  };
 
-  const removeTechFromStack = (tech: string) => {
 
-    setManualProject(prev => ({
+  const removeTechFromStack = (tech: string) => {
 
-      ...prev,
+    setManualProject(prev => ({
 
-      techStack: prev.techStack.filter(t => t !== tech)
+      ...prev,
 
-    }));
+      techStack: prev.techStack.filter(t => t !== tech)
 
-  };
+    }));
 
-  
+  };
 
-  const handleManualProjectSubmit = async () => {
 
-    if (!manualProject.title || !parsedResumeData) return;
+  const handleManualProjectSubmit = async () => {
 
-    
+    if (!manualProject.title || !parsedResumeData) return;
 
-    setIsOptimizing(true);
 
-    try {
+    setIsOptimizing(true);
 
-      const projectDescription = await generateProjectDescription(manualProject, jobDescription);
+    try {
 
-      
+      const projectDescription = await generateProjectDescription(manualProject, jobDescription);
 
-      const newProject = {
 
-        title: manualProject.title,
+      const newProject = {
 
-        bullets: projectDescription.split('\n').filter(line => line.trim().startsWith('•')).map(line => line.replace('•', '').trim())
+        title: manualProject.title,
 
-      };
+        bullets: projectDescription.split('\n').filter(line => line.trim().startsWith('•')).map(line => line.replace('•', '').trim())
 
-      
+      };
 
-      let updatedResume;
 
-      
+      let updatedResume;
 
-      if (lowScoringProjects.length > 0) {
 
-        const filteredProjects = parsedResumeData.projects?.filter(project => 
+      if (lowScoringProjects.length > 0) {
 
-          !lowScoringProjects.some(lowProject => lowProject.title === project.title)
+        const filteredProjects = parsedResumeData.projects?.filter(project =>
 
-        ) || [];
+          !lowScoringProjects.some(lowProject => lowProject.title === project.title)
 
-        
+        ) || [];
 
-        updatedResume = {
 
-          ...parsedResumeData,
+        updatedResume = {
 
-          projects: [...filteredProjects, newProject]
+          ...parsedResumeData,
 
-        };
+          projects: [...filteredProjects, newProject]
 
-      } else {
+        };
 
-        updatedResume = {
+      } else {
 
-          ...parsedResumeData,
+        updatedResume = {
 
-          projects: [...(parsedResumeData.projects || []), newProject]
+          ...parsedResumeData,
 
-        };
+          projects: [...(parsedResumeData.projects || []), newProject]
 
-      }
+        };
 
-      
+      }
 
-      setShowManualProjectAdd(false);
 
-      await proceedWithOptimization(updatedResume, initialResumeScore!);
+      setShowManualProjectAdd(false);
 
-    } catch (error) {
+      await proceedWithOptimization(updatedResume, initialResumeScore!);
 
-      console.error('Error creating manual project:', error);
+    } catch (error) {
 
-      alert('Failed to create project. Please try again.');
+      console.error('Error creating manual project:', error);
 
-      setIsOptimizing(false);
+      alert('Failed to create project. Please try again.');
 
-    }
+      setIsOptimizing(false);
 
-  };
+    }
 
-  
+  };
 
-  const generateProjectDescription = async (project: any, jd: string): Promise<string> => {
 
-    return `• Developed ${project.title} using ${project.techStack.join(', ')} technologies
+  const generateProjectDescription = async (project: any, jd: string): Promise<string> => {
+
+    return `• Developed ${project.title} using ${project.techStack.join(', ')} technologies
 
 • Implemented core features and functionality aligned with industry best practices
 
 • Delivered scalable solution with focus on performance and user experience`;
 
-  };
+  };
 
 
 
-  const handleProjectsAdded = (updatedResumeData: ResumeData) => {
+  const handleProjectsAdded = (updatedResumeData: ResumeData) => {
 
-    console.log('handleProjectsAdded called with:', updatedResumeData);
+    console.log('handleProjectsAdded called with:', updatedResumeData);
 
-    
 
-    setOptimizedResume(updatedResumeData);
+    setOptimizedResume(updatedResumeData);
 
-    setParsedResumeData(updatedResumeData);
+    setParsedResumeData(updatedResumeData);
 
-    
 
-    if (initialResumeScore) {
+    if (initialResumeScore) {
 
-      proceedWithFinalOptimization(updatedResumeData, initialResumeScore);
+      proceedWithFinalOptimization(updatedResumeData, initialResumeScore);
 
-    } else {
+    } else {
 
-      generateScoresAfterProjectAdd(updatedResumeData);
+      generateScoresAfterProjectAdd(updatedResumeData);
 
-    }
+    }
 
-  };
+  };
 
-  
 
-  const generateScoresAfterProjectAdd = async (updatedResume: ResumeData) => {
+  const generateScoresAfterProjectAdd = async (updatedResume: ResumeData) => {
 
-    try {
+    try {
 
-      const beforeScoreData = generateBeforeScore(reconstructResumeText(parsedResumeData!));
+      const beforeScoreData = generateBeforeScore(reconstructResumeText(parsedResumeData!));
 
-      setBeforeScore(beforeScoreData);
+      setBeforeScore(beforeScoreData);
 
 
 
-      const afterScoreData = generateAfterScore(JSON.stringify(updatedResume));
+      const afterScoreData = generateAfterScore(JSON.stringify(updatedResume));
 
-      setAfterScore(afterScoreData);
+      setAfterScore(afterScoreData);
 
-      
 
-      if (initialResumeScore) {
+      if (initialResumeScore) {
 
-        const finalScore = await getDetailedResumeScore(updatedResume, jobDescription);
+        const finalScore = await getDetailedResumeScore(updatedResume, jobDescription);
 
-        setFinalResumeScore(finalScore);
+        setFinalResumeScore(finalScore);
 
-      }
+      }
 
 
 
-      const sections = ['projects', 'workExperience', 'skills'];
+      const sections = ['projects', 'workExperience', 'skills'];
 
-      setChangedSections(sections);
+      setChangedSections(sections);
 
 
 
-      if (window.innerWidth < 768) {
+      if (window.innerWidth < 768) {
 
-        setShowMobileInterface(true);
+        setShowMobileInterface(true);
 
-      }
+      }
 
-    } catch (error) {
+    } catch (error) {
 
-      console.error('Error generating scores after project add:', error);
+      console.error('Error generating scores after project add:', error);
 
-    }
+    }
 
-  };
+  };
 
 
 
-  const handleSubscriptionSuccess = () => {
+  const handleSubscriptionSuccess = () => {
 
-    checkSubscriptionStatus();
+    checkSubscriptionStatus();
 
-  };
+  };
 
 
 
-  const handleProjectsUpdated = (updatedResume: ResumeData) => {
+  const handleProjectsUpdated = (updatedResume: ResumeData) => {
 
-    console.log('Projects updated, triggering final AI re-optimization...');
+    console.log('Projects updated, triggering final AI re-optimization...');
 
-    
 
-    setOptimizedResume(updatedResume);
+    setOptimizedResume(updatedResume);
 
-    setParsedResumeData(updatedResume);
+    setParsedResumeData(updatedResume);
 
-    
 
-    if (initialResumeScore) {
+    if (initialResumeScore) {
 
-      proceedWithFinalOptimization(updatedResume, initialResumeScore);
+      proceedWithFinalOptimization(updatedResume, initialResumeScore);
 
-    } else {
+    } else {
 
-      generateScoresAfterProjectAdd(updatedResume);
+      generateScoresAfterProjectAdd(updatedResume);
 
-    }
+    }
 
-  };
+  };
 
 
 
-  // Mobile interface sections - NEW
+  // Mobile interface sections - NEW
 
-  const mobileSections = [
+  const mobileSections = [
 
-    {
+    {
 
-      id: 'resume',
+      id: 'resume',
 
-      title: 'Optimized Resume',
+      title: 'Optimized Resume',
 
-      icon: <FileText className="w-5 h-5" />,
+      icon: <FileText className="w-5 h-5" />,
 
-      // Ensure optimizedResume is not null before passing it
+      // Ensure optimizedResume is not null before passing it
 
-      component: optimizedResume ? (
+      component: optimizedResume ? (
 
-        <ResumePreview resumeData={optimizedResume} userType={userType} />
+        <ResumePreview resumeData={optimizedResume} userType={userType} />
 
-      ) : null,
+      ) : null,
 
-      resumeData: optimizedResume // Pass resumeData directly for potential internal use in MobileOptimizedInterface
+      resumeData: optimizedResume // Pass resumeData directly for potential internal use in MobileOptimizedInterface
 
-    },
+    },
 
-    {
+    {
 
-      id: 'analysis',
+      id: 'analysis',
 
-      title: 'Resume Analysis', // Updated title for clarity
+      title: 'Resume Analysis', // Updated title for clarity
 
-      icon: <BarChart3 className="w-5 h-5" />,
+      icon: <BarChart3 className="w-5 h-5" />,
 
-      // Ensure both scores are available before passing
+      // Ensure both scores are available before passing
 
-      component: beforeScore && afterScore && optimizedResume && jobDescription && targetRole ? (
+      component: beforeScore && afterScore && optimizedResume && jobDescription && targetRole ? (
 
-        <>
+        <>
 
-          {/* Detailed Score Analysis from ResumeOptimizer */}
+          {/* Detailed Score Analysis from ResumeOptimizer */}
 
-          {initialResumeScore && finalResumeScore && (
+          {initialResumeScore && finalResumeScore && (
 
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-6">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-6">
 
-              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
 
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <h2 className="text-xl font-semibold text-gray-900 flex items-center">
 
-                  <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
+                  <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
 
-                  Resume Score Overview
+                  Resume Score Overview
 
-                </h2>
+                </h2>
 
-              </div>
+              </div>
 
-              <div className="p-6">
+              <div className="p-6">
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                  <div className="text-center">
+                  <div className="text-center">
 
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Before Optimization</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Before Optimization</h3>
 
-                    <div className="text-4xl font-bold text-red-600 mb-2">{initialResumeScore.totalScore}/100</div>
+                    <div className="text-4xl font-bold text-red-600 mb-2">{initialResumeScore.totalScore}/100</div>
 
-                    <div className="text-sm text-gray-600">Grade: {initialResumeScore.grade}</div>
+                    <div className="text-sm text-gray-600">Grade: {initialResumeScore.grade}</div>
 
-                  </div>
+                  </div>
 
-                  <div className="text-center">
+                  <div className="text-center">
 
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">After Optimization</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">After Optimization</h3>
 
-                    <div className="text-4xl font-bold text-green-600 mb-2">{finalResumeScore.totalScore}/100</div>
+                    <div className="text-4xl font-bold text-green-600 mb-2">{finalResumeScore.totalScore}/100</div>
 
-                    <div className="text-sm text-gray-600">Grade: {finalResumeScore.grade}</div>
+                    <div className="text-sm text-gray-600">Grade: {finalResumeScore.grade}</div>
 
-                  </div>
+                  </div>
 
-                </div>
+                </div>
 
-                <div className="mt-6 text-center">
+                <div className="mt-6 text-center">
 
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-2xl font-bold text-blue-600">
 
-                    +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
+                    +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
 
-                  </div>
+                  </div>
 
-                </div>
+                </div>
 
-              </div>
+              </div>
 
-            </div>
+            </div>
 
-          )}
+          )}
 
-          <ComprehensiveAnalysis
+          <ComprehensiveAnalysis
 
-            beforeScore={beforeScore}
+            beforeScore={beforeScore}
 
-            afterScore={afterScore}
+            afterScore={afterScore}
 
-            changedSections={changedSections}
+            changedSections={changedSections}
 
-            resumeData={optimizedResume}
+            resumeData={optimizedResume}
 
-            jobDescription={jobDescription}
+            jobDescription={jobDescription}
 
-            targetRole={targetRole || "Target Role"}
+            targetRole={targetRole || "Target Role"}
 
-          />
+          />
 
-        </>
+        </>
 
-      ) : null
+      ) : null
 
-    }
+    }
 
-  ];
+  ];
 
 
 
 
 
-  if (showMobileInterface && optimizedResume) {
+  if (showMobileInterface && optimizedResume) {
 
-    return <MobileOptimizedInterface sections={mobileSections} />;
+    return <MobileOptimizedInterface sections={mobileSections} />;
 
-  }
+  }
 
 
 
-  if (isOptimizing) {
+  if (isOptimizing) {
 
-    return (
+    return (
 
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 p-4">
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
+        <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
 
-          <Loader2 className="w-16 h-16 text-blue-600 animate-spin mx-auto mb-6" />
+          <Loader2 className="w-16 h-16 text-blue-600 animate-spin mx-auto mb-6" />
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">Optimizing Your Resume...</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">Optimizing Your Resume...</h2>
 
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-4">
 
-            Please wait while our AI analyzes your resume and job description to generate the best possible match.
+            Please wait while our AI analyzes your resume and job description to generate the best possible match.
 
-          </p>
+          </p>
 
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500">
 
-            This may take a few moments as we process complex data and apply advanced algorithms.
+            This may take a few moments as we process complex data and apply advanced algorithms.
 
-          </p>
+          </p>
 
-        </div>
+        </div>
 
-      </div>
+      </div>
 
-    );
+    );
 
-  }
+  }
 
 
 
-  return (
+  return (
 
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16">
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        {!optimizedResume ? (
+        {!optimizedResume ? (
 
-          <>
+          <>
 
-            <div className="text-center mb-8">
+            <div className="text-center mb-8">
 
-              <div className="w-20 h-20 rounded-full overflow-hidden shadow-lg mx-auto mb-4">
+              <div className="w-20 h-20 rounded-full overflow-hidden shadow-lg mx-auto mb-4">
 
-                <img
+                <img
 
-                  src="https://res.cloudinary.com/dlkovvlud/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1751536902/a-modern-logo-design-featuring-primoboos_XhhkS8E_Q5iOwxbAXB4CqQ_HnpCsJn4S1yrhb826jmMDw_nmycqj.jpg"
+                  src="https://res.cloudinary.com/dlkovvlud/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1751536902/a-modern-logo-design-featuring-primoboos_XhhkS8E_Q5iOwxbAXB4CqQ_HnpCsJn4S1yrhb826jmMDw_nmycqj.jpg"
 
-                  alt="PrimoBoost AI Logo"
+                  alt="PrimoBoost AI Logo"
 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover"
 
-                />
+                />
 
-              </div>
+              </div>
 
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">PrimoBoost AI</h1>
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">PrimoBoost AI</h1>
 
-              <p className="text-lg text-gray-600 mb-2">Upgrade Your Resume, Unlock Your Future</p>
+              <p className="text-lg text-gray-600 mb-2">Upgrade Your Resume, Unlock Your Future</p>
 
-              <p className="text-base text-gray-500 max-w-2xl mx-auto mb-6">Transform. Optimize. Get Hired – With PrimoBoost.AI</p>
+              <p className="text-base text-gray-500 max-w-2xl mx-auto mb-6">Transform. Optimize. Get Hired – With PrimoBoost.AI</p>
 
 
 
-              <div className="inline-flex items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-700 mb-8">
+              <div className="inline-flex items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-700 mb-8">
 
-                <Sparkles className="w-4 h-4 mr-2" />
+                <Sparkles className="w-4 h-4 mr-2" />
 
-                Powered by Advanced AI Technology
+                Powered by Advanced AI Technology
 
-              </div>
+              </div>
 
-            </div>
+            </div>
 
 
 
-            <div className="grid grid-cols-3 gap-4 mb-8"> {/* Added this wrapping div */}
+            <div className="grid grid-cols-3 gap-4 mb-8"> {/* Added this wrapping div */}
 
-              <div className={`bg-blue-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
+              <div className={`bg-blue-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
 
-                               sm:flex-1 sm:p-6 sm:w-auto sm:h-auto ${currentStep === 1 ? 'border-blue-300 ring-2 ring-blue-200' : 'border-gray-200'}`}>
+                               sm:flex-1 sm:p-6 sm:w-auto sm:h-auto ${currentStep === 1 ? 'border-blue-300 ring-2 ring-blue-200' : 'border-gray-200'}`}>
 
-                <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-0 sm:mb-4">
+                <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-0 sm:mb-4">
 
-                  <Upload className="w-6 h-6 text-blue-600" />
+                  <Upload className="w-6 h-6 text-blue-600" />
 
-                </div>
+                </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2 hidden sm:block">Upload Resume</h3>
                 <p className="text-sm text-gray-600 hidden sm:block">Upload your current resume or paste the text</p>
 
-              </div>
+              </div>
 
 
 
-              <div className={`bg-green-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
+              <div className={`bg-green-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
 
-                               sm:flex-1 sm:p-6 sm:w-auto sm:h-auto ${currentStep === 2 ? 'border-green-300 ring-2 ring-green-200' : 'border-gray-200'}`}>
+                               sm:flex-1 sm:p-6 sm:w-auto sm:h-auto ${currentStep === 2 ? 'border-green-300 ring-2 ring-green-200' : 'border-gray-200'}`}>
 
-                <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-0 sm:mb-4">
+                <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-0 sm:mb-4">
 
-                  <Briefcase className="w-6 h-6 text-green-600" />
+                  <Briefcase className="w-6 h-6 text-green-600" />
 
-                </div>
+                </div>
 
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 hidden sm:block">Add Job Details</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 hidden sm:block">Add Job Details</h3>
 
-                <p className="text-sm text-gray-600 hidden sm:block">Paste the job description you're targeting</p>
+                <p className="text-sm text-gray-600 hidden sm:block">Paste the job description you're targeting</p>
 
-              </div>
+              </div>
 
 
 
-              <div className={`bg-purple-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
+              <div className={`bg-purple-50 rounded-xl p-2 border flex-none w-24 h-28 flex flex-col items-center justify-center
 
-                               sm:flex-1 sm:p-6 sm:w-auto sm:h-auto ${currentStep === 3 ? 'border-purple-300 ring-2 ring-purple-200' : 'border-gray-200'}`}>
+                               sm:flex-1 sm:p-6 sm:w-auto sm:h-auto ${currentStep === 3 ? 'border-purple-300 ring-2 ring-purple-200' : 'border-gray-200'}`}>
 
-                <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-0 sm:mb-4">
+                <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-0 sm:mb-4">
 
-                  <Sparkles className="w-6 h-6 text-purple-600" />
+                  <Sparkles className="w-6 h-6 text-purple-600" />
 
-                </div>
+                </div>
 
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 hidden sm:block">Get Optimized</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 hidden sm:block">Get Optimized</h3>
 
-                <p className="text-sm text-gray-600 hidden sm:block">Download your enhanced, ATS-ready resume</p>
+                <p className="text-sm text-gray-600 hidden sm:block">Download your enhanced, ATS-ready resume</p>
 
-              </div>
+              </div>
 
-            </div> {/* Closing tag for the new wrapping div */}
+            </div> {/* Closing tag for the new wrapping div */}
 
 
 
-            {isAuthenticated && !loadingSubscription && (
+            {isAuthenticated && !loadingSubscription && (
 
-              <div className="mb-8">
+              <div className="mb-8">
 
-                <SubscriptionStatus onUpgrade={() => setShowSubscriptionPlans(true)} />
+                <SubscriptionStatus onUpgrade={() => setShowSubscriptionPlans(true)} />
 
-              </div>
+              </div>
 
-            )}
+            )}
 
 
 
-            <div className="max-w-7xl mx-auto space-y-6">
+            <div className="max-w-7xl mx-auto space-y-6">
 
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
 
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
 
-                  <Upload className="w-5 h-5 mr-2 text-blue-600" />
+                  <Upload className="w-5 h-5 mr-2 text-blue-600" />
 
-                  Upload Resume
+                  Upload Resume
 
-                </h2>
+                </h2>
 
-                <FileUpload onFileUpload={handleFileUpload} />
+                <FileUpload onFileUpload={handleFileUpload} />
 
-              </div>
+              </div>
 
 
 
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
 
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
 
-                  <FileText className="w-5 h-5 mr-2 text-green-600" />
+                  <FileText className="w-5 h-5 mr-2 text-green-600" />
 
-                  Resume & Job Details
+                  Resume & Job Details
 
-                </h2>
+                </h2>
 
-                <InputSection
+                <InputSection
 
-                  resumeText={resumeText}
+                  resumeText={resumeText}
 
-                  jobDescription={jobDescription}
+                  jobDescription={jobDescription}
 
-                  onResumeChange={setResumeText}
+                  onResumeChange={setResumeText}
 
-                  onJobDescriptionChange={setJobDescription}
+                  onJobDescriptionChange={setJobDescription}
 
-                />
+                />
 
-              </div>
+              </div>
 
 
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
 
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
 
-                    <User className="w-5 h-5 mr-2 text-purple-600" />
+                    <User className="w-5 h-5 mr-2 text-purple-600" />
 
-                    Social Links (Optional)
+                    Social Links (Optional)
 
-                  </h2>
+                  </h2>
 
-                  <div className="space-y-4">
+                  <div className="space-y-4">
 
-                    <div>
+                    <div>
 
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                        LinkedIn Profile URL
+                        LinkedIn Profile URL
 
-                      </label>
+                      </label>
 
-                      <input
+                      <input
 
-                        type="url"
+                        type="url"
 
-                        value={linkedinUrl}
+                        value={linkedinUrl}
 
-                        onChange={(e) => setLinkedinUrl(e.target.value)}
+                        onChange={(e) => setLinkedinUrl(e.target.value)}
 
-                        placeholder="https://linkedin.com/in/yourprofile"
+                        placeholder="https://linkedin.com/in/yourprofile"
 
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
 
-                      />
+                      />
 
-                    </div>
+                    </div>
 
-                    <div>
+                    <div>
 
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                        GitHub Profile URL
+                        GitHub Profile URL
 
-                      </label>
+                      </label>
 
-                      <input
+                      <input
 
-                        type="url"
+                        type="url"
 
-                        value={githubUrl}
+                        value={githubUrl}
 
-                        onChange={(e) => setGithubUrl(e.target.value)}
+                        onChange={(e) => setGithubUrl(e.target.value)}
 
-                        placeholder="https://github.com/yourusername"
+                        placeholder="https://github.com/yourusername"
 
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
 
-                      />
+                      />
 
-                    </div>
+                    </div>
 
-                  </div>
+                  </div>
 
-                </div>
+                </div>
 
 
 
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
 
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
 
-                    <Briefcase className="w-5 h-5 mr-2 text-orange-600" />
+                    <Briefcase className="w-5 h-5 mr-2 text-orange-600" />
 
-                    Target Role (Optional)
+                    Target Role (Optional)
 
-                  </h2>
+                  </h2>
 
-                  <div>
+                  <div>
 
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                      Role Title
+                      Role Title
 
-                    </label>
+                    </label>
 
-                    <input
+                    <input
 
-                      type="text"
+                      type="text"
 
-                      value={targetRole}
+                      value={targetRole}
 
-                      onChange={(e) => setTargetRole(e.target.value)}
+                      onChange={(e) => setTargetRole(e.target.value)}
 
-                      placeholder="e.g., Senior Software Engineer, Product Manager..."
+                      placeholder="e.g., Senior Software Engineer, Product Manager..."
 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
 
-                    />
+                    />
 
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-gray-500 mt-2">
 
-                      Specify the exact role title for more targeted project recommendations
+                      Specify the exact role title for more targeted project recommendations
 
-                    </p>
+                    </p>
 
-                  </div>
+                  </div>
 
-                </div>
+                </div>
 
-              </div>
+              </div>
 
 
 
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
 
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
 
-                  <User className="w-5 h-5 mr-2 text-indigo-600" />
+                  <User className="w-5 h-5 mr-2 text-indigo-600" />
 
-                  Experience Level
+                  Experience Level
 
-                </h2>
+                </h2>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
 
-                  <button
+                  <button
 
-                    onClick={() => setUserType('fresher')}
+                    onClick={() => setUserType('fresher')}
 
-                    className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                    className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
 
-                      userType === 'fresher'
+                      userType === 'fresher'
 
-                        ? 'border-green-500 bg-green-50 shadow-md'
+                        ? 'border-green-500 bg-green-50 shadow-md'
 
-                        : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
+                        : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
 
-                    }`}
+                    }`}
 
-                  >
+                  >
 
-                    <User className={`w-6 h-6 mb-2 ${userType === 'fresher' ? 'text-green-600' : 'text-gray-500'}`} />
+                    <User className={`w-6 h-6 mb-2 ${userType === 'fresher' ? 'text-green-600' : 'text-gray-500'}`} />
 
-                    <span className="font-medium">Fresher/New Graduate</span>
+                    <span className="font-medium">Fresher/New Graduate</span>
 
-                    <span className="text-xs text-gray-500 mt-1">Recent graduate or entry-level professional</span>
+                    <span className="text-xs text-gray-500 mt-1">Recent graduate or entry-level professional</span>
 
-                  </button>
+                  </button>
 
 
 
-                  <button
+                  <button
 
-                    onClick={() => setUserType('experienced')}
+                    onClick={() => setUserType('experienced')}
 
-                    className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                    className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
 
-                      userType === 'experienced'
+                      userType === 'experienced'
 
-                        ? 'border-blue-500 bg-blue-50 shadow-md'
+                        ? 'border-blue-500 bg-blue-50 shadow-md'
 
-                        : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
 
-                    }`}
+                    }`}
 
-                  >
+                  >
 
-                    <Briefcase className={`w-6 h-6 mb-2 ${userType === 'experienced' ? 'text-blue-600' : 'text-gray-500'}`} />
+                    <Briefcase className={`w-6 h-6 mb-2 ${userType === 'experienced' ? 'text-blue-600' : 'text-gray-500'}`} />
 
-                    <span className="font-medium">Experienced Professional</span>
+                    <span className="font-medium">Experienced Professional</span>
 
-                    <span className="text-xs text-gray-500 mt-1">Professional with 1+ years of work experience</span>
+                    <span className="text-xs text-gray-500 mt-1">Professional with 1+ years of work experience</span>
 
-                  </button>
+                  </button>
 
-                </div>
+                </div>
 
-              </div>
+              </div>
 
 
 
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
 
-                <button
+                <button
 
-                  onClick={isAuthenticated ? handleOptimize : onShowAuth}
+                  onClick={isAuthenticated ? handleOptimize : onShowAuth}
 
-                  disabled={!resumeText.trim() || !jobDescription.trim()}
+                  disabled={!resumeText.trim() || !jobDescription.trim()}
 
-                  className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
+                  className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
 
-                    !resumeText.trim() || !jobDescription.trim()
+                    !resumeText.trim() || !jobDescription.trim()
 
-                      ? 'bg-gray-400 cursor-not-allowed text-white'
+                      ? 'bg-gray-400 cursor-not-allowed text-white'
 
-                      : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl cursor-pointer'
+                      : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl cursor-pointer'
 
-                  }`}
+                  }`}
 
-                >
+                >
 
-                  <Sparkles className="w-6 h-6" />
+                  <Sparkles className="w-6 h-6" />
 
-                  <span>{isAuthenticated ? 'Optimize My Resume' : 'Sign In to Optimize'}</span>
+                  <span>{isAuthenticated ? 'Optimize My Resume' : 'Sign In to Optimize'}</span>
 
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5" />
 
-                </button>
+                </button>
 
 
 
-                {!isAuthenticated && (
+                {!isAuthenticated && (
 
-                  <p className="text-center text-sm text-gray-500 mt-3">
+                  <p className="text-center text-sm text-gray-500 mt-3">
 
-                    You need to be signed in to optimize your resume.
+                    You need to be signed in to optimize your resume.
 
-                  </p>
+                  </p>
 
-                )}
+                )}
 
-              </div>
+              </div>
 
 
 
-              {resumeText && jobDescription && (
+              {resumeText && jobDescription && (
 
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
 
-                  <button
+                  <button
 
-                    onClick={() => setShowProjectAnalysis(true)}
+                    onClick={() => setShowProjectAnalysis(true)}
 
-                    className="w-full py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer"
+                    className="w-full py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer"
 
-                  >
+                  >
 
-                    <Target className="w-5 h-5" />
+                    <Target className="w-5 h-5" />
 
-                    <span>Analyze & Improve Projects</span>
+                    <span>Analyze & Improve Projects</span>
 
-                  </button>
+                  </button>
 
-                </div>
+                </div>
 
-              )}
+              )}
 
-            </div>
+            </div>
 
-          </>
+          </>
 
-        ) : (
+        ) : (
 
-          <div className="max-w-7xl mx-auto space-y-6">
-
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-
-              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
-
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-
-                  <FileText className="w-5 h-5 mr-2 text-green-600" />
-
-                  Optimized Resume
-
-                </h2>
-
-              </div>
-
-              <ResumePreview resumeData={optimizedResume} userType={userType} />
-
-            </div>
-
-
-
-            <ExportButtons resumeData={optimizedResume} targetRole={targetRole} />
-
+          <div className="max-w-7xl mx-auto space-y-6">
+            {/* NEW TABBED NAVIGATION AND CREATE NEW RESUME BUTTON */}
             {optimizedResume && (
-  <div className="text-center">
-    <button
-      onClick={handleStartNewResume}
-      className="inline-flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors mt-6"
-    >
-      <ArrowLeft className="w-4 h-4" />
-      <span>Create New Resume</span>
-    </button>
-  </div>
-)}
+              <div className="text-center flex flex-col items-center gap-4">
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setActiveTab('resume')}
+                    className={`inline-flex items-center space-x-2 px-4 py-2 rounded-xl transition-colors font-medium text-sm ${
+                      activeTab === 'resume'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span>Resume Preview</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('analysis')}
+                    className={`inline-flex items-center space-x-2 px-4 py-2 rounded-xl transition-colors font-medium text-sm ${
+                      activeTab === 'analysis'
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    <span>Score Analysis</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleStartNewResume}
+                  className="inline-flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-xl shadow transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Create New Resume</span>
+                </button>
+              </div>
+            )}
+            {/* END NEW TABBED NAVIGATION AND CREATE NEW RESUME BUTTON */}
+
+            {/* CONDITIONAL RENDERING FOR ACTIVE TAB CONTENT */}
+            {optimizedResume && activeTab === 'resume' && (
+              <>
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
+                    <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                      <FileText className="w-5 h-5 mr-2 text-green-600" />
+                      Optimized Resume
+                    </h2>
+                  </div>
+                  <ResumePreview resumeData={optimizedResume} userType={userType} />
+                </div>
+                <ExportButtons resumeData={optimizedResume} targetRole={targetRole} />
+              </>
+            )}
+
+            {optimizedResume && activeTab === 'analysis' && (
+              <>
+                {beforeScore && afterScore && initialResumeScore && finalResumeScore && (
+                  <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-6">
+                    <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
+                      <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                        <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
+                        Resume Score Overview
+                      </h2>
+                    </div>
+                    <div className="p-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="text-center">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">Before Optimization</h3>
+                          <div className="text-4xl font-bold text-red-600 mb-2">{initialResumeScore.totalScore}/100</div>
+                          <div className="text-sm text-gray-600">Grade: {initialResumeScore.grade}</div>
+                        </div>
+                        <div className="text-center">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">After Optimization</h3>
+                          <div className="text-4xl font-bold text-green-600 mb-2">{finalResumeScore.totalScore}/100</div>
+                          <div className="text-sm text-gray-600">Grade: {finalResumeScore.grade}</div>
+                        </div>
+                      </div>
+                      <div className="mt-6 text-center">
+                        <div className="text-2xl font-bold text-blue-600">
+                          +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
+                <ComprehensiveAnalysis
+                  beforeScore={beforeScore}
+                  afterScore={afterScore}
+                  changedSections={changedSections}
+                  resumeData={optimizedResume}
+                  jobDescription={jobDescription}
+                  targetRole={targetRole || "Target Role"}
+                />
+              </>
+            )}
+            {/* END CONDITIONAL RENDERING FOR ACTIVE TAB CONTENT */}
 
 
+            {/* Project Analysis Button - This remains, but outside the tabbed content */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
 
-            {beforeScore && afterScore && initialResumeScore && finalResumeScore && (
+              <button
 
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-6">
+                onClick={() => setShowProjectAnalysis(true)}
 
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 border-b border-gray-200">
+                className="w-full py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer"
 
-                  <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+              >
 
-                    <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
+                <Target className="w-5 h-5" />
 
-                    Resume Score Analysis
+                <span>Analyze & Improve Projects</span>
 
-                  </h2>
+              </button>
 
-                </div>
+            </div>
 
-                <div className="p-6">
+          </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        )}
 
-                    <div className="text-center">
+      </div>
 
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Before Optimization</h3>
 
-                      <div className="text-4xl font-bold text-red-600 mb-2">{initialResumeScore.totalScore}/100</div>
 
-                      <div className="text-sm text-gray-600">Grade: {initialResumeScore.grade}</div>
+      {showProjectMismatch && (
 
-                    </div>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
 
-                    <div className="text-center">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
 
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">After Optimization</h3>
+            <div className="p-6">
 
-                      <div className="text-4xl font-bold text-green-600 mb-2">{finalResumeScore.totalScore}/100</div>
+              <div className="text-center mb-6">
 
-                      <div className="text-sm text-gray-600">Grade: {finalResumeScore.grade}</div>
+                <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
 
-                    </div>
+                  <AlertCircle className="w-8 h-8 text-orange-600" />
 
-                </div>
+                </div>
 
-                <div className="mt-6 text-center">
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Project Mismatch Detected</h2>
 
-                  <div className="text-2xl font-bold text-blue-600">
+                <p className="text-gray-600">
 
-                    +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
+                  Your current projects don't align well with the job description. Would you like to add a relevant project to improve your resume score?
 
-                  </div>
+                </p>
 
-                </div>
+              </div>
 
-              </div>
 
-              </div>
 
-            )}
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
 
+                <div className="text-center">
 
+                  <div className="text-2xl font-bold text-red-600 mb-1">
 
-            {beforeScore && afterScore && (
+                    {initialResumeScore?.totalScore}/100
 
-              <ComprehensiveAnalysis
+                  </div>
 
-                beforeScore={beforeScore}
+                  <div className="text-sm text-red-700">Current Resume Score</div>
 
-                afterScore={afterScore}
+                </div>
 
-                changedSections={changedSections}
+              </div>
 
-                resumeData={optimizedResume}
 
-                jobDescription={jobDescription}
 
-                targetRole={targetRole || "Target Role"}
+              <div className="flex space-x-3">
 
-              />
+                <button
 
-            )}
+                  onClick={() => handleProjectMismatchResponse(true)}
 
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors"
 
+                >
 
-            {/* Project Analysis Button */}
+                  Yes, Add Project
 
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                </button>
 
-              <button
+                <button
 
-                onClick={() => setShowProjectAnalysis(true)}
+                  onClick={() => handleProjectMismatchResponse(false)}
 
-                className="w-full py-3 px-6 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer"
+                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-colors"
 
-              >
+                >
 
-                <Target className="w-5 h-5" />
+                  Skip
 
-                <span>Analyze & Improve Projects</span>
+                </button>
 
-              </button>
+              </div>
 
-            </div>
+            </div>
 
-          </div>
+          </div>
 
-        )}
+        </div>
 
-      </div>
+      )}
 
 
 
-      {showProjectMismatch && (
+      {showProjectOptions && (
 
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
 
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
 
-            <div className="p-6">
+            <div className="p-6">
 
-              <div className="text-center mb-6">
+              <div className="text-center mb-6">
 
-                <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
 
-                  <AlertCircle className="w-8 h-8 text-orange-600" />
+                  <Plus className="w-8 h-8 text-blue-600" />
 
-                </div>
+                </div>
 
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Project Mismatch Detected</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Choose Project Addition Method</h2>
 
-                <p className="text-gray-600">
+                <p className="text-gray-600">
 
-                  Your current projects don't align well with the job description. Would you like to add a relevant project to improve your resume score?
+                  How would you like to add a relevant project to your resume?
 
-                </p>
+                </p>
 
-              </div>
+              </div>
 
 
 
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="space-y-3">
 
-                <div className="text-center">
+                <button
 
-                  <div className="text-2xl font-bold text-red-600 mb-1">
+                  onClick={() => handleProjectOptionSelect('manual')}
 
-                    {initialResumeScore?.totalScore}/100
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-4 rounded-xl transition-colors flex items-center justify-center space-x-2"
 
-                  </div>
+                >
 
-                  <div className="text-sm text-red-700">Current Resume Score</div>
+                  <User className="w-5 h-5" />
 
-                </div>
+                  <span>Manual Add - I'll provide project details</span>
 
-              </div>
+                </button>
 
+                <button
 
+                  onClick={() => handleProjectOptionSelect('ai')}
 
-              <div className="flex space-x-3">
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 px-4 rounded-xl transition-colors flex items-center justify-center space-x-2"
 
-                <button
+                >
 
-                  onClick={() => handleProjectMismatchResponse(true)}
+                  <Sparkles className="w-5 h-5" />
 
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors"
+                  <span>AI-Suggested - Generate automatically</span>
 
-                >
+                </button>
 
-                  Yes, Add Project
+              </div>
 
-                </button>
+            </div>
 
-                <button
+          </div>
 
-                  onClick={() => handleProjectMismatchResponse(false)}
+        </div>
 
-                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-colors"
+      )}
 
-                >
 
-                  Skip
 
-                </button>
+      {showManualProjectAdd && (
 
-              </div>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
 
-            </div>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
 
-          </div>
+            <div className="p-6">
 
-        </div>
+              <div className="text-center mb-6">
 
-      )}
+                <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
 
+                  <Plus className="w-8 h-8 text-green-600" />
 
+                </div>
 
-      {showProjectOptions && (
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Add Project Manually</h2>
 
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+                <p className="text-gray-600">
 
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                  Provide project details and AI will generate a professional description
 
-            <div className="p-6">
+                </p>
 
-              <div className="text-center mb-6">
+              </div>
 
-                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
 
-                  <Plus className="w-8 h-8 text-blue-600" />
 
-                </div>
+              <div className="space-y-4">
 
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Choose Project Addition Method</h2>
+                <div>
 
-                <p className="text-gray-600">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                  How would you like to add a relevant project to your resume?
+                    Project Title *
 
-                </p>
+                  </label>
 
-              </div>
+                  <input
 
+                    type="text"
 
+                    value={manualProject.title}
 
-              <div className="space-y-3">
+                    onChange={(e) => setManualProject(prev => ({ ...prev, title: e.target.value }))}
 
-                <button
+                    placeholder="e.g., E-commerce Website"
 
-                  onClick={() => handleProjectOptionSelect('manual')}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
 
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-4 rounded-xl transition-colors flex items-center justify-center space-x-2"
+                  />
 
-                >
+                </div>
 
-                  <User className="w-5 h-5" />
 
-                  <span>Manual Add - I'll provide project details</span>
 
-                </button>
+                <div className="grid grid-cols-2 gap-4">
 
-                <button
+                  <div>
 
-                  onClick={() => handleProjectOptionSelect('ai')}
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 px-4 rounded-xl transition-colors flex items-center justify-center space-x-2"
+                      Start Date *
 
-                >
+                    </label>
 
-                  <Sparkles className="w-5 h-5" />
+                    <input
 
-                  <span>AI-Suggested - Generate automatically</span>
+                      type="month"
 
-                </button>
+                      value={manualProject.startDate}
 
-              </div>
+                      onChange={(e) => setManualProject(prev => ({ ...prev, startDate: e.target.value }))}
 
-            </div>
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
 
-          </div>
+                    />
 
-        </div>
+                  </div>
 
-      )}
+                  <div>
 
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
 
+                      End Date *
 
-      {showManualProjectAdd && (
+                    </label>
 
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+                    <input
 
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                      type="month"
 
-            <div className="p-6">
+                      value={manualProject.endDate}
 
-              <div className="text-center mb-6">
+                      onChange={(e) => setManualProject(prev => ({ ...prev, endDate: e.target.value }))}
 
-                <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
 
-                  <Plus className="w-8 h-8 text-green-600" />
+                    />
 
-                </div>
+                  </div>
 
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Add Project Manually</h2>
+                </div>
 
-                <p className="text-gray-600">
 
-                  Provide project details and AI will generate a professional description
 
-                </p>
+                <div>
 
-              </div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
 
+                    Tech Stack *
 
+                  </label>
 
-              <div className="space-y-4">
+                  <div className="flex gap-2 mb-2">
 
-                <div>
+                    <input
 
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                      type="text"
 
-                    Project Title *
+                      value={newTechStack}
 
-                  </label>
+                      onChange={(e) => setNewTechStack(e.target.value)}
 
-                  <input
+                      placeholder="Add technology (e.g., React, Node.js)"
 
-                    type="text"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
 
-                    value={manualProject.title}
+                      onKeyPress={(e) => e.key === 'Enter' && addTechToStack()}
 
-                    onChange={(e) => setManualProject(prev => ({ ...prev, title: e.target.value }))}
+                    />
 
-                    placeholder="e.g., E-commerce Website"
+                    <button
 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      onClick={addTechToStack}
 
-                  />
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
 
-                </div>
+                    >
 
+                      Add
 
+                    </button>
 
-                <div className="grid grid-cols-2 gap-4">
+                  </div>
 
-                  <div>
+                  <div className="flex flex-wrap gap-2">
 
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {manualProject.techStack.map((tech, index) => (
 
-                      Start Date *
+                      <span
 
-                    </label>
+                        key={index}
 
-                    <input
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800"
 
-                      type="month"
+                      >
 
-                      value={manualProject.startDate}
+                        {tech}
 
-                      onChange={(e) => setManualProject(prev => ({ ...prev, startDate: e.target.value }))}
+                        <button
 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                          onClick={() => removeTechFromStack(tech)}
 
-                    />
+                          className="ml-2 text-green-600 hover:text-green-800"
 
-                  </div>
+                        >
 
-                  <div>
+                          <X className="w-3 h-3" />
 
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        </button>
 
-                      End Date *
+                      </span>
 
-                    </label>
+                    ))}
 
-                    <input
+                  </div>
 
-                      type="month"
+                </div>
 
-                      value={manualProject.endDate}
 
-                      onChange={(e) => setManualProject(prev => ({ ...prev, endDate: e.target.value }))}
 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                <div>
 
-                    />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                  </div>
+                    One-liner Description (Optional)
 
-                </div>
+                  </label>
 
+                  <input
 
+                    type="text"
 
-                <div>
+                    value={manualProject.oneLiner}
 
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    onChange={(e) => setManualProject(prev => ({ ...prev, oneLiner: e.target.value }))}
 
-                    Tech Stack *
+                    placeholder="Brief description of the project"
 
-                  </label>
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
 
-                  <div className="flex gap-2 mb-2">
+                  />
 
-                    <input
+                </div>
 
-                      type="text"
+              </div>
 
-                      value={newTechStack}
 
-                      onChange={(e) => setNewTechStack(e.target.value)}
 
-                      placeholder="Add technology (e.g., React, Node.js)"
+              <div className="flex space-x-3 mt-6">
 
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                <button
 
-                      onKeyPress={(e) => e.key === 'Enter' && addTechToStack()}
+                  onClick={handleManualProjectSubmit}
 
-                    />
+                  disabled={!manualProject.title || manualProject.techStack.length === 0}
 
-                    <button
+                  className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-3 px-4 rounded-xl transition-colors"
 
-                      onClick={addTechToStack}
+                >
 
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  Generate & Add Project
 
-                    >
+                </button>
 
-                      Add
+                <button
 
-                    </button>
+                  onClick={() => setShowManualProjectAdd(false)}
 
-                  </div>
+                  className="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-xl transition-colors"
 
-                  <div className="flex flex-wrap gap-2">
+                >
 
-                    {manualProject.techStack.map((tech, index) => (
+                  Cancel
 
-                      <span
+                </button>
 
-                        key={index}
+              </div>
 
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800"
+            </div>
 
-                      >
+          </div>
 
-                        {tech}
+        </div>
 
-                        <button
+      )}
 
-                          onClick={() => removeTechFromStack(tech)}
 
-                          className="ml-2 text-green-600 hover:text-green-800"
 
-                        >
+      {isProcessingMissingSections && (
 
-                          <X className="w-3 h-3" />
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
 
-                        </button>
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 text-center">
 
-                      </span>
+            <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
 
-                    ))}
+              <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
 
-                </div>
+            </div>
 
-                </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Processing Your Information</h2>
 
+            <p className="text-gray-600 mb-4">
 
+              We're updating your resume with the new sections you provided...
 
-                <div>
+            </p>
 
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2 text-sm text-gray-500">
 
-                    One-liner Description (Optional)
+              <div className="flex items-center justify-center">
 
-                  </label>
+                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
 
-                  <input
+                <span>Analyzing new content</span>
 
-                    type="text"
+              </div>
 
-                    value={manualProject.oneLiner}
+              <div className="flex items-center justify-center">
 
-                    onChange={(e) => setManualProject(prev => ({ ...prev, oneLiner: e.target.value }))}
+                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
 
-                    placeholder="Brief description of the project"
+                <span>Calculating resume score</span>
 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              </div>
 
-                  />
+              <div className="flex items-center justify-center">
 
-                </div>
+                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
 
-              </div>
+                <span>Preparing optimization</span>
 
+              </div>
 
+            </div>
 
-              <div className="flex space-x-3 mt-6">
+          </div>
 
-                <button
+        </div>
 
-                  onClick={handleManualProjectSubmit}
+      )}
 
-                  disabled={!manualProject.title || manualProject.techStack.length === 0}
 
-                  className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-3 px-4 rounded-xl transition-colors"
 
-                >
+      <>
 
-                  Generate & Add Project
+        <ProjectEnhancement
 
-                </button>
+          isOpen={showProjectEnhancement}
 
-                <button
+          onClose={() => setShowProjectEnhancement(false)}
 
-                  onClick={() => setShowManualProjectAdd(false)}
+          currentResume={parsedResumeData || optimizedResume || { name: '', phone: '', email: '', linkedin: '', github: '', education: [], workExperience: [], projects: [], skills: [], certifications: [] }}
 
-                  className="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-xl transition-colors"
+          jobDescription={jobDescription}
 
-                >
+          onProjectsAdded={handleProjectsUpdated}
 
-                  Cancel
+        />
 
-                </button>
 
-              </div>
 
-            </div>
+        <ProjectAnalysisModal
 
-          </div>
+          isOpen={showProjectAnalysis}
 
-        </div>
+          onClose={() => setShowProjectAnalysis(false)}
 
-      )}
+          resumeData={parsedResumeData || optimizedResume || { name: '', phone: '', email: '', linkedin: '', github: '', education: [], workExperience: [], projects: [], skills: [], certifications: [] }}
 
+          jobDescription={jobDescription}
 
+          targetRole={targetRole}
 
-      {isProcessingMissingSections && (
+          onProjectsUpdated={handleProjectsUpdated}
 
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
+        />
 
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 text-center">
 
-            <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
 
-              <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
+        <SubscriptionPlans
 
-            </div>
+          isOpen={showSubscriptionPlans}
 
-            <h2 className="text-xl font-bold text-gray-900 mb-3">Processing Your Information</h2>
+          onClose={() => setShowSubscriptionPlans(false)}
 
-            <p className="text-gray-600 mb-4">
+          onSubscriptionSuccess={handleSubscriptionSuccess}
 
-              We're updating your resume with the new sections you provided...
+        />
 
-            </p>
 
-            <div className="space-y-2 text-sm text-gray-500">
 
-              <div className="flex items-center justify-center">
+        <MissingSectionsModal
 
-                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+          isOpen={showMissingSectionsModal}
 
-                <span>Analyzing new content</span>
+          onClose={() => {
 
-              </div>
+            setShowMissingSectionsModal(false);
 
-              <div className="flex items-center justify-center">
+            setMissingSections([]);
 
-                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+            setPendingResumeData(null);
 
-                <span>Calculating resume score</span>
+            setIsOptimizing(false);
 
-              </div>
+          }}
 
-              <div className="flex items-center justify-center">
+          missingSections={missingSections}
 
-                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+          onSectionsProvided={handleMissingSectionsProvided}
 
-                <span>Preparing optimization</span>
+        />
 
-              </div>
+      </>
 
-            </div>
+    </div>
 
-          </div>
-
-        </div>
-
-      )}
-
-
-
-      <>
-
-        <ProjectEnhancement
-
-          isOpen={showProjectEnhancement}
-
-          onClose={() => setShowProjectEnhancement(false)}
-
-          currentResume={parsedResumeData || optimizedResume || { name: '', phone: '', email: '', linkedin: '', github: '', education: [], workExperience: [], projects: [], skills: [], certifications: [] }}
-
-          jobDescription={jobDescription}
-
-          onProjectsAdded={handleProjectsUpdated}
-
-        />
-
-
-
-        <ProjectAnalysisModal
-
-          isOpen={showProjectAnalysis}
-
-          onClose={() => setShowProjectAnalysis(false)}
-
-          resumeData={parsedResumeData || optimizedResume || { name: '', phone: '', email: '', linkedin: '', github: '', education: [], workExperience: [], projects: [], skills: [], certifications: [] }}
-
-          jobDescription={jobDescription}
-
-          targetRole={targetRole}
-
-          onProjectsUpdated={handleProjectsUpdated}
-
-        />
-
-
-
-        <SubscriptionPlans
-
-          isOpen={showSubscriptionPlans}
-
-          onClose={() => setShowSubscriptionPlans(false)}
-
-          onSubscriptionSuccess={handleSubscriptionSuccess}
-
-        />
-
-
-
-        <MissingSectionsModal
-
-          isOpen={showMissingSectionsModal}
-
-          onClose={() => {
-
-            setShowMissingSectionsModal(false);
-
-            setMissingSections([]);
-
-            setPendingResumeData(null);
-
-            setIsOptimizing(false);
-
-          }}
-
-          missingSections={missingSections}
-
-          onSectionsProvided={handleMissingSectionsProvided}
-
-        />
-
-      </>
-
-    </div>
-
-  );
+  );
 
 };
 
