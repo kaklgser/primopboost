@@ -233,7 +233,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
   const renderWorkExperienceForm = () => (
     <div className="space-y-4 sm:space-y-6">
-   <div className="text-center mb-4 sm:mb-6 mt-0 sm:mt-1">
+   <div className="text-center mb-4 sm:mb-6 mt-0 sm:mt-0">
 
         <div className="bg-blue-100 w-10 h-10 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
           <Briefcase className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
