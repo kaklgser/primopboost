@@ -130,7 +130,7 @@ JSON Structure:
   "linkedin": "",
   "github": "",
   "targetRole": "",
-  ${userType === 'experienced' ? '"summary": "",' : '"summary": "",'}
+  "summary": "",
   "education": [
     {"degree": "", "school": "", "year": "", "cgpa": ""}
   ],
@@ -143,13 +143,13 @@ JSON Structure:
   "skills": [
     {"category": "", "count": 0, "list": []}
   ],
-  "certifications": [],
-  ${userType === 'fresher' ? `
+  "certifications": []${userType === 'fresher' ? `,
   "achievements": [],
   "extraCurricularActivities": [],
   "languagesKnown": [],
   "personalDetails": ""` : ''}
 }
+
 
 Resume:
 ${resume}
