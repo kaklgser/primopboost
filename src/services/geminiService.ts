@@ -122,7 +122,6 @@ Rules:
 8. Use professional language and industry-specific keywords from the job description
 9. For LinkedIn and GitHub, use EXACTLY what is provided - empty string if not provided
 
-JSON Structure:
 {
   "name": "",
   "phone": "",
@@ -132,23 +131,24 @@ JSON Structure:
   "targetRole": "",
   "summary": "",
   "education": [
-    {"degree": "", "school": "", "year": "", "cgpa": ""}
+    { "degree": "", "school": "", "year": "", "cgpa": "" }
   ],
   "workExperience": [
-    {"role": "", "company": "", "year": "", "bullets": []}
+    { "role": "", "company": "", "year": "", "bullets": [] }
   ],
   "projects": [
-    {"title": "", "bullets": []}
+    { "title": "", "bullets": [] }
   ],
   "skills": [
-    {"category": "", "count": 0, "list": []}
+    { "category": "", "count": 0, "list": [] }
   ],
-  "certifications": []${userType === 'fresher' ? `,
+  "certifications": [],
   "achievements": [],
   "extraCurricularActivities": [],
   "languagesKnown": [],
-  "personalDetails": ""` : ''}
+  "personalDetails": ""
 }
+
 
 
 Resume:
