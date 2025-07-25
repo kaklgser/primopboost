@@ -1092,7 +1092,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16">
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto px-0 sm:px-6 lg:px-8 py-8">
 
         {!optimizedResume ? (
 
