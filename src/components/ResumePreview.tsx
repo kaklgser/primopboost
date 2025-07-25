@@ -166,13 +166,12 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
                     {job.year}
                   </div>
                 </div>
-                {job.bullets && job.bullets.length > 0 && (
-                  <ul style={{ marginLeft: '12pt' /* PDF_CONFIG.spacing.bulletIndent */, listStyleType: 'disc' }}>
-                    {job.bullets.map((bullet, bulletIndex) => (
-                      <li key={bulletIndex} style={{ ...bodyTextStyle, marginBottom: '1pt' /* Small space between bullets */ }}>
-                        {bullet}
-                      </li>
-                    ))}
+                {job.bullets.map((bullet, bulletIndex) => (
+  <li key={bulletIndex} style={{ ...bodyTextStyle, marginBottom: '1pt' }}>
+    {typeof bullet === 'string' ? bullet : bullet.description || JSON.stringify(bullet)}
+  </li>
+))}
+
                   </ul>
                 )}
               </div>
