@@ -586,28 +586,44 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 mb-4 sm:mb-8">
             {missingSections.map((section, index) => (
-              <div key={section} className="flex items-center w-full sm:w-auto">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  index < currentStep ? 'bg-green-500 text-white' :
-                  index === currentStep ? 'bg-blue-500 text-white' :
-                  'bg-gray-200 text-gray-500'
-                }`}>
-                  {index < currentStep ? <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" /> : getSectionIcon(section)}
-                </div>
-                <div className="ml-3">
-                  <div className="text-xs sm:text-sm font-medium text-gray-900">{getSectionName(section)}</div>
-                  <div className="text-xs text-gray-500 hidden sm:block">
-                    {index < currentStep ? 'Completed' :
-                      index === currentStep ? 'Current' : 'Pending'}
-                  </div>
-                </div>
-                {index < missingSections.length - 1 && index < currentStep && (
-                  <div className={`w-16 h-1 mx-4 ${
-                    index < currentStep ? 'bg-green-500' : 'bg-gray-200'
-                  } hidden sm:block`}></div>
-                )}
-              </div>
-            ))}
+  <div key={section} className="flex items-center w-auto sm:w-auto">
+    <div
+      className={`w-10 h-10 rounded-full flex items-center justify-center ${
+        index < currentStep
+          ? 'bg-green-500 text-white'
+          : index === currentStep
+          ? 'bg-blue-500 text-white'
+          : 'bg-gray-200 text-gray-500'
+      }`}
+    >
+      {index < currentStep ? (
+        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+      ) : (
+        getSectionIcon(section)
+      )}
+    </div>
+
+    {/* Only show text on desktop */}
+    <div className="ml-2 hidden sm:block">
+      <div className="text-sm font-medium text-gray-900">
+        {getSectionName(section)}
+      </div>
+      <div className="text-xs text-gray-500">
+        {index < currentStep
+          ? 'Completed'
+          : index === currentStep
+          ? 'Current'
+          : 'Pending'}
+      </div>
+    </div>
+
+    {/* Optional line between steps */}
+    {index < missingSections.length - 1 && (
+      <div className="w-6 h-px bg-gray-300 mx-2 sm:w-16 sm:h-1 sm:mx-4"></div>
+    )}
+  </div>
+))}
+
           </div>
         </div>
 
