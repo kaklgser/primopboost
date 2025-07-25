@@ -1435,7 +1435,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                   </div>
                   <ResumePreview resumeData={optimizedResume} userType={userType} />
                 </div>
-                <ExportButtons resumeData={optimizedResume} targetRole={targetRole} />
+               <ExportButtons resumeData={optimizedResume} userType={userType} targetRole={targetRole} />
               </>
             )}
 
