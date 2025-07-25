@@ -586,7 +586,8 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
 
 
-        <div className="flex justify-center sm:justify-between items-center flex-wrap gap-4 sm:gap-2 mb-0 sm:mb-0">
+        <div className="flex justify-center sm:justify-between items-center flex-wrap gap-4 sm:gap-6 mb-2 sm:mb-6">
+
 
             {missingSections.map((section, index) => (
   <div key={section} className="flex items-center w-auto sm:w-auto">
