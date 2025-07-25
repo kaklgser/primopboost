@@ -567,12 +567,12 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 
   return (
 <div
-  className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center p-2 sm:p-200 backdrop-blur-sm"
+  className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center p-2 sm:p-2 backdrop-blur-sm"
   onClick={handleBackdropClick}
 >
 <div
     className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95vw] sm:max-w-4xl overflow-y-auto"
-    style={{ maxHeight: '90vh', overscrollBehavior: 'contain' }}
+    style={{ maxHeight: '100vh', overscrollBehavior: 'contain' }}
   >
 
 
