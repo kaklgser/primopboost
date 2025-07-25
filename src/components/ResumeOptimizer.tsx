@@ -50,6 +50,20 @@ interface ResumeOptimizerProps {
 
 }
 
+const handleStartNewResume = () => {
+  setOptimizedResume(null);
+  setResumeText('');
+  setJobDescription('');
+  setLinkedinUrl('');
+  setGithubUrl('');
+  setTargetRole('');
+  setBeforeScore(null);
+  setAfterScore(null);
+  setInitialResumeScore(null);
+  setFinalResumeScore(null);
+  setChangedSections([]);
+  setCurrentStep(1);
+};
 
 
 const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
@@ -1537,6 +1551,19 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
 
             <ExportButtons resumeData={optimizedResume} targetRole={targetRole} />
+
+            {optimizedResume && (
+  <div className="text-center">
+    <button
+      onClick={handleStartNewResume}
+      className="inline-flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors mt-6"
+    >
+      <ArrowLeft className="w-4 h-4" />
+      <span>Create New Resume</span>
+    </button>
+  </div>
+)}
+
 
 
 
