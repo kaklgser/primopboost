@@ -72,7 +72,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
   const [targetRole, setTargetRole] = useState('');
 
-  const [userType, setUserType] = useState<UserType>('experienced');
+  const [userType, setUserType] = useState<UserType>('fresher');
 
   const [optimizedResume, setOptimizedResume] = useState<ResumeData | null>(null);
 
