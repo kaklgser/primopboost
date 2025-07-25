@@ -666,7 +666,7 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
 >
   <ArrowLeft className="w-4 h-4 sm:mr-2" />
   <span className="hidden sm:inline">Previous</span>
-</button
+</button>
 
           <div className="text-xs sm:text-sm text-gray-500 order-first sm:order-none ">
             Step {currentStep + 1} of {missingSections.length}
