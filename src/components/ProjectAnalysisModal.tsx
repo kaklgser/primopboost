@@ -879,7 +879,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
                     <div className="flex items-start">
                       <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
                       <div className="text-xs sm:text-sm text-blue-800">
-                        <p className="font-medium mb-1 break-words">GitHub Links in Exported Resume</p>
+                    
                         <p className="break-words">GitHub links are **not** included in the final exported document.</p> {/* Updated text */}
                       </div>
                     </div>
