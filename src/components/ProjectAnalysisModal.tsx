@@ -326,10 +326,8 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm">
-     <div
-<div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl mx-auto">
+    <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl mx-auto">
 
->
 
         {/* Header */}
         <div className="relative bg-gradient-to-r from-blue-50 to-purple-50 p-3 sm:p-6 border-b border-gray-200">
