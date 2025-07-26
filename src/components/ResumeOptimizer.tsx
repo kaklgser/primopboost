@@ -1037,11 +1037,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-16">
 
       {/* Debug Buttons */}
-      <div className="fixed bottom-4 left-4 z-50 flex gap-2">
-        <button onClick={() => setCurrentStep(1)} className="px-4 py-2 bg-gray-200 rounded-md text-sm">Step 1</button>
-        <button onClick={() => setCurrentStep(2)} className="px-4 py-2 bg-gray-200 rounded-md text-sm">Step 2</button>
-        <button onClick={() => setCurrentStep(3)} className="px-4 py-2 bg-gray-200 rounded-md text-sm">Step 3</button>
-      </div>
+   
       {/* End Debug Buttons */}
 
       <div className="w-90vh max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 py-8">
