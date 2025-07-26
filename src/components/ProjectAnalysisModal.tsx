@@ -327,7 +327,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
   return (
  <div className="absolute top-0 left-0 w-full min-h-screen bg-black/60 flex justify-center z-50 p-2 sm:p-4 backdrop-blur-sm">
 
-    <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl mx-auto">
+    <div className="bg-white rounded-xl shadow-2xl w-full style={{ maxHeight: '80vh' }}">
 
 
         {/* Header */}
