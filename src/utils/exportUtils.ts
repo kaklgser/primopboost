@@ -6,7 +6,7 @@ import { saveAs } from 'file-saver';
 const PDF_CONFIG = {
   // A4 dimensions in mm
   pageWidth: 210,
-  pageHeight: 297,
+  pageHeight: 300,
 
   // Professional margins in mm (0.5 inch = 12.7mm, 0.7 inch = 17.78mm)
   margins: {
@@ -34,7 +34,7 @@ const PDF_CONFIG = {
     nameFromTop: 20, // Start name further down slightly to match mock
     afterName: 2,
     afterContact: 3,
-    sectionSpacingBefore: 5, // Space before section title
+    sectionSpacingBefore: 1, // Space before section title
     sectionSpacingAfter: 2, // Space after section underline
     bulletListSpacing: 0, // Reduced to minimize space between bullets
     afterSubsection: 4, // Space between sub-sections (e.g., jobs, projects)
