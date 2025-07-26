@@ -11,7 +11,7 @@ const PDF_CONFIG = {
   // Professional margins in mm (0.5 inch = 12.7mm, 0.7 inch = 17.78mm)
   margins: {
     top: 15,    // ~0.6 inches
-    bottom: 5, // ~0.6 inches
+    bottom: 0, // ~0.6 inches
     left: 15,   // ~0.6 inches
     right: 15   // ~0.6 inches
   },
