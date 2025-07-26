@@ -257,7 +257,7 @@ function drawContactInfo(state: PageState, resumeData: ResumeData): number {
 function drawWorkExperience(state: PageState, workExperience: any[], userType: UserType = 'experienced'): number {
   if (!workExperience || workExperience.length === 0) return 0;
 
-  const sectionTitle = userType === 'fresher' ? 'INTERNSHIPS & WORK EXPERIENCE' : 'EXPERIENCE';
+  const sectionTitle = userType === 'fresher' ? 'WORK EXPERIENCE' : 'EXPERIENCE';
   let totalHeight = drawSectionTitle(state, sectionTitle);
 
   workExperience.forEach((job, index) => {
