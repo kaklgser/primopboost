@@ -6,12 +6,12 @@ import { saveAs } from 'file-saver';
 const PDF_CONFIG = {
   // A4 dimensions in mm
   pageWidth: 210,
-  pageHeight: 360,
+  pageHeight: 297,
 
   // Professional margins in mm (0.5 inch = 12.7mm, 0.7 inch = 17.78mm)
   margins: {
     top: 15,    // ~0.6 inches
-    bottom: 5, // ~0.6 inches
+    bottom: 15, // ~0.6 inches
     left: 15,   // ~0.6 inches
     right: 15   // ~0.6 inches
   },
@@ -34,10 +34,10 @@ const PDF_CONFIG = {
     nameFromTop: 20, // Start name further down slightly to match mock
     afterName: 2,
     afterContact: 3,
-    sectionSpacingBefore: 3, // Space before section title
-    sectionSpacingAfter: 1.5, // Space after section underline
+    sectionSpacingBefore: 5, // Space before section title
+    sectionSpacingAfter: 3, // Space after section underline
     bulletListSpacing: 0, // Reduced to minimize space between bullets
-    afterSubsection: 2.5, // Space between sub-sections (e.g., jobs, projects)
+    afterSubsection: 4, // Space between sub-sections (e.g., jobs, projects)
     lineHeight: 1.2, // Tighter line height
     bulletIndent: 4
   },
