@@ -1435,12 +1435,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                   <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-6">
                    
                    
-                        <div className="text-center">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">After Optimization</h3>
-                          <div className="text-4xl font-bold text-green-600 mb-2">{finalResumeScore.totalScore}/100</div>
-                          <div className="text-sm text-gray-600">Grade: {finalResumeScore.grade}</div>
-                        </div>
-                      </div>
+                        
                       <div className="mt-6 text-center">
                         <div className="text-2xl font-bold text-blue-600">
                           +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
