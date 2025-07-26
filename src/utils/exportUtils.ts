@@ -34,7 +34,7 @@ const PDF_CONFIG = {
     nameFromTop: 20, // Start name further down slightly to match mock
     afterName: 2,
     afterContact: 3,
-    sectionSpacingBefore: 2, // Space before section title
+    sectionSpacingBefore: 3, // Space before section title
     sectionSpacingAfter: 2, // Space after section underline
     bulletListSpacing: 0, // Reduced to minimize space between bullets
     afterSubsection: 4, // Space between sub-sections (e.g., jobs, projects)
