@@ -325,12 +325,11 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
   if (!isOpen) return null;
 
   return (
-<div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm">
-
-
-    <div className="bg-white rounded-xl shadow-2xl w-full overflow-y-auto flex flex-col" style={{ maxHeight: '100vh' }}>
-
-
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4 backdrop-blur-sm">
+     <div
+  className="bg-white rounded-xl shadow-2xl w-full overflow-y-auto flex flex-col"
+  style={{ maxHeight: '80vh' }}
+>
 
         {/* Header */}
         <div className="relative bg-gradient-to-r from-blue-50 to-purple-50 p-3 sm:p-6 border-b border-gray-200">
