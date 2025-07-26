@@ -327,7 +327,7 @@ export const ProjectAnalysisModal: React.FC<ProjectAnalysisModalProps> = ({
   return (
  <div className="absolute top-0 left-0 w-full min-h-screen bg-black/60 flex justify-center z-50 p-2 sm:p-4 backdrop-blur-sm">
 
-    <div className="bg-white rounded-xl shadow-2xl w-full overflow-y-auto flex flex-col" style={{ maxHeight: '80vh' }}>
+    <div className="bg-white rounded-xl shadow-2xl w-full overflow-y-auto flex flex-col" style={{ maxHeight: '100vh' }}>
 
 
 
