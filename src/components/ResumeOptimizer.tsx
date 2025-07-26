@@ -1437,9 +1437,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                    
                         
                       <div className="mt-6 text-center">
-                        <div className="text-2xl font-bold text-blue-600">
-                          +{finalResumeScore.totalScore - initialResumeScore.totalScore} Points Improvement
-                        </div>
+
                       </div>
                     </div>
                   
