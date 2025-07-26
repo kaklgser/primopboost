@@ -38,7 +38,7 @@ const PDF_CONFIG = {
     sectionSpacingAfter: 2, // Space after section underline
     bulletListSpacing: 0, // Reduced to minimize space between bullets
     afterSubsection: 4, // Space between sub-sections (e.g., jobs, projects)
-    lineHeight: 0.5, // Tighter line height
+    lineHeight: 1, // Tighter line height
     bulletIndent: 4
   },
   colors: {
