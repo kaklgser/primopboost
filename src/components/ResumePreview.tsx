@@ -147,7 +147,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, userTy
         return (
           <div style={{ marginBottom: '12pt' }}>
             <h2 style={sectionTitleStyle}>
-              {userType === 'fresher' ? 'INTERNSHIPS & WORK EXPERIENCE' : 'EXPERIENCE'}
+              {userType === 'fresher' ? 'WORK EXPERIENCE' : 'EXPERIENCE'}
             </h2>
             <div style={sectionUnderlineStyle}></div>
             
