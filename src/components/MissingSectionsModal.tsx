@@ -256,7 +256,9 @@ export const MissingSectionsModal: React.FC<MissingSectionsModalProps> = ({
           <Briefcase className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
         </div>
         <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Add Work Experience</h3>
-        <p className="text-sm sm:text-base text-gray-600">Please provide your work experience details</p>
+        <p className="text-sm sm:text-base text-gray-600"> Please provide your work experience details. If you're a fresher and don't have any full-time experience,
+    we recommend adding any internships, training, or freelance work you've done. These greatly help in showcasing your skills.
+  </p>
       </div>
 
       {workExperience.map((work, workIndex) => (
