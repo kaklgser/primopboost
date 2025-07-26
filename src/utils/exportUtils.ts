@@ -6,7 +6,7 @@ import { saveAs } from 'file-saver';
 const PDF_CONFIG = {
   // A4 dimensions in mm
   pageWidth: 210,
-  pageHeight: 297,
+  pageHeight: 360,
 
   // Professional margins in mm (0.5 inch = 12.7mm, 0.7 inch = 17.78mm)
   margins: {
