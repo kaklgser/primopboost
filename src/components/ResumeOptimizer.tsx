@@ -1295,11 +1295,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
               )}
 
 
-                {resumeText && jobDescription && (
-
                 
-
-              )}
 
             </div>
 
