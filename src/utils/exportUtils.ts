@@ -835,7 +835,7 @@ const generateWordHTMLContent = (data: ResumeData, userType: UserType = 'experie
   ` : '';
 
   const workExperienceHtml = data.workExperience && data.workExperience.length > 0 ? `
-    <div class="section-title">${userType === 'fresher' ? 'INTERNSHIPS & WORK EXPERIENCE' : 'EXPERIENCE'}</div>
+    <div class="section-title">${userType === 'fresher' ? 'WORK EXPERIENCE' : 'EXPERIENCE'}</div>
     <div class="section-underline"></div>
     ${data.workExperience.map(job => `
       <div class="job-header">
