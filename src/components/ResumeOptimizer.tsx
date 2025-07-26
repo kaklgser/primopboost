@@ -1431,11 +1431,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
 
             {optimizedResume && activeTab === 'analysis' && (
               <>
-                {beforeScore && afterScore && initialResumeScore && finalResumeScore && (
-               
-                  
-                )}
-
+                
                 <ComprehensiveAnalysis
                   beforeScore={beforeScore}
                   afterScore={afterScore}
