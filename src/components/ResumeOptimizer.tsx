@@ -1442,7 +1442,7 @@ const ResumeOptimizer: React.FC<ResumeOptimizerProps> = ({
                         </div>
                       </div>
                     </div>
-                  </div>
+                  
                 )}
 
                 <ComprehensiveAnalysis
